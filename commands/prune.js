@@ -26,7 +26,7 @@ export async function run(interaction, args) {
     const { client, guild } = interaction;
     const allowedAmount = (n) => Math.ceil(n) > 100 ? 100 : Math.ceil(n) < 0 ? 0 : Math.ceil(n); 
 
-    await interaction.defer();
+    await interaction.defer({ ephemeral: true });
 
     const amount = allowedAmount(args.get("antall"));
     const targetID = args.get("kar");
@@ -37,8 +37,11 @@ export async function run(interaction, args) {
 
     channel.messages.fetch({ limit: amount }).then(messages => {
         const msgsToDelete = target ? messages.filter(msg => msg.author.id === target.id) : messages;
+
+        const targetStr = target ? ` fra ${target.tag}` : "";
+        const channelStr = channelID ? ` i kanalen ${channel}` : "";
         channel.bulkDelete(msgsToDelete, true).then(deleted => {
-            interaction.editReply(`Sletta ${deleted.size} meldinger`, { ephemeral: true });
+            interaction.editReply(`Sletta ${deleted.size} meldinger${targetStr}${channelStr}`, { ephemeral: true });
         });
     });
 };

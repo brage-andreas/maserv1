@@ -1,7 +1,12 @@
-//import "module-alias/register.js";
 import { readdirSync } from "fs";
 import { Client, Collection } from "discord.js";
-import { default as opt } from "./settings.js"
+import opt from "./settings.js"
+
+console.clear();
+
+
+// #####################
+
 
 const client = new Client({ intents: ["GUILDS", "GUILD_MESSAGES"] });
 client.commands = new Collection();
@@ -12,51 +17,33 @@ const getJSFiles = (dir) => {
     return jsFiles;
 }
 
+
+// #####################
+
+
 const commandFiles = getJSFiles("./commands");
-for (const file of commandFiles) {
+console.log(`  Loading ${commandFiles.length} commands ···`)
+
+commandFiles.forEach(async file => {
     const cmdFile = await import(`./commands/${file}`);
     client.commands.set(cmdFile.default.name, cmdFile);
-}
-
-client.on("ready", () => {
-    console.log("READY");
 });
 
-client.on("message", async (msg) => {
-    const { content, author, guild } = msg;
-    const botOwner = (query) => content.toLowerCase() === query && author.id === client.application?.owner.id;
 
-    if (!client.application?.owner) await client.application?.fetch();
+// #####################
 
-	if (botOwner("?deploy")) {
-		const data = client.commands.map(cmd => cmd.default);
-		await guild.commands.set(data);
-    }
 
-    if (botOwner("?clear")) {
-        await guild.commands.set([]);
-    }
+const eventFiles = getJSFiles("./events");
+console.log(`  Loading ${commandFiles.length} events ···\n`)
+
+eventFiles.forEach(async file => {
+    const eventFile = await import(`./events/${file}`);
+    const eventFileName = file.split(".")[0];
+    if (eventFile) client.on(eventFileName, (...args) => eventFile.run(client, ...args))
 });
 
-client.on("interaction", async (interaction) => {
-    if (!interaction.isCommand()) return;
-    const { options, commandName } = interaction;
 
-    const getArgs = () => {
-        const argsCollection = new Collection();
-
-        options.forEach(option => {
-            argsCollection.set(option.name, option.value);
-        });
-
-        return argsCollection;
-    };
-
-    const args = getArgs();
-
-    const cmd = client.commands.get(commandName);
-    if (cmd) cmd.run(interaction, args);
-});
+// #####################
 
 
 client.login(opt.token);
