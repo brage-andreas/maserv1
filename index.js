@@ -1,6 +1,7 @@
-import { readdirSync } from "fs";
 import { Client, Collection } from "discord.js";
+import { readdirSync } from "fs";
 import chalk from "chalk";
+
 import opt from "./resources/settings.js";
 
 process.stdout.write("\x1Bc\n"); // clears terminal, console.clear() doesn't fully clear it
@@ -19,7 +20,7 @@ const getJSFiles = (dir) => {
 
 
 const commandFiles = getJSFiles("./commands");
-console.log(chalk `  {grey Loading} ${commandFiles.length} {grey commands •••}`)
+console.log(chalk `  {grey │ Loading} ${commandFiles.length} {grey commands...}`)
 
 commandFiles.forEach(async file => {
     const cmdFile = await import(`./commands/${file}`);
@@ -29,7 +30,7 @@ commandFiles.forEach(async file => {
 
 
 const eventFiles = getJSFiles("./events");
-console.log(chalk `  {grey Loading} ${commandFiles.length} {grey events •••}\n`)
+console.log(chalk `  {grey │ Loading} ${commandFiles.length} {grey events...}\n`)
 
 eventFiles.forEach(async file => {
     const eventFile = await import(`./events/${file}`);
