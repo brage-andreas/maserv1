@@ -1,0 +1,27 @@
+{
+  "name": "bigbotmaster",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hellobafu/bigbotmaster.git"
+  },
+  "author": "Dr Drango",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hellobafu/bigbotmaster/issues"
+  },
+  "homepage": "https://github.com/hellobafu/bigbotmaster#readme",
+  "dependencies": {
+    "discord.js": "github:discordjs/discord.js#e033dd080aabb12dcfe2a0708a10a92d4fb68000",
+    "module-alias": "^2.2.2"
+  },
+  "_moduleAliases": {
+    "~": "."
+  }
+}
