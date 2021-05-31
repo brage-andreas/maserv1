@@ -1,5 +1,3 @@
-import { MessageActionRow, MessageButton } from "discord.js";
-
 const data = {
     name: "say",
     description: "halalutrrh",
@@ -15,11 +13,5 @@ const data = {
 
 export default data;
 export async function run(interaction, args) {
-    const row = new MessageActionRow().addComponents(
-        new MessageButton()
-        .setCustomID("primary")
-        .setLabel("lolbanan")
-        .setStyle("PRIMARY")
-    );
-    await interaction.reply(args.get("input"), { components: [row] });
+    await interaction.reply(args.get("input"));
 };

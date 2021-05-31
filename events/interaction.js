@@ -11,7 +11,7 @@ export async function run(client, interaction) {
     
         const cmd = client.commands.get(commandName);
         if (cmd) cmd.run(interaction, args);
-    } else
+    } //else
 
-    if (interaction) return;
+    // if (interaction.isMessageComponent() && interaction.componentType === "BUTTON") { }
 }

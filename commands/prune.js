@@ -1,3 +1,5 @@
+import { MessageActionRow, MessageButton } from "discord.js";
+
 const data = {
     name: "prune",
     description: "slett halalutrrh",
@@ -35,13 +37,44 @@ export async function run(interaction, args) {
     const target = targetID ? await client.users.fetch(targetID) : null;
     const channel = channelID ? guild.channels.cache.get(channelID) : interaction.channel;
 
-    channel.messages.fetch({ limit: amount }).then(messages => {
+    channel.messages.fetch({ limit: amount }).then(async messages => {
         const msgsToDelete = target ? messages.filter(msg => msg.author.id === target.id) : messages;
 
-        const targetStr = target ? ` fra ${target.tag}` : "";
+        const targetStr = target ? ` fra ${target}` : "";
         const channelStr = channelID ? ` i kanalen ${channel}` : "";
-        channel.bulkDelete(msgsToDelete, true).then(deleted => {
-            interaction.editReply(`Sletta ${deleted.size} meldinger${targetStr}${channelStr}`, { ephemeral: true });
+        
+        const row = new MessageActionRow().addComponents(
+            [ new MessageButton().setCustomID("ja").setLabel("Ja").setStyle("SUCCESS") ],
+            [ new MessageButton().setCustomID("nei").setLabel("Nei").setStyle("DANGER") ]
+        );
+
+        const query = await interaction.editReply(`(5s) Sikker på at du vil slette ${msgsToDelete.size} meldinger${targetStr}${channelStr}`, { components: [row], ephemeral: true });
+
+        const filterPositive = interaction => interaction.customID === "ja";
+        const filterNegative = interaction => interaction.customID === "nei";
+        const collectorPositive = query.createMessageComponentInteractionCollector(filterPositive, { time: 15000, maxProcessed: 1 });
+        const collectorNegative = query.createMessageComponentInteractionCollector(filterNegative, { time: 15000, maxProcessed: 1 });
+        
+        collectorPositive.on("collect", () => { 
+            channel.bulkDelete(msgsToDelete, true).then(() => {
+                interaction.editReply("Gjort!", { ephemeral: true, components: [] });
+            });
+            return;
+        });
+
+        collectorNegative.on("collect", () => {
+            interaction.editReply("Okay!", { ephemeral: true, components: [] });
+            return;
+        });
+
+        collectorPositive.on("end", () => {
+            interaction.editReply("Okay!", { ephemeral: true, components: [] });
+            return;
+        });
+
+        collectorNegative.on("end", () => {
+            interaction.editReply("Okay!", { ephemeral: true, components: [] });
+            return;
         });
     });
 };
