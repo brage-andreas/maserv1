@@ -5,7 +5,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "link-module-alias"
   },
   "repository": {
     "type": "git",
@@ -18,16 +19,13 @@
   },
   "homepage": "https://github.com/hellobafu/bigbotmaster#readme",
   "dependencies": {
+    "chalk": "^4.1.1",
     "discord.js": "github:discordjs/discord.js#e033dd080aabb12dcfe2a0708a10a92d4fb68000",
     "module-alias": "^2.2.2"
   },
-
   "_moduleAliases": {
     "~": ".",
-    "@cmd": "./commands",
-    "@evt": "./events"
-  },
-  "devDependencies": {
-    "@types/module-alias": "^2.0.0"
+    "~cmd": "./commands",
+    "~evt": "./events"
   }
 }

@@ -1,11 +1,10 @@
 import { readdirSync } from "fs";
 import { Client, Collection } from "discord.js";
-import opt from "./settings.js"
+import chalk from "chalk";
+import opt from "./resources/settings.js";
 
-console.clear();
+process.stdout.write("\x1Bc\n"); // clears terminal, console.clear() doesn't fully clear it
 
-
-// #####################
 
 
 const client = new Client({ intents: ["GUILDS", "GUILD_MESSAGES"] });
@@ -18,11 +17,9 @@ const getJSFiles = (dir) => {
 }
 
 
-// #####################
-
 
 const commandFiles = getJSFiles("./commands");
-console.log(`  Loading ${commandFiles.length} commands ···`)
+console.log(chalk `  {grey Loading} ${commandFiles.length} {grey commands •••}`)
 
 commandFiles.forEach(async file => {
     const cmdFile = await import(`./commands/${file}`);
@@ -30,11 +27,9 @@ commandFiles.forEach(async file => {
 });
 
 
-// #####################
-
 
 const eventFiles = getJSFiles("./events");
-console.log(`  Loading ${commandFiles.length} events ···\n`)
+console.log(chalk `  {grey Loading} ${commandFiles.length} {grey events •••}\n`)
 
 eventFiles.forEach(async file => {
     const eventFile = await import(`./events/${file}`);
@@ -42,8 +37,6 @@ eventFiles.forEach(async file => {
     if (eventFile) client.on(eventFileName, (...args) => eventFile.run(client, ...args))
 });
 
-
-// #####################
 
 
 client.login(opt.token);
