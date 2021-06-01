@@ -20,12 +20,6 @@
   "homepage": "https://github.com/hellobafu/bigbotmaster#readme",
   "dependencies": {
     "chalk": "^4.1.1",
-    "discord.js": "github:discordjs/discord.js#e033dd080aabb12dcfe2a0708a10a92d4fb68000",
-    "module-alias": "^2.2.2"
-  },
-  "_moduleAliases": {
-    "~": ".",
-    "~cmd": "./commands",
-    "~evt": "./events"
+    "discord.js": "github:discordjs/discord.js#e033dd080aabb12dcfe2a0708a10a92d4fb68000"
   }
 }

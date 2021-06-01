@@ -27,8 +27,8 @@ export default data;
 export async function run(interaction, args) {
     const { client, guild } = interaction;
     const allowedAmount = (n) => Math.ceil(n) > 100 ? 100 : Math.ceil(n) < 0 ? 0 : Math.ceil(n); 
-
-    await interaction.defer({ ephemeral: true });
+ 
+    await interaction.reply("Jobber...", { ephemeral: true });
 
     const amount = allowedAmount(args.get("antall"));
     const targetID = args.get("kar");
@@ -48,7 +48,7 @@ export async function run(interaction, args) {
             [ new MessageButton().setCustomID("nei").setLabel("Nei").setStyle("DANGER") ]
         );
 
-        const query = await interaction.editReply(`(5s) Sikker på at du vil slette ${msgsToDelete.size} meldinger${targetStr}${channelStr}`, { components: [row], ephemeral: true });
+        const query = await interaction.editReply(`Sikker på at du vil slette ${msgsToDelete.size} meldinger${targetStr}${channelStr}`, { components: [row], ephemeral: true });
 
         const filterPositive = interaction => interaction.customID === "ja";
         const filterNegative = interaction => interaction.customID === "nei";
