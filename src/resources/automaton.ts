@@ -1,7 +1,7 @@
 import chalk from "chalk";
 
-import { cols, fCols } from "./colours"
-import { BotLogNamesInterface } from "./definitions";
+import { cols, fCols } from "./colours.js"
+import { BotLogNamesInterface } from "./definitions.js";
 
 const { red, green, yellow } = cols;
 const { fRed, fGreen, fYellow } = fCols;

@@ -1,5 +1,5 @@
 import { Collection, Interaction } from "discord.js";
-import { DaClient } from "../resources/definitions"
+import { DaClient } from "../resources/definitions.js"
 
 export async function run(client: DaClient, interaction: Interaction) {
     if (interaction.isCommand()) {

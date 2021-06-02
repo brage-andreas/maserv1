@@ -1,5 +1,5 @@
 import { Channel, Collection, CommandInteraction, MessageActionRow, MessageButton, MessageComponentInteraction, TextChannel } from "discord.js";
-import { CommandDataInterface } from "../resources/definitions";
+import { CommandDataInterface } from "../resources/definitions.js";
 
 const data: CommandDataInterface = {
     name: "prune",

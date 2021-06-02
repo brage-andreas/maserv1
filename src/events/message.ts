@@ -1,5 +1,5 @@
 import { ApplicationCommandData, Message } from "discord.js";
-import { DaClient } from "../resources/definitions";
+import { DaClient } from "../resources/definitions.js";
 
 export async function run(client: DaClient, msg: Message) {
     const { content, author, guild, channel } = msg;

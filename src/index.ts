@@ -1,8 +1,8 @@
 import { readdirSync } from "fs";
 import chalk from "chalk";
 
-import { DaClient } from "./resources/definitions";
-import { token } from "./resources/settings";
+import { DaClient } from "./resources/definitions.js";
+import { token } from "./resources/settings.js";
 
 process.stdout.write("\x1Bc\n"); // clears terminal, console.clear() doesn't fully clear it
 
