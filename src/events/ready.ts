@@ -8,10 +8,10 @@ const { fYellow, fGreen } = fCols;
 
 export async function run(client: DaClient) {
     const [sec, min, hour] = time();
-    const channels = client.channels.cache.size;
-    const guilds = client.guilds.cache.size;
-    const tag = client.user?.tag;
-    const id = client.user?.id;
+    const channels: number = client.channels.cache.size;
+    const guilds: number = client.guilds.cache.size;
+    const tag: (string | undefined) = client.user?.tag;
+    const id: (string | undefined) = client.user?.id;
 
     console.log(chalk `  {grey ┌────────────────────┐}`)
     console.log(chalk `  {grey │} ${hour}:${min}:${sec} • {${fGreen} Started} {grey │}`);

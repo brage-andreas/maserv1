@@ -3,18 +3,22 @@ import { DaClient } from "../resources/definitions.js";
 
 export async function run(client: DaClient, msg: Message) {
     const { content, author, guild, channel } = msg;
-    const botOwner = (query: string): boolean => content.toLowerCase() === query && author.id === client.application?.owner?.id;
+    const isBotOwner = (): boolean => author.id === client.application?.owner?.id;
     
     if (!client.application?.owner) await client.application?.fetch();
 
-	if (botOwner("?deploy")) {
+	if (content === "?build" && isBotOwner()) {
         if (!guild) return;
+
+        msg.delete();
 		const data: ApplicationCommandData[] = client.commands.map(cmd => cmd.default);
 		await guild.commands.set(data);
     }
     
-    if (botOwner("?clear")) {
+    if (content === "?clear" && isBotOwner()) {
         if (!guild) return;
+
+        msg.delete();
         await guild.commands.set([]);
     }
 

@@ -12,15 +12,16 @@ const twoCharLength = (num: number): string => num<10 ? String("0"+num) : String
  * @returns sec, min, hour [ ]
  */
  const time = (): string[] => {
-    const now = new Date;
+    const now: Date = new Date;
     
-    const sec = twoCharLength(now.getSeconds());
-    const min = twoCharLength(now.getMinutes());
-    const hour = twoCharLength(now.getHours());
+    const sec: string = twoCharLength(now.getSeconds());
+    const min: string = twoCharLength(now.getMinutes());
+    const hour: string = twoCharLength(now.getHours());
     
     return [sec, min, hour];
 }
 
+// FIX 1T NØW XD
 const botLog = async (custom: string, names: BotLogNamesInterface) => {
     const [ sec, min, hour ] = time();
     const { guildName, channelName, authorName, authorID } = names;

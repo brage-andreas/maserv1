@@ -30,4 +30,4 @@ interface BotLogNamesInterface {
     authorID: string | null;
 }
 
-export { DaClient, CommandOptionsInterface, CommandDataInterface, BotLogNamesInterface }
+export { DaClient, CommandOptionsInterface, CommandDataInterface, CommandInterface, BotLogNamesInterface }
