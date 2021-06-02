@@ -25,7 +25,7 @@ commandFiles.forEach(async (file: string) => {
 
 
 const eventFiles = getJSFiles("./events");
-console.log(chalk `  {grey │ Loading} ${commandFiles.length} {grey events...}\n`)
+console.log(chalk `  {grey │ Loading} ${eventFiles.length} {grey events...}\n`)
 
 eventFiles.forEach(async (file: string) => {
     const eventFile = await import(`./events/${file}`);
