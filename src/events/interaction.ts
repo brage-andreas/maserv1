@@ -1,10 +1,11 @@
-import { Collection } from "discord.js";
+import { Collection, Interaction } from "discord.js";
+import { DaClient } from "../resources/definitions"
 
-export async function run(client, interaction) {
+export async function run(client: DaClient, interaction: Interaction) {
     if (interaction.isCommand()) {
         const { options, commandName } = interaction;
     
-        const args = new Collection();
+        const args: Collection<string, any> = new Collection();
         options.forEach(option => {
             args.set(option.name, option.value);
         });
