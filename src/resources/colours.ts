@@ -1,4 +1,4 @@
-const formatColour = (colour: string) => `hex("${colour.replace("#","")}")`;
+const formatColour = (colour: string): string => `hex("${colour.replace("#","")}")`;
 
 const colourTable = {
     yellow: "#FFC152",
