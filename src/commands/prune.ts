@@ -1,5 +1,12 @@
-import { Collection, CommandInteraction, Message, MessageActionRow, MessageButton, MessageComponentInteraction, TextChannel, User } from "discord.js";
+import chalk from "chalk";
+import { Collection, CommandInteraction, Message, MessageActionRow,
+         MessageButton, MessageComponentInteraction, TextChannel, User } from "discord.js";
+
 import { CommandDataInterface } from "../resources/definitions.js";
+import { botLog } from "../resources/automaton.js";
+import { fCols } from "../resources/colours.js";
+
+const { fGreen } = fCols;
 
 const data: CommandDataInterface = {
     name: "prune",
@@ -64,20 +71,22 @@ export async function run(interaction: CommandInteraction, args: Collection<stri
         
         collector.on("collect", (collectedInteraction: MessageComponentInteraction) => {
             if (collectedInteraction.customID === "ja") {
-                channel.bulkDelete(msgsToDelete, true).then(() => {
+                channel.bulkDelete(msgsToDelete, true).then((messages: Collection<string, Message>) => {
                     interaction.editReply("Gjort!", { components: [] });
+                    
+                    botLog(chalk `{${fGreen} PRUNE} {grey > Deleted} ${messages.size} {grey messages}`,
+                    { authorName: interaction.user.tag, authorID: interaction.user.id, channelName: channel.name, guildName: channel.guild.name });
                 });
+                collector.stop("fromCollected")
             } else
             
             if (collectedInteraction.customID === "nei") {
-                collector.stop("nei")
+                collector.stop("fromCollected")
             }
-
-            return;
         });
 
         collector.on("end", (collected: Collection<string, MessageComponentInteraction>, reason: string) => {
-            if (reason === "nei") {
+            if (reason === "fromCollected") {
                 interaction.editReply("Okay!", { components: [] });
             }
             

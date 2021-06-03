@@ -21,18 +21,30 @@ const twoCharLength = (num: number): string => num<10 ? String("0"+num) : String
     return [sec, min, hour];
 }
 
-// FIX 1T NØW XD
-const botLog = async (custom: string, names: BotLogNamesInterface) => {
-    const [ sec, min, hour ] = time();
+
+
+// botLog(chalk `{${fGreen} COMMAND} {grey > MESSAGE}`);
+const cache: { authorID: string, authorCh: string } = {authorID: "", authorCh: "" };
+const botLog = async (custom: string, names: BotLogNamesInterface): Promise<void> => {
     const { guildName, channelName, authorName, authorID } = names;
+    const [sec, min, hour] = time();
 
-    const strTime    = chalk `{grey ${hour}:${min}:${sec}}`;
-    const strChannel = channelName ? chalk `{${yellow} #${channelName}} ` : "";
-    const strGuild   = guildName ? chalk `{grey in "${guildName}"} ` : "";
+    const arrayToPrint: string[] = [" "];
 
-    console.log(chalk `  {${red} ~/ CLIENT} ${strChannel}${strGuild}\n   ${strTime} ${custom}`);
+    if (authorName)  arrayToPrint.push(chalk `{${fYellow} ${authorName}}`);
+    if (authorID)    arrayToPrint.push(chalk `{grey (${authorID}})`);
+    if (channelName) arrayToPrint.push(chalk `{grey in} #${channelName}`);
+    if (guildName)   arrayToPrint.push(chalk `{grey of ${guildName}}`);
+
+    arrayToPrint.push(chalk `\n  {grey ${hour}:${min}:${sec}}`);
+    arrayToPrint.push(custom);
+
+    console.log(arrayToPrint.join(" "));
+
+    cache.authorCh = channelName || "";
+    cache.authorID = authorID    || "";
 }
 
 
 
-export { time }
+export { time, botLog }

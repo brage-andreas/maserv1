@@ -24,10 +24,10 @@ interface CommandInterface extends CommandDataInterface {
 }
 
 interface BotLogNamesInterface {
-    guildName: string | null;
-    channelName: string | null;
-    authorName: string | null;
-    authorID: string | null;
+    guildName?: string;
+    channelName?: string;
+    authorName?: string;
+    authorID?: string;
 }
 
 export { DaClient, CommandOptionsInterface, CommandDataInterface, CommandInterface, BotLogNamesInterface }
