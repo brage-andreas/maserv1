@@ -44,7 +44,7 @@ export async function run(interaction: CommandInteraction, args: Collection<stri
 
     const target: User | null = targetID ? await client.users.fetch(targetID) : null;
     const channel: TextChannel = getChannel(channelID);
-
+    
     channel.messages.fetch({ limit: amount }).then(async (messages: Collection<string, Message>) => {
         const msgsToDelete: Collection<string, Message> = target ? messages.filter(msg => msg.author.id === target.id) : messages;
 
