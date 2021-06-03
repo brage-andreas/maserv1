@@ -23,6 +23,7 @@ export async function run(client: DaClient, msg: Message) {
     }
 
     if (content === "lol") {
+        msg.reply("iolbanan")
         channel.send("iolbanan", { allowedMentions: { repliedUser: false }, reply: { messageReference: msg.id } })
     }
 }
