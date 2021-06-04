@@ -11,7 +11,7 @@ export async function run(client: DaClient, interaction: Interaction) {
         });
     
         const cmd: (CommandInterface | undefined) = client.commands.get(commandName);
-        if (cmd) cmd.run(interaction, args);
+        if (cmd) cmd.run(client, interaction, args);
     } //else
 
     // if (interaction.isMessageComponent()) { }

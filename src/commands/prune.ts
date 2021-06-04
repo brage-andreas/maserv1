@@ -2,7 +2,7 @@ import chalk from "chalk";
 import { Collection, CommandInteraction, Message, MessageActionRow,
          MessageButton, MessageComponentInteraction, TextChannel, User } from "discord.js";
 
-import { CommandDataInterface } from "../resources/definitions.js";
+import { CommandDataInterface, DaClient } from "../resources/definitions.js";
 import { botLog } from "../resources/automaton.js";
 import { fCols } from "../resources/colours.js";
 
@@ -32,8 +32,8 @@ const data: CommandDataInterface = {
 }
 
 export default data;
-export async function run(interaction: CommandInteraction, args: Collection<string, any>) {
-    const { client, guild } = interaction;
+export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, any>) {
+    const { guild } = interaction;
 
     const allowedAmount = (n: number): number => Math.ceil(n) > 100 ? 100 : Math.ceil(n) < 0 ? 0 : Math.ceil(n);
     const getChannel = (id?: string) => {

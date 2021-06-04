@@ -19,8 +19,9 @@ interface CommandDataInterface {
 }
 
 interface CommandInterface extends CommandDataInterface {
+    
     default: ApplicationCommandData;
-    run(interaction: CommandInteraction, args: Collection<string, any>): void;
+    run(client: DaClient, interaction: CommandInteraction, args: Collection<string, any>): void;
 }
 
 interface BotLogNamesInterface {

@@ -1,4 +1,5 @@
 import { Collection, CommandInteraction } from "discord.js";
+import { DaClient } from "../resources/definitions";
 
 const data = {
     name: "say",
@@ -14,6 +15,6 @@ const data = {
 }
 
 export default data;
-export async function run(interaction: CommandInteraction, args: Collection<string, any>) {
+export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, any>) {
     await interaction.reply(args.get("input"));
 };
