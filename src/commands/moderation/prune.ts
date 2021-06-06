@@ -2,31 +2,31 @@ import chalk from "chalk";
 import { Collection, CommandInteraction, Message, MessageActionRow,
          MessageButton, MessageComponentInteraction, TextChannel, User } from "discord.js";
 
-import { CommandDataInterface, DaClient } from "../resources/definitions.js";
-import { botLog } from "../resources/automaton.js";
-import { fCols } from "../resources/colours.js";
+import { CommandDataInterface, DaClient } from "../../resources/definitions.js";
+import { botLog } from "../../resources/automaton.js";
+import { fCols } from "../../resources/colours.js";
 
 const { fGreen } = fCols;
 
 const data: CommandDataInterface = {
     name: "prune",
-    description: "slett halalutrrh",
+    description: "Slett opptil 100 meldinger i en kanal fra samme server",
     options: [
         {
             name: "antall",
             type: "INTEGER",
-            description: "hvor mange meldinger",
+            description: "Hvor mange meldinger",
             required: true
         },
         {
             name: "kar",
             type: "USER",
-            description: "hvem å slette meldinger til"
+            description: "Hvem å slette meldinger til"
         },
         {
             name: "kanal",
             type: "CHANNEL",
-            description: "hvor å slette meldinger"
+            description: "Hvor å slette meldinger"
         }
     ]
 }

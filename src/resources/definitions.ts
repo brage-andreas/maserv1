@@ -19,8 +19,8 @@ interface CommandDataInterface {
 }
 
 interface CommandInterface extends CommandDataInterface {
-    
     default: ApplicationCommandData;
+    category: string;
     run(client: DaClient, interaction: CommandInteraction, args: Collection<string, any>): void;
 }
 
