@@ -33,7 +33,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
         commandData.options?.forEach(option => {
             printArray.push(option.required ? option.name : `<${option.name}>`);
 
-            const optionStr: string = `• ${option.required ? "R " : ""}${option.name} (${option.type.toLowerCase()}) - ${option.description}`;
+            const optionStr: string = `• ${option.required ? "R " : ""}${option.name} (${option.type.toString().toLowerCase()}) - ${option.description}`;
             optionsInfo.push(optionStr);
         });
 
