@@ -20,7 +20,7 @@ export default data;
 export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, any>) {
     const { guild, user } = interaction;
     const targetCmd: string | undefined = args.get("kommando");
-    const typeTable: any = { // err on 46 if not type any
+    const typeTable: any = { // err on 49 if not type any
         "STRING": "string",
         "INTEGER": "tall",
         "BOOLEAN": "sant/usant",
@@ -54,63 +54,31 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
         interaction.editReply({ embeds: [oneCmdEmbed] });
     }
     
-    else {
-        
+    else { 
         const allCmdsEmbed = new MessageEmbed()
         .setTitle(`**Kommandoer** (${guild})`)
         .setColor(colours.yellow)
         .setAuthor(user.tag, user.displayAvatarURL());
         
         const getCategoryString = (category: string): string => {
-            const knownCategoryTable = new Map({
+            const knownCategoryTable: Map<string, string> = new Map(Object.entries({
                 "information": "ehh #stalker much ROFL",
                 "moderation" : "karen da #managre",
                 "other"      : "xD YDDCD (ya do da command doe) ROFL"
-            });
-            }
+            }));
 
-            knownCategoryTable[category] || category.toUpperCase()
+            return knownCategoryTable.get(category) || category.toUpperCase()
         }
 
         const allCategories: Set<string> = new Set(client.commands.map(cmd => cmd.category));
         allCategories.forEach((category: string) => {
             const cmds = client.commands
                          .filter(cmd => cmd.category === category)
-                         .array()
+                         .array() // collection map has no index in loop
                          .map((cmd, i) => `\`${i+1 < 10 ? "0"+(i+1) : i+1}\` ${cmd.default.name}`);
-            allCmdsEmbed.addField(, cmds.join("\n"));
+            allCmdsEmbed.addField(getCategoryString(category), cmds.join("\n"));
         });
         
         interaction.editReply({ embeds: [allCmdsEmbed] });
     }
 };
-
-/*
-
-    /NAME OPTIONS1 OPTIONS2
-    * R Options 1 (TYPE) - DESCRIPTION
-    * Options 2 (TYPE) - DESCRIPTION
-
-Collection(3) [Map] {
-  'help' => [Module: null prototype] {
-    default: {
-      name: 'help',
-      description: 'sender ræl om kommandoer',
-      options: [Array]
-    },
-    run: [AsyncFunction: run]
-  },
-  'say' => [Module: null prototype] {
-    default: { name: 'say', description: 'halalutrrh', options: [Array] },
-    run: [AsyncFunction: run]
-  },
-  'prune' => [Module: null prototype] {
-    default: {
-      name: 'prune',
-      description: 'slett halalutrrh',
-      options: [Array]
-    },
-    run: [AsyncFunction: run]
-  }
-}
-*/
