@@ -27,20 +27,23 @@ const twoCharLength = (num: number): string => num<10 ? String("0"+num) : String
 const cache: { authorID: string, authorCh: string } = {authorID: "", authorCh: "" };
 const botLog = async (custom: string, names?: BotLogNamesInterface): Promise<void> => {
     const [sec, min, hour] = time();
+    const same = cache.authorCh === names?.channelName && cache.authorID === names?.authorID;
+    
+    if (!same) {
+        const memberLocationArray: string[] = ["\n "];
 
-    const sameUser = cache.authorCh === names?.channelName && cache.authorID === names?.authorID;
-    const arrayToPrint: string[] = [" "];
+        if (names?.authorName) memberLocationArray.push(chalk `{${fYellow} ${names.authorName}}`);
+        if (names?.authorID) memberLocationArray.push(chalk `{grey (${names.authorID})}`);
+        if (names?.channelName) memberLocationArray.push(chalk `{grey in} #${names.channelName}`);
+        if (names?.guildName) memberLocationArray.push(chalk `{grey of ${names.guildName}}`);
 
-    if (names?.authorName && sameUser) arrayToPrint.push(chalk `{${fYellow} ${names.authorName}}`);
-    if (names?.authorID && sameUser)   arrayToPrint.push(chalk `{grey (${names.authorID}})`);
-    if (names?.channelName)  arrayToPrint.push(chalk `{grey in} #${names.channelName}`);
-    if (names?.guildName)    arrayToPrint.push(chalk `{grey of ${names.guildName}}`);
-    if (arrayToPrint.length) arrayToPrint.push("\n");
+        if (memberLocationArray.length > 1) {
+            console.log(memberLocationArray.join(" "));
+        }
+    }
 
-    arrayToPrint.push(chalk ` {grey ${hour}:${min}:${sec}}`);
-    arrayToPrint.push(custom);
-
-    console.log(arrayToPrint.join(" "));
+    const content: string = chalk `  {grey ${hour}:${min}:${sec}} ${custom}`;
+    console.log(content);
 
     cache.authorCh = names?.channelName || "";
     cache.authorID = names?.authorID    || "";

@@ -3,7 +3,7 @@ import chalk from "chalk";
 
 import { botLog } from "../../resources/automaton.js";
 import { fCols } from "../../resources/colours.js";
-import { DaClient } from "../../resources/definitions.js";
+import { ArgsInterface, DaClient } from "../../resources/definitions.js";
 
 const { fGreen } = fCols;
 
@@ -21,11 +21,11 @@ const data = {
 }
 
 export default data;
-export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, any>) {
+export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, ArgsInterface>) {
     const { user, channel, guild } = interaction;
     const txtChannel: TextChannel | null = channel ? channel as TextChannel : null;
 
-    await interaction.reply(args.get("input"));
+    await interaction.reply(args.get("input") as string);
 
     botLog(chalk `{${fGreen} SAY} {grey > "}${args.get("input")}{grey "}`,
     { authorName: user.tag, authorID: user.id, channelName: txtChannel?.name, guildName: guild?.name });

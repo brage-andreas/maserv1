@@ -19,7 +19,7 @@
   "homepage": "https://github.com/hellobafu/bigbotmaster#readme",
   "dependencies": {
     "chalk": "^4.1.1",
-    "discord.js": "^13.0.0-dev.e980948de55e91e59c9e3293ac76bc645a058a53"
+    "discord.js": "^13.0.0-dev.f5f3f772865ee98bbb44df938e0e71f9f8865c10"
   },
   "devDependencies": {
     "@types/node": "^15.6.2"

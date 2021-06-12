@@ -1,4 +1,5 @@
 import chalk from "chalk";
+import { Collection, GuildEmoji } from "discord.js";
 
 import { fCols } from "../resources/colours.js";
 import { time } from "../resources/automaton.js";
@@ -13,12 +14,15 @@ export async function run(client: DaClient) {
     const tag: (string | undefined) = client.user?.tag;
     const id: (string | undefined) = client.user?.id;
 
-    console.log(chalk `  {grey ┌────────────────────┐}`)
-    console.log(chalk `  {grey │} ${hour}:${min}:${sec} • {${fGreen} Started} {grey │}`);
-    console.log(chalk `  {grey └────────────────────┘}\n`)
-    
-    console.log(chalk `  {grey │} {grey Alias} {${fYellow} ${tag}} {grey (${id})}`);
-    console.log(chalk `  {grey │} {grey In} ${guilds} {grey guilds and} ${channels} {grey channels}`);
+    const privateEmojis: Collection<`${bigint}`, GuildEmoji> = client.emojis.cache.each(emoji => emoji.guild.id === "349183996040577025");
+    privateEmojis.forEach((emoji: GuildEmoji) => {
+        if (!emoji.name) return;
+        client.moji.set(emoji.name, emoji.toString());
+    });
+
+    console.log(chalk `  ${hour}:${min}:${sec} {grey =>} {${fGreen} Started}\n`);
+    console.log(chalk `  {grey Alias} {${fYellow} ${tag}} {grey (${id})}`);
+    console.log(chalk `  {grey In} ${guilds} {grey guilds and} ${channels} {grey channels}`);
 
     console.log("\n");
 }

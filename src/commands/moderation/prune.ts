@@ -2,7 +2,7 @@ import chalk from "chalk";
 import { Collection, CommandInteraction, Message, MessageActionRow,
          MessageButton, MessageComponentInteraction, TextChannel, User } from "discord.js";
 
-import { CommandDataInterface, DaClient } from "../../resources/definitions.js";
+import { ArgsInterface, CommandDataInterface, DaClient } from "../../resources/definitions.js";
 import { botLog } from "../../resources/automaton.js";
 import { fCols } from "../../resources/colours.js";
 
@@ -32,8 +32,8 @@ const data: CommandDataInterface = {
 }
 
 export default data;
-export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, any>) {
-    const { guild } = interaction;
+export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, ArgsInterface>) {
+    const { guild, user } = interaction;
 
     const allowedAmount = (n: number): number => Math.ceil(n) > 100 ? 100 : Math.ceil(n) < 0 ? 0 : Math.ceil(n);
     const getChannel = (id?: `${bigint}`) => {
@@ -43,11 +43,11 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
         return ch as TextChannel;
     }
 
-    await interaction.reply("Jobber...", { ephemeral: true });
+    await interaction.reply({ content: "Jobber...", ephemeral: true });
 
-    const amount: number = allowedAmount(args.get("antall"));
-    const targetID: `${bigint}` = args.get("kar");
-    const channelID: `${bigint}` = args.get("kanal");
+    const amount: number = allowedAmount(args.get("antall") as number);
+    const targetID: `${bigint}` = args.get("kar") as `${bigint}`;
+    const channelID: `${bigint}` = args.get("kanal") as `${bigint}`;
 
     const target: User | null = targetID ? await client.users.fetch(targetID) : null;
     const channel: TextChannel = getChannel(channelID);
@@ -63,8 +63,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
             [ new MessageButton().setCustomID("nei").setLabel("Nei").setStyle("DANGER") ]
         );
 
-        // Promise<any>?
-        const query = await interaction.editReply(`Sikker på at du vil slette ${msgsToDelete.size} meldinger${targetStr}${channelStr}`, { components: [row] }) as Message;
+        const query: Message = await interaction.editReply({ content: `Sikker på at du vil slette ${msgsToDelete.size} meldinger${targetStr}${channelStr}`, components: [row] }) as Message;
 
         const filter = (interaction: MessageComponentInteraction) => interaction.customID === "ja" || interaction.customID === "nei";
         const collector = query.createMessageComponentInteractionCollector(filter, { time: 15000 });
@@ -72,10 +71,10 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
         collector.on("collect", (collectedInteraction: MessageComponentInteraction) => {
             if (collectedInteraction.customID === "ja") {
                 channel.bulkDelete(msgsToDelete, true).then((messages: Collection<`${bigint}`, Message>) => {
-                    interaction.editReply("Gjort!", { components: [] });
+                    interaction.editReply({ content: "Gjort!", components: [] });
                     
                     botLog(chalk `{${fGreen} PRUNE} {grey > Deleted} ${messages.size} {grey messages}`,
-                    { authorName: interaction.user.tag, authorID: interaction.user.id, channelName: channel.name, guildName: channel.guild.name });
+                    { authorName: user.tag, authorID: user.id, channelName: channel.name, guildName: guild?.name });
                 });
                 collector.stop("fromCollected")
             } else
@@ -86,15 +85,9 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
         });
 
         collector.on("end", (collected: Collection<string, MessageComponentInteraction>, reason: string) => {
-            if (reason === "fromCollected") {
-                interaction.editReply("Okay!", { components: [] });
-            }
-            
-            else {    
-                interaction.editReply("Tidsavbrudt", { components: [] });
-            }
+            if (reason === "fromCollected") interaction.editReply({ content: "Okay!", components: [] });
 
-            return;
+            else interaction.editReply({ content: "Tidsavbrudt", components: [] });
         });
     });
 };

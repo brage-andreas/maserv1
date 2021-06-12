@@ -1,7 +1,21 @@
 import { ApplicationCommandData, Client, Collection, CommandInteraction } from "discord.js";
+import { cols, fCols } from "./colours.js";
 
 class DaClient extends Client {
     commands = new Collection<string, CommandInterface>();
+    moji = new Collection<string, string>();
+    colours = cols;
+    formattedColours = fCols;
+    
+    mojis(...mojis: string[]): string[] {
+        const emojiArray: string[] = [];
+        mojis.forEach(emoji => {
+            const em = this.emojis.cache.find(em => em.name === emoji);
+            if (em) emojiArray.push(em.toString());
+        });
+
+        return emojiArray;
+    }
 }
 
 interface CommandOptionsInterface {
@@ -21,7 +35,7 @@ interface CommandDataInterface {
 interface CommandInterface extends CommandDataInterface {
     default: ApplicationCommandData;
     category: string;
-    run(client: DaClient, interaction: CommandInteraction, args: Collection<string, any>): void;
+    run(client: DaClient, interaction: CommandInteraction, args: Collection<string, ArgsInterface>): void;
 }
 
 interface BotLogNamesInterface {
@@ -31,4 +45,6 @@ interface BotLogNamesInterface {
     authorID?: string;
 }
 
-export { DaClient, CommandOptionsInterface, CommandDataInterface, CommandInterface, BotLogNamesInterface }
+type ArgsInterface = (string | number | boolean | undefined);
+
+export { DaClient, CommandOptionsInterface, CommandDataInterface, CommandInterface, BotLogNamesInterface, ArgsInterface }
