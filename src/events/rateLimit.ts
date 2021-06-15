@@ -12,13 +12,13 @@ interface rateLimitObjectInterface {
 export async function run(client: DaClient, limitObject: rateLimitObjectInterface) {
     console.log([
         `\n\n`,
-        `  <RATE LIMITED>:`,
-        `      Timeout: ${limitObject.timeout}`,
+        `  <AVOIDING RATE LIMIT>:`,
+        `      Timeout: ${limitObject.timeout} ms`,
         `      ..Limit: ${limitObject.limit}`,
         `      .Method: ${limitObject.method}`,
         `      ...Path: ${limitObject.path}`,
         `      ..Route: ${limitObject.route}`,
-        `      .Global: ${limitObject.global}`,
+        `      .Global: ${limitObject.global.toString().toUpperCase()}`,
         `\n\n`
     ].join("\n"));
 }

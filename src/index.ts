@@ -6,6 +6,12 @@ import { token } from "./resources/settings.js";
 
 process.stdout.write("\x1Bc\n"); // clears terminal, console.clear() doesn't fully clear it
 
+const x = `ghgg
+huoho
+hhhjj
+uj`;
+console.log(x);
+
 const client = new DaClient({ intents: ["GUILDS", "GUILD_MESSAGES"] });
 
 const getJSFiles = (dir: string, subfolder: boolean = false): Map<string, string[]> | string[] => {
