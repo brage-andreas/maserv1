@@ -1,24 +1,29 @@
-import { Collection, CommandInteraction } from "discord.js";
+import { Collection, CommandInteraction, TextChannel } from "discord.js";
 import chalk from "chalk";
 
-import { DaClient } from "../../resources/definitions.js";
+import { DaClient, ArgsInterface } from "../../resources/definitions.js";
 import { botLog } from "../../resources/automaton.js";
 
 const data = {
-    name: "ping",
-    description: "sender ping",
+    name: "",
+    description: "",
     options: [
         {
-            name: "full",
-            type: "BOOLEAN",
-            description: "mye ræl?"
+            name: "",
+            type: "",
+            description: ""
         }
     ]
 }
 
 export default data;
-export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, any>) {
+export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, ArgsInterface>) {
     const { fGreen } = client.formattedColours;
+    const { user, guild } = interaction;
+    const channel = interaction.channel as TextChannel;
 
-    botLog(chalk `{${fGreen} COMMAND} {grey > USED COMMAND}`);
+    
+
+    botLog(chalk `{${fGreen} COMMAND} {grey > Text}`,
+    { authorName: user.tag, authorID: user.id, channelName: channel.name, guildName: guild?.name });
 };
