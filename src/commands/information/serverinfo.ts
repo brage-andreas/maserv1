@@ -2,7 +2,7 @@ import { Collection, CommandInteraction, GuildChannel, MessageEmbed } from "disc
 import chalk from "chalk";
 
 import { DaClient, ArgsInterface } from "../../resources/definitions.js";
-import { botLog, parseDates } from "../../resources/automaton.js";
+import { botLog, parseDate } from "../../resources/automaton.js";
 
 const data = {
     name: "serverinfo",
@@ -20,10 +20,10 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
     if (!guild || !guild.available) return interaction.editReply({ content: "Hmm. Noe gikk galt." });
 
     await guild.members.fetch()
-    const { createdAt, channels, name, description, id, memberCount, roles } = guild;
+    const { createdTimestamp, channels, name, description, id, memberCount, roles } = guild;
     const owner = await guild.fetchOwner();
 
-    const { made } = parseDates({ created: createdAt });
+    const made = parseDate(createdTimestamp);
     
     const oldestChannel = (chl: Collection<`${bigint}`, GuildChannel>) => chl.sort((a: GuildChannel, b:GuildChannel) => a.createdTimestamp-b.createdTimestamp).first();
     

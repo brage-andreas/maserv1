@@ -1,8 +1,9 @@
 import { readdirSync } from "fs";
+import dotenv from "dotenv"
 import chalk from "chalk";
+dotenv.config({ path: "../.env" });
 
 import { DaClient } from "./resources/definitions.js";
-import { token } from "./resources/settings.js";
 
 process.stdout.write("\x1Bc\n"); // clears terminal, console.clear() doesn't fully clear it
 
@@ -56,4 +57,4 @@ eventFiles.forEach(async (file: string) => {
 
 
 
-client.login(token);
+client.login(process.env.TOKEN);

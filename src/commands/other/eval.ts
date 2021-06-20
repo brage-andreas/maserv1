@@ -1,3 +1,4 @@
+import Discord from "discord.js";
 import { Collection, CommandInteraction, TextChannel } from "discord.js";
 import chalk from "chalk";
 
@@ -30,12 +31,14 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
     try {
         const evaluated = await eval(`( async () => { ${code} })()`);
         interaction.editReply(`Output: \`\`\`js\n${evaluated}\`\`\``);
+        
         botLog(chalk `{${fGreen} EVAL} {grey > Output: "}${evaluated}{grey "}`);
     }
     
     catch (err) {
         const errEmoji = client.moji.get("err");
         interaction.editReply(`${errEmoji} Error: \`\`\`js\n${err}\n\`\`\``);
+        
         botLog(chalk `{${fGreen} EVAL} {grey > Error: "}${err}{grey "}`,
         { authorName: user.tag, authorID: user.id, channelName: channel.name, guildName: guild?.name });
     }

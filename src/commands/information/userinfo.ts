@@ -2,7 +2,7 @@ import { Collection, CommandInteraction, GuildMember, MessageEmbed, TextChannel 
 import chalk from "chalk";
 
 import { DaClient, ArgsInterface } from "../../resources/definitions.js";
-import { botLog, parseDates } from "../../resources/automaton.js";
+import { botLog, parseDate } from "../../resources/automaton.js";
 
 const data = {
     name: "userinfo",
@@ -50,9 +50,8 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
     const roles = member.roles.cache.filter(r => r.name !== "@everyone").map(r => r.toString());
     const avatar = user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 });
     const status = getStatus(member);
-    const dates = parseDates({ joined: member.joinedAt, created: user.createdAt });
-    const came = dates?.came;
-    const made = dates?.made;
+    const came = parseDate(member.joinedTimestamp);
+    const made = parseDate(user.createdTimestamp);
 
     const infoEmbed = new MessageEmbed()
     .setColor(member.displayHexColor === "#000000" || member.displayHexColor === "#ffffff" ? "RANDOM" : member.displayHexColor)

@@ -1,4 +1,4 @@
-import { ApplicationCommandData, Message } from "discord.js";
+import { ApplicationCommandData, Message, MessageEmbed } from "discord.js";
 import { DaClient } from "../resources/definitions.js";
 
 export async function run(client: DaClient, msg: Message) {
@@ -20,6 +20,22 @@ export async function run(client: DaClient, msg: Message) {
 
         msg.delete();
         await guild.commands.set([]);
+    }
+
+    if (content === "example") {
+        if (!guild) return;
+
+        msg.delete();
+        const embed = new MessageEmbed()
+        .setTitle("TITLE")
+        .setColor(client.colours.yellow)
+        .setURL("https://google.com")
+        .setAuthor("Author", client.user?.displayAvatarURL())
+        .setDescription("Description")
+        .setTimestamp()
+        .addField("Title", "Content")
+
+        msg.channel.send({ embed: embed })
     }
 
     /*if (content === "lol") {
