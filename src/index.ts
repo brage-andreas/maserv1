@@ -5,7 +5,9 @@ dotenv.config({ path: "../.env" });
 
 import { DaClient } from "./resources/definitions.js";
 
+
 process.stdout.write("\x1Bc\n"); // clears terminal, console.clear() doesn't fully clear it
+
 
 const client = new DaClient({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_MEMBERS", "GUILD_PRESENCES"] });
 
@@ -33,7 +35,6 @@ const getJSFiles = (dir: string, subfolder: boolean = false): Map<string, string
 }
 
 
-
 const commandFiles = getJSFiles("./commands", true) as Map<string, string[]>;
 console.log(chalk `  {grey Loading} ${commandFiles.size} {grey commands...}`);
 
@@ -52,9 +53,9 @@ eventFiles.forEach(async (file: string) => {
     const eventFile = await import(`./events/${file}`);
     const eventFileName = file.split(".")[0];
 
+    if (!eventFileName) return;
     if (eventFile) client.on(eventFileName, (...args: any) => eventFile.run(client, ...args))
 });
 
 
-
-client.login(process.env.TOKEN);
+void client.login(process.env.TOKEN);
