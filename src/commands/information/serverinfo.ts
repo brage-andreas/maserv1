@@ -9,7 +9,7 @@ const data = {
     description: "Sender en haug med ræl om inn server"
 }
 
-export default data;
+export { data };
 export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, ArgsInterface>) {
     const { fGreen } = client.formattedColours;
     const { yellow } = client.colours;

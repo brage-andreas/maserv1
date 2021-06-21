@@ -31,7 +31,7 @@ const data: CommandDataInterface = {
     ]
 }
 
-export default data;
+export { data };
 export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, ArgsInterface>) {
     const { guild, user } = interaction;
 

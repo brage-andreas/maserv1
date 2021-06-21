@@ -20,7 +20,7 @@ const data = {
     ]
 }
 
-export default data;
+export { data };
 export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, ArgsInterface>) {
     const { user, channel, guild } = interaction;
     const txtChannel: TextChannel | null = channel ? channel as TextChannel : null;

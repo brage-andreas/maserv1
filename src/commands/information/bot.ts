@@ -9,7 +9,7 @@ const data = {
     description: "Sender masse ræl om botten"
 }
 
-export default data;
+export { data };
 export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, ArgsInterface>) {
     const { fGreen } = client.formattedColours;
     const { user, guild } = interaction;
@@ -35,17 +35,17 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
     const roughUserCount = client.guilds.cache.reduce((count, guild) => count + guild.memberCount, 0);
 
     const infoEmbed = new MessageEmbed()
-    .setTitle(`${interaction.guild?.me?.displayName.toUpperCase() || "omagawd min infof xD"}`)
-    .setURL("https://youtube.com")
+    .setAuthor(`${interaction.guild?.me?.displayName.toUpperCase() || "omagawd min infof xD"}`)
+    .setThumbnail(`${client.user?.displayAvatarURL()}` || "")
     .setColor(client.colours.yellow)
     .addField("Platform", `${platform}`)
-    .addField("Spec", `\`${(heapUsed/10**6).toFixed(2)}\`/\`${(heapTotal/10**6).toFixed(2)}\` MB,\nmed \`${systemCPUTime}\` μs system/CPU brukt per clockcycle`)
+    .addField("Spec", `\`${(heapUsed/10**6).toFixed(2)}\`/\`${(heapTotal/10**6).toFixed(2)}\` MB,\nmed \`${systemCPUTime}\` μs system-CPU brukt per clockcycle`)
     .addField("Uptime", `${Math.ceil(uptime)} sekunder`)
     .addField("Servere og kanaler", `${guilds} servere og ${channels} kanaler`)
     .addField("Brukere (ca.)", `${roughUserCount} stykker`);
 
     interaction.reply({ embeds: [infoEmbed] });
-
+    
     botLog(chalk `{${fGreen} BOT} {grey > Text}`,
     { authorName: user.tag, authorID: user.id, channelName: channel.name, guildName: guild?.name });
 };

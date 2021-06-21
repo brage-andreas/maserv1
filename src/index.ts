@@ -41,7 +41,7 @@ console.log(chalk `  {grey Loading} ${commandFiles.size} {grey commands...}`);
 commandFiles.forEach(async (filesInFolder: string[], folder: string) => {
     filesInFolder.forEach(async (file: string) => {
         const cmdFile = await import(`./commands/${folder}/${file}`);
-        client.commands.set(cmdFile.default.name, { ...cmdFile, category: folder});
+        client.commands.set(cmdFile.data.name, { ...cmdFile, category: folder});
     });
 });
 
@@ -49,12 +49,12 @@ commandFiles.forEach(async (filesInFolder: string[], folder: string) => {
 const eventFiles = getJSFiles("./events") as string[];
 console.log(chalk `  {grey Loading} ${eventFiles.length} {grey events...}\n`);
 
-eventFiles.forEach(async (file: string) => {
-    const eventFile = await import(`./events/${file}`);
-    const eventFileName = file.split(".")[0];
+eventFiles.forEach(async (fullFileName: string) => {
+    const file = await import(`./events/${fullFileName}`);
+    const fileName = fullFileName.split(".")[0];
 
-    if (!eventFileName) return;
-    if (eventFile) client.on(eventFileName, (...args: any) => eventFile.run(client, ...args))
+    if (!fileName) return;
+    if (file) client.on(fileName, (...args: any) => file.run(client, ...args))
 });
 
 

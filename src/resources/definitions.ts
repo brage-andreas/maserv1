@@ -7,14 +7,11 @@ class DaClient extends Client {
     colours = cols;
     formattedColours = fCols;
     
-    mojis(...mojis: string[]): string[] {
-        const emojiArray: string[] = [];
-        mojis.forEach(emoji => {
+    mojis(...mojis: string[]): (string | undefined)[] {
+        return mojis.map(emoji => {
             const em = this.emojis.cache.find(em => em.name === emoji);
-            if (em) emojiArray.push(em.toString());
+            if (em) return em.toString();
         });
-
-        return emojiArray;
     }
 }
 

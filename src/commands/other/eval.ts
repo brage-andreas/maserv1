@@ -17,7 +17,7 @@ const data = {
     ]
 }
 
-export default data;
+export { data };
 export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, ArgsInterface>) {
     const { fGreen } = client.formattedColours;
     const { user, guild } = interaction;
