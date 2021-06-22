@@ -63,7 +63,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
             [ new MessageButton().setCustomID("nei").setLabel("Nei").setStyle("DANGER") ]
         );
 
-        const query: Message = await interaction.editReply({ content: `Sikker på at du vil slette ${msgsToDelete.size} meldinger${targetStr}${channelStr}`, components: [row] }) as Message;
+        const query: Message = await interaction.editReply({ content: `Sikker på at du vil slette ${msgsToDelete.size} meldinger${targetStr}${channelStr}?`, components: [row] }) as Message;
 
         const filter = (interaction: MessageComponentInteraction) => interaction.customID === "ja" || interaction.customID === "nei";
         const collector = query.createMessageComponentInteractionCollector(filter, { time: 15000 });
