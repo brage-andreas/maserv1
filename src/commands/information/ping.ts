@@ -1,13 +1,13 @@
-import { Collection, CommandInteraction, Message } from "discord.js";
+import { ApplicationCommandData, Collection, CommandInteraction, Message } from "discord.js";
 import chalk from "chalk";
 
-import { ArgsInterface, DaClient } from "../../resources/definitions.js";
+import { DaClient } from "../../resources/definitions.js";
 import { botLog } from "../../resources/automaton.js";
 import { fCols } from "../../resources/colours.js";
 
 const { fGreen } = fCols;
 
-const data = {
+const data: ApplicationCommandData = {
     name: "ping",
     description: "Sender ping",
     options: [
@@ -20,7 +20,7 @@ const data = {
 }
 
 export { data };
-export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, ArgsInterface>) {
+export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, unknown>) {
     interaction.reply("...");
 
     const reply = await interaction.fetchReply() as Message;

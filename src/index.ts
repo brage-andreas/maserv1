@@ -1,18 +1,17 @@
 import { readdirSync } from "fs";
 import dotenv from "dotenv"
 import chalk from "chalk";
-dotenv.config({ path: "../.env" });
+dotenv.config();
 
-import { DaClient } from "./resources/definitions.js";
+import { Command, DaClient } from "./resources/definitions.js";
 
 
 process.stdout.write("\x1Bc\n"); // clears terminal, console.clear() doesn't fully clear it
 
-
 const client = new DaClient({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_MEMBERS", "GUILD_PRESENCES"] });
 
 const getJSFiles = (dir: string, subfolder: boolean = false): Map<string, string[]> | string[] => {
-    const allItemsInDir: string[] = readdirSync(dir);
+    const allItemsInDir: string[] = readdirSync(new URL(`./${dir}`, import.meta.url));
     
     if (!subfolder) {
         const jsFilesInFolder = allItemsInDir.filter((filename: string) => filename.endsWith(".js"));
@@ -23,7 +22,7 @@ const getJSFiles = (dir: string, subfolder: boolean = false): Map<string, string
         const filesToReturn: Map<string, string[]> = new Map;
 
         allItemsInDir.forEach(folder => {
-            const allFilesInDir = readdirSync(`${dir}/${folder}`);
+            const allFilesInDir = readdirSync(new URL(`./${dir}/${folder}`, import.meta.url));
             const jsFilesInFolder = allFilesInDir.filter((filename: string) => filename.endsWith(".js"));
     
             filesToReturn.set(folder, jsFilesInFolder);
@@ -40,8 +39,8 @@ console.log(chalk `  {grey Loading} ${commandFiles.size} {grey commands...}`);
 
 commandFiles.forEach(async (filesInFolder: string[], folder: string) => {
     filesInFolder.forEach(async (file: string) => {
-        const cmdFile = await import(`./commands/${folder}/${file}`);
-        client.commands.set(cmdFile.data.name, { ...cmdFile, category: folder});
+        const cmdFile: Command = await import(new URL(`./commands/${folder}/${file}`, import.meta.url).toString());
+        client.commands.set(cmdFile.data.name, { ...cmdFile, category: folder });
     });
 });
 
@@ -50,7 +49,7 @@ const eventFiles = getJSFiles("./events") as string[];
 console.log(chalk `  {grey Loading} ${eventFiles.length} {grey events...}\n`);
 
 eventFiles.forEach(async (fullFileName: string) => {
-    const file = await import(`./events/${fullFileName}`);
+    const file = await import(new URL(`./events/${fullFileName}`, import.meta.url).toString());
     const fileName = fullFileName.split(".")[0];
 
     if (!fileName) return;

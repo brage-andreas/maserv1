@@ -1,16 +1,16 @@
-import { Collection, CommandInteraction, GuildChannel, MessageEmbed } from "discord.js";
+import { ApplicationCommandData, Collection, CommandInteraction, GuildChannel, MessageEmbed } from "discord.js";
 import chalk from "chalk";
 
-import { DaClient, ArgsInterface } from "../../resources/definitions.js";
+import { DaClient } from "../../resources/definitions.js";
 import { botLog, parseDate } from "../../resources/automaton.js";
 
-const data = {
+const data: ApplicationCommandData = {
     name: "serverinfo",
     description: "Sender en haug med ræl om inn server"
 }
 
 export { data };
-export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, ArgsInterface>) {
+export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, unknown>) {
     const { fGreen } = client.formattedColours;
     const { yellow } = client.colours;
     const { guild } = interaction;

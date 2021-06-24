@@ -1,32 +1,33 @@
 import chalk from "chalk";
-import { MessageEmbed } from "discord.js";
 
 import { cols, fCols } from "./colours.js"
-import { BotLogNamesInterface } from "./definitions.js";
 
 const { red, green, yellow } = cols;
 const { fRed, fGreen, fYellow } = fCols;
 
 const twoCharLength = (num: number): string => num<10 ? String("0"+num) : String(num);
 
+interface BotLogNames { guildName?: string; channelName?: string; authorName?: string; authorID?: string; }
+
 /**
  * @returns sec, min, hour [ ]
  */
- const time = (): string[] => {
+const time = (): string[] => {
     const now: Date = new Date;
     
-    const sec: string = twoCharLength(now.getSeconds());
-    const min: string = twoCharLength(now.getMinutes());
-    const hour: string = twoCharLength(now.getHours());
+    const sec = twoCharLength(now.getSeconds());
+    const min = twoCharLength(now.getMinutes());
+    const hour = twoCharLength(now.getHours());
     
     return [sec, min, hour];
 }
 
 
 
-// botLog(chalk `{${fGreen} COMMAND} {grey > MESSAGE}`);
 const cache: { authorID: string, authorCh: string } = {authorID: "", authorCh: "" };
-const botLog = async (custom: string, names?: BotLogNamesInterface): Promise<void> => {
+
+// botLog(chalk `{${fGreen} COMMAND} {grey > MESSAGE}`);
+const botLog = async (custom: string, names?: BotLogNames): Promise<void> => {
     const [sec, min, hour] = time();
     const same = cache.authorCh === names?.channelName && cache.authorID === names?.authorID;
     
@@ -43,7 +44,7 @@ const botLog = async (custom: string, names?: BotLogNamesInterface): Promise<voi
         }
     }
 
-    const content: string = chalk `  {grey ${hour}:${min}:${sec}} ${custom}`;
+    const content = chalk `  {grey ${hour}:${min}:${sec}} ${custom}`;
     console.log(content);
 
     cache.authorCh = names?.channelName || "";

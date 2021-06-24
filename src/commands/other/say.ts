@@ -3,7 +3,7 @@ import chalk from "chalk";
 
 import { botLog } from "../../resources/automaton.js";
 import { fCols } from "../../resources/colours.js";
-import { ArgsInterface, DaClient } from "../../resources/definitions.js";
+import { DaClient } from "../../resources/definitions.js";
 
 const { fGreen } = fCols;
 
@@ -21,7 +21,7 @@ const data = {
 }
 
 export { data };
-export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, ArgsInterface>) {
+export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, unknown>) {
     const { user, channel, guild } = interaction;
     const txtChannel: TextChannel | null = channel ? channel as TextChannel : null;
 

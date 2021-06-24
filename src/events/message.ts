@@ -11,7 +11,7 @@ export async function run(client: DaClient, msg: Message) {
         if (!guild) return;
 
         msg.delete();
-		const data: ApplicationCommandData[] = client.commands.map(cmd => cmd.default);
+		const data: ApplicationCommandData[] = client.commands.map(cmd => cmd.data);
 		await guild.commands.set(data);
     }
     
@@ -20,22 +20,6 @@ export async function run(client: DaClient, msg: Message) {
 
         msg.delete();
         await guild.commands.set([]);
-    }
-
-    if (content === "example") {
-        if (!guild) return;
-
-        msg.delete();
-        const embed = new MessageEmbed()
-        .setTitle("TITLE")
-        .setColor(client.colours.yellow)
-        .setURL("https://google.com")
-        .setAuthor("Author", client.user?.displayAvatarURL())
-        .setDescription("Description")
-        .setTimestamp()
-        .addField("Title", "Content")
-
-        msg.channel.send({ embed: embed })
     }
 
     /*if (content === "lol") {

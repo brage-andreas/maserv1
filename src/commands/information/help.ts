@@ -1,11 +1,11 @@
 import chalk from "chalk";
-import { Collection, CommandInteraction, MessageEmbed } from "discord.js";
+import { ApplicationCommandData, Collection, CommandInteraction, MessageEmbed } from "discord.js";
 
 import { botLog } from "../../resources/automaton.js";
-import { ArgsInterface, DaClient } from "../../resources/definitions.js";
+import { DaClient } from "../../resources/definitions.js";
 import { cols as colours } from "../../resources/colours.js";
 
-const data = {
+const data: ApplicationCommandData = {
     name: "help",
     description: "Sender ræl om kommandoer",
     options: [
@@ -18,10 +18,12 @@ const data = {
 }
 
 export { data };
-export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, ArgsInterface>) {
+export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, unknown>) {
+    console.log(interaction);
+    console.log(args);
     const { fGreen } = client.formattedColours;
     const { guild, user, channel } = interaction;
-    const targetCmd = args.get("kommando");
+    const targetCmd = args.get("kommando") as string;
 
     const typeTable: any = { // err on 49 if not type any
         "STRING": "string",
@@ -41,7 +43,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
         const cmd = client.commands.get(targetCmd as string);
         if (!cmd) return interaction.reply({ content: `Finner ikke kommandoen i ${guild?.name}`, allowedMentions: { repliedUser: false }, ephemeral: true })
 
-        const commandData = cmd.default;
+        const commandData = cmd.data;
         const optionsMap = commandData.options?.map(opt => opt.required ? opt.name : `<${opt.name}>`).join(", ");
 
         const oneCmdEmbed = new MessageEmbed()
@@ -82,7 +84,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
             const cmds = client.commands
                          .filter(cmd => cmd.category === category)
                          .array() // collection map has no index in loop
-                         .map((cmd, i) => `\`${i+1 < 10 ? "0"+(i+1) : i+1}\` ${cmd.default.name}`);
+                         .map((cmd, i) => `\`${i+1 < 10 ? "0"+(i+1) : i+1}\` ${cmd.data.name}`);
             allCmdsEmbed.addField(getCategoryString(category), cmds.join("\n"));
         });
         

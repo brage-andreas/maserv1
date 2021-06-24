@@ -1,16 +1,16 @@
-import { Collection, CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
+import { ApplicationCommandData, Collection, CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
 import chalk from "chalk";
 
-import { DaClient, ArgsInterface } from "../../resources/definitions.js";
+import { DaClient } from "../../resources/definitions.js";
 import { botLog } from "../../resources/automaton.js";
 
-const data = {
+const data: ApplicationCommandData = {
     name: "bot",
     description: "Sender masse ræl om botten"
 }
 
 export { data };
-export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, ArgsInterface>) {
+export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, unknown>) {
     const { fGreen } = client.formattedColours;
     const { user, guild } = interaction;
     const channel = interaction.channel as TextChannel;

@@ -1,10 +1,10 @@
-import { Collection, CommandInteraction, GuildMember, MessageEmbed, TextChannel } from "discord.js";
+import { ApplicationCommandData, Collection, CommandInteraction, GuildMember, MessageEmbed, TextChannel } from "discord.js";
 import chalk from "chalk";
 
-import { DaClient, ArgsInterface } from "../../resources/definitions.js";
+import { DaClient } from "../../resources/definitions.js";
 import { botLog, parseDate } from "../../resources/automaton.js";
 
-const data = {
+const data: ApplicationCommandData = {
     name: "userinfo",
     description: "Sender en haug med ræl om inn fyr",
     options: [
@@ -18,7 +18,7 @@ const data = {
 
 
 export { data };
-export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, ArgsInterface>) {
+export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, unknown>) {
     const { fGreen } = client.formattedColours;
     const { guild } = interaction;
     const channel = interaction.channel as TextChannel;

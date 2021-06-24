@@ -1,11 +1,21 @@
-import { ApplicationCommandData, Client, Collection, CommandInteraction } from "discord.js";
+import { ApplicationCommandData, ApplicationCommandOptionData, Client, Collection, CommandInteraction } from "discord.js";
 import { cols, fCols } from "./colours.js";
 
 class DaClient extends Client {
-    commands = new Collection<string, CommandInterface>();
-    moji = new Collection<string, string>();
+    commands = new Collection<string, Command>();
     colours = cols;
     formattedColours = fCols;
+    
+    get moji() {
+        const emojis = new Collection<string, string>();
+
+        this.emojis.cache.forEach(em => {
+            if (!em.name) return;
+            emojis.set(em.name, em.toString());
+        })
+
+        return emojis;
+    }
     
     mojis(...mojis: string[]): (string | undefined)[] {
         return mojis.map(emoji => {
@@ -15,33 +25,16 @@ class DaClient extends Client {
     }
 }
 
-interface CommandOptionsInterface {
-    name: string;
-    type: "SUB_COMMAND" | "SUB_COMMAND_GROUP" | "STRING" | "INTEGER" | "BOOLEAN" | "USER" | "CHANNEL" | "ROLE" | "MENTIONABLE";
-    description: string;
-    required?: boolean;
-    choices?: { name: string, value: string }[] 
-}
-
-interface CommandDataInterface {
+interface Command {
     name: string;
     description: string;
-    options?: CommandOptionsInterface[];
-}
-
-interface CommandInterface extends CommandDataInterface {
-    default: ApplicationCommandData;
+    options?: ApplicationCommandOptionData[];
+    data: ApplicationCommandData;
     category: string;
-    run(client: DaClient, interaction: CommandInteraction, args: Collection<string, ArgsInterface>): void;
+    run(client: DaClient, interaction: CommandInteraction, args: Args): void;
 }
 
-interface BotLogNamesInterface {
-    guildName?: string;
-    channelName?: string;
-    authorName?: string;
-    authorID?: string;
-}
+type Args = Collection<string, (string | number | boolean | undefined)>
 
-type ArgsInterface = (string | number | boolean | undefined);
 
-export { DaClient, CommandOptionsInterface, CommandDataInterface, CommandInterface, BotLogNamesInterface, ArgsInterface }
+export { DaClient, Command, Args }

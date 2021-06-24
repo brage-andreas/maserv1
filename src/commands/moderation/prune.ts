@@ -1,14 +1,14 @@
 import chalk from "chalk";
-import { Collection, CommandInteraction, Message, MessageActionRow,
+import { ApplicationCommandData, Collection, CommandInteraction, Message, MessageActionRow,
          MessageButton, MessageComponentInteraction, TextChannel, User } from "discord.js";
 
-import { ArgsInterface, CommandDataInterface, DaClient } from "../../resources/definitions.js";
+import { DaClient } from "../../resources/definitions.js";
 import { botLog } from "../../resources/automaton.js";
 import { fCols } from "../../resources/colours.js";
 
 const { fGreen } = fCols;
 
-const data: CommandDataInterface = {
+const data: ApplicationCommandData = {
     name: "prune",
     description: "Slett opptil 100 meldinger i en kanal fra samme server",
     options: [
@@ -32,7 +32,7 @@ const data: CommandDataInterface = {
 }
 
 export { data };
-export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, ArgsInterface>) {
+export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, unknown>) {
     const { guild, user } = interaction;
 
     const allowedAmount = (n: number): number => Math.ceil(n) > 100 ? 100 : Math.ceil(n) < 0 ? 0 : Math.ceil(n);
@@ -42,7 +42,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
         if (!id) ch = interaction.channel;
         return ch as TextChannel;
     }
-
+    
     await interaction.reply({ content: "Jobber...", ephemeral: true });
 
     const amount: number = allowedAmount(args.get("antall") as number);

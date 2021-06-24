@@ -3,9 +3,10 @@
   "version": "3.0.0",
   "description": "",
   "type": "module",
+  "main": "./dist/index.js",
   "scripts": {
-    "build": "npm i --prefer-offline --no-audit && npx tsc -p ./ && npm run start",
-    "start": "cd dist && node index.js"
+    "prestart": "tsc",
+    "start": "node ."
   },
   "repository": {
     "type": "git",
@@ -19,7 +20,7 @@
   "homepage": "https://github.com/hellobafu/bigbotmaster#readme",
   "dependencies": {
     "chalk": "^4.1.1",
-    "discord.js": "^13.0.0-dev.f5f3f772865ee98bbb44df938e0e71f9f8865c10",
+    "discord.js": "^13.0.0-dev.1816a93b1b1b2bae47e8651e76fa53699de8421d",
     "dotenv": "^10.0.0"
   },
   "devDependencies": {
