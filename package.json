@@ -21,7 +21,8 @@
   "dependencies": {
     "chalk": "^4.1.1",
     "discord.js": "^13.0.0-dev.1816a93b1b1b2bae47e8651e76fa53699de8421d",
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "pg-promise": "^10.10.2"
   },
   "devDependencies": {
     "@types/node": "^15.6.2"
