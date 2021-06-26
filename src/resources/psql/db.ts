@@ -1,7 +1,7 @@
 import pgpImport from "pg-promise";
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 
-const pgp = pgpImport()
+const pgp = pgpImport();
 
 dotenv.config();
 const conStr = process.env.CONNECTIONSTR;

@@ -8,40 +8,38 @@ import { fCols } from "../../resources/colours.js";
 const { fGreen } = fCols;
 
 const data: ApplicationCommandData = {
-    name: "ping",
-    description: "Sender ping",
-    options: [
-        {
-            name: "full",
-            type: "BOOLEAN",
-            description: "Sender mer info enn vanlig"
-        }
-    ]
-}
+	name: "ping",
+	description: "Sender ping",
+	options: [
+		{
+			name: "full",
+			type: "BOOLEAN",
+			description: "Sender mer info enn vanlig"
+		}
+	]
+};
 
 export { data };
 export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, unknown>) {
-    interaction.reply("...");
+	interaction.reply("...");
 
-    const reply = await interaction.fetchReply() as Message;
-    if (!reply) return interaction.editReply("Noe gikk galt.");
+	const reply = (await interaction.fetchReply()) as Message;
+	if (!reply) return interaction.editReply("Noe gikk galt.");
 
-    const full = args.get("full");
+	const full = args.get("full");
 
-    const heartbeat = client.ws.ping;
-    const absPing = reply.createdTimestamp-interaction.createdTimestamp;
-    const ping = absPing-heartbeat<0 ? absPing-heartbeat*-1 : absPing-heartbeat;
-    
-    if (full) {
-        interaction.editReply(`Ping/absolutt: \`${ping}/${absPing} ms\`\nWS heartbeat: \`${heartbeat} ms\``);
-    }
-    
-    else {
-        const [str1, str2, str3] = client.mojis("strength1", "strength2", "strength3");
-        const emoji = ping > 300 ? str1 : ping > 75 ? str2 : str3;
+	const heartbeat = client.ws.ping;
+	const absPing = reply.createdTimestamp - interaction.createdTimestamp;
+	const ping = absPing - heartbeat < 0 ? absPing - heartbeat * -1 : absPing - heartbeat;
 
-        interaction.editReply(`Ping: ${emoji} ${ping} ms`);
-    }
+	if (full) {
+		interaction.editReply(`Ping/absolutt: \`${ping}/${absPing} ms\`\nWS heartbeat: \`${heartbeat} ms\``);
+	} else {
+		const [str1, str2, str3] = client.mojis("strength1", "strength2", "strength3");
+		const emoji = ping > 300 ? str1 : ping > 75 ? str2 : str3;
 
-    botLog(chalk `{${fGreen} PING}`);
-};
+		interaction.editReply(`Ping: ${emoji} ${ping} ms`);
+	}
+
+	botLog(chalk`{${fGreen} PING}`);
+}
