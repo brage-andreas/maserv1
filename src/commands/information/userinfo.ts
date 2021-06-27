@@ -1,15 +1,7 @@
-import {
-	ApplicationCommandData,
-	Collection,
-	CommandInteraction,
-	GuildMember,
-	MessageEmbed,
-	TextChannel
-} from "discord.js";
-import chalk from "chalk";
+import { ApplicationCommandData, CommandInteraction, GuildMember, MessageEmbed, TextChannel } from "discord.js";
 
-import { DaClient } from "../../resources/definitions.js";
-import { botLog, parseDate } from "../../resources/automaton.js";
+import { Args, DaClient } from "../../resources/definitions.js";
+import { log, parseDate } from "../../resources/automaton.js";
 
 const data: ApplicationCommandData = {
 	name: "userinfo",
@@ -24,8 +16,7 @@ const data: ApplicationCommandData = {
 };
 
 export { data };
-export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, unknown>) {
-	const { fGreen } = client.formattedColours;
+export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
 	const { guild } = interaction;
 	const channel = interaction.channel as TextChannel;
 
@@ -63,11 +54,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 	const made = parseDate(user.createdTimestamp);
 
 	const infoEmbed = new MessageEmbed()
-		.setColor(
-			member.displayHexColor === "#000000" || member.displayHexColor === "#ffffff"
-				? "RANDOM"
-				: member.displayHexColor
-		)
+		.setColor(["#000000", "#ffffff"].includes(member.displayHexColor) ? "RANDOM" : member.displayHexColor)
 		.setThumbnail(avatar)
 		.setTitle(member.displayName)
 		.setURL("https://youtube.com")
@@ -86,10 +73,5 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 
 	interaction.editReply({ embeds: [infoEmbed] });
 
-	botLog(chalk`{${fGreen} USERINFO} {grey > Used on} ${user.tag} {grey (${user.id})}`, {
-		guildName: guild.name,
-		channelName: channel.name,
-		authorID: interaction.user.id,
-		authorName: interaction.user.tag
-	});
+	log.cmd({ cmd: "userinfo", msg: `Used on ${user.tag} (${user.id})` }, { channel, guild, user: interaction.user });
 }

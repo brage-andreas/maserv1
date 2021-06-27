@@ -1,8 +1,7 @@
 import { ApplicationCommandData, Collection, CommandInteraction, TextChannel } from "discord.js";
-import chalk from "chalk";
 
-import { DaClient } from "../../resources/definitions.js";
-import { botLog } from "../../resources/automaton.js";
+import { Args, DaClient } from "../../resources/definitions.js";
+import { log } from "../../resources/automaton.js";
 import { getNick } from "../../resources/psql/query.js";
 
 const data: ApplicationCommandData = {
@@ -19,8 +18,7 @@ const data: ApplicationCommandData = {
 };
 
 export { data };
-export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, unknown>) {
-	const { fGreen } = client.formattedColours;
+export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
 	const { user, guild } = interaction;
 	const channel = interaction.channel as TextChannel;
 
@@ -29,10 +27,5 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 	const input = args.get("query") as string;
 	interaction.reply(JSON.stringify(await getNick(user.id, "486548195137290265")));
 
-	botLog(chalk`{${fGreen} COMMAND} {grey > Text}`, {
-		authorName: user.tag,
-		authorID: user.id,
-		channelName: channel.name,
-		guildName: guild?.name
-	});
+	log.cmd({ cmd: "psql" }, { channel, user, guild });
 }

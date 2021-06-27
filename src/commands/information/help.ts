@@ -1,9 +1,8 @@
-import chalk from "chalk";
-import { ApplicationCommandData, Collection, CommandInteraction, MessageEmbed } from "discord.js";
+import { ApplicationCommandData, Collection, CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
 
-import { botLog } from "../../resources/automaton.js";
-import { DaClient } from "../../resources/definitions.js";
-import { cols as colours } from "../../resources/colours.js";
+import { CMD_TYPES } from "../../resources/constants.js";
+import { Args, DaClient } from "../../resources/definitions.js";
+import { log } from "../../resources/automaton.js";
 
 const data: ApplicationCommandData = {
 	name: "help",
@@ -18,23 +17,9 @@ const data: ApplicationCommandData = {
 };
 
 export { data };
-export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, unknown>) {
-	console.log(interaction);
-	console.log(args);
-	const { fGreen } = client.formattedColours;
+export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
 	const { guild, user, channel } = interaction;
 	const targetCmd = args.get("kommando") as string;
-
-	const typeTable: any = {
-		// err on 49 if not type any
-		STRING: "string",
-		INTEGER: "tall",
-		BOOLEAN: "sant/usant",
-		USER: "bruker (@/ID)",
-		CHANNEL: "kanal (@/ID)",
-		ROLE: "rolle (@/ID)",
-		MENTIONABLE: "@/ID"
-	};
 
 	const [double_right_g, double_right_y] = client.mojis("double_right_g", "double_right_y");
 
@@ -54,29 +39,25 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 
 		const oneCmdEmbed = new MessageEmbed()
 			.setTitle(`**${commandData.name.toUpperCase()}** (${guild})`)
-			.setColor(colours.yellow)
+			.setColor(client.colours.yellow)
 			.setDescription(`${commandData.description}\n\`/${commandData.name.toLowerCase()} ${optionsMap}\``);
 
 		commandData.options?.forEach((option) => {
 			const title: string = option.required
 				? `${double_right_g} ${option.name}`
 				: `${double_right_y} <${option.name}>`;
-			const content: string = `${option.description}\n*${typeTable[option.type]}*`;
+			const content: string = `${option.description}\n*${CMD_TYPES[option.type]}*`;
 
 			oneCmdEmbed.addField(title, content);
 		});
 
 		interaction.editReply({ embeds: [oneCmdEmbed] });
-		botLog(chalk`{${fGreen} HELP} {grey > Sent info about} ${targetCmd}`, {
-			guildName: guild?.name,
-			authorName: user.tag,
-			authorID: user.id,
-			channelName: channel.type === "text" ? channel.name : ""
-		});
+
+		log.cmd({ cmd: "help", msg: `Sent info about ${targetCmd}` }, { channel: channel as TextChannel, guild, user });
 	} else {
 		const allCmdsEmbed = new MessageEmbed()
 			.setTitle(`**Kommandoer** (${guild})`)
-			.setColor(colours.yellow)
+			.setColor(client.colours.yellow)
 			.setAuthor(user.tag, user.displayAvatarURL());
 
 		const getCategoryString = (category: string): string => {
@@ -102,11 +83,6 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 
 		interaction.editReply({ embeds: [allCmdsEmbed] });
 
-		botLog(chalk`{${fGreen} HELP} {grey > Sent all commands}`, {
-			guildName: guild?.name,
-			authorName: user.tag,
-			authorID: user.id,
-			channelName: channel.type === "text" ? channel.name : ""
-		});
+		log.cmd({ cmd: "help", msg: "Sent all commands" }, { channel: channel as TextChannel, guild, user });
 	}
 }

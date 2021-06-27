@@ -1,11 +1,7 @@
-import { ApplicationCommandData, Collection, CommandInteraction, Message } from "discord.js";
-import chalk from "chalk";
+import { ApplicationCommandData, Collection, CommandInteraction, Message, TextChannel } from "discord.js";
 
-import { DaClient } from "../../resources/definitions.js";
-import { botLog } from "../../resources/automaton.js";
-import { fCols } from "../../resources/colours.js";
-
-const { fGreen } = fCols;
+import { Args, DaClient } from "../../resources/definitions.js";
+import { log } from "../../resources/automaton.js";
 
 const data: ApplicationCommandData = {
 	name: "ping",
@@ -20,7 +16,8 @@ const data: ApplicationCommandData = {
 };
 
 export { data };
-export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, unknown>) {
+export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
+	const { channel, guild, user } = interaction;
 	interaction.reply("...");
 
 	const reply = (await interaction.fetchReply()) as Message;
@@ -41,5 +38,5 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 		interaction.editReply(`Ping: ${emoji} ${ping} ms`);
 	}
 
-	botLog(chalk`{${fGreen} PING}`);
+	log.cmd({ cmd: "ping" }, { channel: channel as TextChannel, guild, user });
 }

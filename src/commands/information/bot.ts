@@ -1,8 +1,8 @@
 import { ApplicationCommandData, Collection, CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
-import chalk from "chalk";
 
-import { DaClient } from "../../resources/definitions.js";
-import { botLog } from "../../resources/automaton.js";
+import { Args, DaClient } from "../../resources/definitions.js";
+import { PLATFORMS } from "../../resources/constants.js";
+import { log } from "../../resources/automaton.js";
 
 const data: ApplicationCommandData = {
 	name: "bot",
@@ -10,25 +10,13 @@ const data: ApplicationCommandData = {
 };
 
 export { data };
-export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, unknown>) {
-	const { fGreen } = client.formattedColours;
+export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
 	const { user, guild } = interaction;
 	const channel = interaction.channel as TextChannel;
 
-	const platformTable: { [index: string]: string } = {
-		aix: "AIX",
-		darwin: "Darwin",
-		freebsd: "FreeBSD",
-		linux: "Linux",
-		openbsd: "OpenBSD",
-		sunos: "SunOS",
-		win32: "Windows",
-		android: "Android"
-	};
-
 	const { heapUsed, heapTotal } = process.memoryUsage();
 	const { systemCPUTime } = process.resourceUsage();
-	const platform: string = platformTable[process.platform] || process.platform;
+	const platform: string = PLATFORMS[process.platform] || process.platform;
 	const uptime = process.uptime();
 	const guilds = client.guilds.cache.size;
 	const channels = client.channels.cache.size;
@@ -47,10 +35,5 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 
 	interaction.reply({ embeds: [infoEmbed] });
 
-	botLog(chalk`{${fGreen} BOT} {grey > Text}`, {
-		authorName: user.tag,
-		authorID: user.id,
-		channelName: channel.name,
-		guildName: guild?.name
-	});
+	log.cmd({ cmd: "bot" }, { channel, guild, user });
 }

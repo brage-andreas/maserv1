@@ -1,9 +1,7 @@
-import Discord from "discord.js";
 import { Collection, CommandInteraction, TextChannel } from "discord.js";
-import chalk from "chalk";
 
-import { DaClient } from "../../resources/definitions.js";
-import { botLog } from "../../resources/automaton.js";
+import { Args, DaClient } from "../../resources/definitions.js";
+import { log } from "../../resources/automaton.js";
 
 const data = {
 	name: "eval",
@@ -18,8 +16,7 @@ const data = {
 };
 
 export { data };
-export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, unknown>) {
-	const { fGreen } = client.formattedColours;
+export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
 	const { user, guild } = interaction;
 	const channel = interaction.channel as TextChannel;
 
@@ -32,16 +29,11 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 		const evaluated = await eval(`( async () => { ${code} })()`);
 		interaction.editReply(`Output: \`\`\`js\n${evaluated}\`\`\``);
 
-		botLog(chalk`{${fGreen} EVAL} {grey > Output: "}${evaluated}{grey "}`);
+		log.cmd({ cmd: "eval", msg: `Output: "${evaluated}"` }, { guild, channel, user });
 	} catch (err) {
 		const errEmoji = client.moji.get("err");
 		interaction.editReply(`${errEmoji} Error: \`\`\`js\n${err}\n\`\`\``);
 
-		botLog(chalk`{${fGreen} EVAL} {grey > Error: "}${err}{grey "}`, {
-			authorName: user.tag,
-			authorID: user.id,
-			channelName: channel.name,
-			guildName: guild?.name
-		});
+		log.cmd({ cmd: "eval", msg: `Error: "${err}"` }, { guild, channel, user }, true);
 	}
 }

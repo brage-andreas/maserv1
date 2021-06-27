@@ -1,18 +1,29 @@
 import chalk from "chalk";
+import { Guild, TextChannel, User } from "discord.js";
 
-import { cols, fCols } from "./colours.js";
+import { FGREEN, FRED, FYELLOW } from "./constants.js";
 
-const { red, green, yellow } = cols;
-const { fRed, fGreen, fYellow } = fCols;
+const _twoCharLength = (num: number): string => (num < 10 ? String("0" + num) : String(num));
 
-const twoCharLength = (num: number): string => (num < 10 ? String("0" + num) : String(num));
-
-interface BotLogNames {
-	guildName?: string;
-	channelName?: string;
-	authorName?: string;
-	authorID?: string;
+interface LogOpt {
+	cmd: string;
+	msg?: string;
 }
+
+interface LogFrom {
+	user: User;
+	channel: TextChannel;
+	guild: Guild | null;
+}
+
+interface LogEvent {
+	msg: string;
+	guild: Guild | null;
+}
+
+// -----
+// -----
+// -----
 
 /**
  * @returns sec, min, hour [ ]
@@ -20,38 +31,63 @@ interface BotLogNames {
 const time = (): string[] => {
 	const now: Date = new Date();
 
-	const sec = twoCharLength(now.getSeconds());
-	const min = twoCharLength(now.getMinutes());
-	const hour = twoCharLength(now.getHours());
+	const sec = _twoCharLength(now.getSeconds());
+	const min = _twoCharLength(now.getMinutes());
+	const hour = _twoCharLength(now.getHours());
 
 	return [sec, min, hour];
 };
 
-const cache: { authorID: string; authorCh: string } = { authorID: "", authorCh: "" };
+const _cache = { user: "", channel: "" };
+const log = {
+	cmd: function (opt: LogOpt, from: LogFrom, err = false) {
+		const { cmd, msg } = opt;
+		const { user, channel, guild } = from;
+		const toPrint: string[] = [];
 
-// botLog(chalk `{${fGreen} COMMAND} {grey > MESSAGE}`);
-const botLog = async (custom: string, names?: BotLogNames): Promise<void> => {
-	const [sec, min, hour] = time();
-	const same = cache.authorCh === names?.channelName && cache.authorID === names?.authorID;
+		if (_cache.channel !== channel.id || _cache.user !== user.id) {
+			const fromArray = [];
 
-	if (!same) {
-		const memberLocationArray: string[] = ["\n "];
+			// User
+			fromArray.push(chalk`\n  {${FYELLOW} ${user.tag}} {grey (${user.id})}`);
 
-		if (names?.authorName) memberLocationArray.push(chalk`{${fYellow} ${names.authorName}}`);
-		if (names?.authorID) memberLocationArray.push(chalk`{grey (${names.authorID})}`);
-		if (names?.channelName) memberLocationArray.push(chalk`{grey in} #${names.channelName}`);
-		if (names?.guildName) memberLocationArray.push(chalk`{grey of ${names.guildName}}`);
+			// Channel
+			if (fromArray.length) {
+				fromArray.push(chalk`{grey in} #${channel.name}`);
+			} else {
+				fromArray.push(chalk`  {grey In} {${FYELLOW} #${channel.name}}`);
+			}
 
-		if (memberLocationArray.length > 1) {
-			console.log(memberLocationArray.join(" "));
+			// Guild
+			if (fromArray.length) {
+				fromArray.push(chalk`{grey in} ${guild?.name || "unknown guild"}`);
+			} else {
+				fromArray.push(chalk`  {grey In} {${FYELLOW} ${guild?.name || "unknown guild"}}`);
+			}
+
+			toPrint.push(fromArray.join(" "));
 		}
+
+		toPrint.push(chalk`  {${err ? FRED : FGREEN} ${cmd.toUpperCase()}} ${msg ? chalk`{grey >} ${msg}` : ""}`);
+
+		console.log(toPrint.join("\n"));
+
+		_cache.channel = channel.id;
+		_cache.user = user.id;
+	},
+
+	event: function (opt: LogEvent) {
+		const { guild, msg } = opt;
+		const toPrint = [];
+
+		toPrint.push(guild ? chalk`{${FYELLOW} ${guild.name}}` : chalk`{${FRED} Unknown guild}`);
+		toPrint.push(chalk`${msg}`);
+
+		console.log(toPrint.join("\n"));
+
+		_cache.channel = "";
+		_cache.user = "";
 	}
-
-	const content = chalk`  {grey ${hour}:${min}:${sec}} ${custom}`;
-	console.log(content);
-
-	cache.authorCh = names?.channelName || "";
-	cache.authorID = names?.authorID || "";
 };
 
 const parseDate = (timestamp: number | null): string => {
@@ -59,4 +95,4 @@ const parseDate = (timestamp: number | null): string => {
 	return `<t:${Math.ceil(timestamp / 1000)}:R>`;
 };
 
-export { time, botLog, parseDate };
+export { time, log, parseDate };

@@ -1,11 +1,7 @@
-import { Collection, CommandInteraction, TextChannel } from "discord.js";
-import chalk from "chalk";
+import { CommandInteraction, TextChannel } from "discord.js";
 
-import { botLog } from "../../resources/automaton.js";
-import { fCols } from "../../resources/colours.js";
-import { DaClient } from "../../resources/definitions.js";
-
-const { fGreen } = fCols;
+import { log } from "../../resources/automaton.js";
+import { Args, DaClient } from "../../resources/definitions.js";
 
 const data = {
 	name: "say",
@@ -21,16 +17,12 @@ const data = {
 };
 
 export { data };
-export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, unknown>) {
-	const { user, channel, guild } = interaction;
-	const txtChannel: TextChannel | null = channel ? (channel as TextChannel) : null;
+export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
+	const { user, guild } = interaction;
+	const channel = interaction.channel as TextChannel;
+	const input = args.get("input") as string;
 
-	await interaction.reply(args.get("input") as string);
+	await interaction.reply(input);
 
-	botLog(chalk`{${fGreen} SAY} {grey > "}${args.get("input")}{grey "}`, {
-		authorName: user.tag,
-		authorID: user.id,
-		channelName: txtChannel?.name,
-		guildName: guild?.name
-	});
+	log.cmd({ cmd: "say", msg: `Said: "${input}"` }, { guild, channel, user });
 }

@@ -1,15 +1,8 @@
+import { RateLimitData } from "discord.js";
+
 import { DaClient } from "../resources/definitions.js";
 
-interface rateLimitObjectInterface {
-	timeout: number;
-	limit: number;
-	method: string;
-	path: string;
-	route: string;
-	global: boolean;
-}
-
-export async function run(client: DaClient, limitObject: rateLimitObjectInterface) {
+export async function run(client: DaClient, limitObject: RateLimitData) {
 	console.log(
 		[
 			`\n\n`,

@@ -1,3 +1,4 @@
+import { YELLOW, GREEN, RED } from "./constants.js";
 import {
 	ApplicationCommandData,
 	ApplicationCommandOptionData,
@@ -5,12 +6,10 @@ import {
 	Collection,
 	CommandInteraction
 } from "discord.js";
-import { cols, fCols } from "./colours.js";
 
 class DaClient extends Client {
 	commands = new Collection<string, Command>();
-	colours = cols;
-	formattedColours = fCols;
+	colours = { yellow: YELLOW, green: GREEN, red: RED };
 
 	get moji() {
 		const emojis = new Collection<string, string>();

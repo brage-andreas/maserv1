@@ -1,8 +1,14 @@
-import { ApplicationCommandData, Collection, CommandInteraction, GuildChannel, MessageEmbed } from "discord.js";
-import chalk from "chalk";
+import {
+	ApplicationCommandData,
+	Collection,
+	CommandInteraction,
+	GuildChannel,
+	MessageEmbed,
+	TextChannel
+} from "discord.js";
 
-import { DaClient } from "../../resources/definitions.js";
-import { botLog, parseDate } from "../../resources/automaton.js";
+import { Args, DaClient } from "../../resources/definitions.js";
+import { log, parseDate } from "../../resources/automaton.js";
 
 const data: ApplicationCommandData = {
 	name: "serverinfo",
@@ -10,10 +16,10 @@ const data: ApplicationCommandData = {
 };
 
 export { data };
-export async function run(client: DaClient, interaction: CommandInteraction, args: Collection<string, unknown>) {
-	const { fGreen } = client.formattedColours;
+export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
 	const { yellow } = client.colours;
-	const { guild } = interaction;
+	const { guild, user } = interaction;
+	const channel = interaction.channel as TextChannel;
 
 	await interaction.defer();
 
@@ -44,7 +50,9 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 		.addField("Beskrivelse", description ? description : "Har ingen beskrivelse.")
 		.addField("ID", `\`${id}\``, true)
 		.addField("Ikon", `[Link](${guild.iconURL({ format: "png", dynamic: true, size: 4096 })})`, true);
+
 	if (made) infoEmbed.addField("Server laget", made);
+
 	infoEmbed
 		.addField("Eier", `${owner} (${owner.id})`, true)
 		.addField("Medlemmer", `${memberCount}`)
@@ -57,5 +65,5 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 
 	interaction.editReply({ embeds: [infoEmbed] });
 
-	botLog(chalk`{${fGreen} SERVERINFO} {grey > Used on guild} ${guild.name} {grey (${guild.id})}`);
+	log.cmd({ cmd: "serverinfo", msg: `Used on guild ${guild.name} (${guild.id})` }, { channel, guild, user });
 }

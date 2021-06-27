@@ -1,9 +1,12 @@
-import { ApplicationCommandData, Message, MessageEmbed } from "discord.js";
+import { ApplicationCommandData, Message } from "discord.js";
 import { DaClient } from "../resources/definitions.js";
+import { TOKEN_REGEX } from "../resources/constants.js";
 
 export async function run(client: DaClient, msg: Message) {
-	const { content, author, guild /*, channel*/ } = msg;
+	const { content, author, guild } = msg;
 	const isBotOwner = (): boolean => author.id === client.application?.owner?.id;
+
+	if (TOKEN_REGEX.test(content)) return msg.delete();
 
 	if (!client.application?.owner) await client.application?.fetch();
 
@@ -22,8 +25,8 @@ export async function run(client: DaClient, msg: Message) {
 		await guild.commands.set([]);
 	}
 
-	/*if (content === "lol") {
+	/*
         msg.reply("iolbanan");
         channel.send({ content: "iolbanan", allowedMentions: { repliedUser: false }, reply: { messageReference: msg.id } });
-    }*/
+    */
 }
