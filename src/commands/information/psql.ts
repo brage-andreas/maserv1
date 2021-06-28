@@ -1,8 +1,8 @@
-import { ApplicationCommandData, Collection, CommandInteraction, TextChannel } from "discord.js";
+import { ApplicationCommandData, CommandInteraction, TextChannel } from "discord.js";
 
 import { Args, DaClient } from "../../resources/definitions.js";
 import { log } from "../../resources/automaton.js";
-import { getNick } from "../../resources/psql/query.js";
+import { getNick } from "../../resources/psql/nicks.js";
 
 const data: ApplicationCommandData = {
 	name: "psql",

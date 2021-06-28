@@ -78,7 +78,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 
 		const filter = (interaction: MessageComponentInteraction) =>
 			interaction.customID === "ja" || interaction.customID === "nei";
-		const collector = query.createMessageComponentInteractionCollector(filter, { time: 15000 });
+		const collector = query.createMessageComponentInteractionCollector({ filter, time: 15000 });
 
 		collector.on("collect", (collectedInteraction: MessageComponentInteraction) => {
 			if (collectedInteraction.customID === "ja") {

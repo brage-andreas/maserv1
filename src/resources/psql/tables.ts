@@ -1,15 +1,5 @@
 import db from "./db.js";
 
-/*
-UPDATE nicks.guild_GUILDID
-SET nicks = array_append(nicks, NICK)
-WHERE id = USERID;
-*/
-
-/*
-SELECT nicks FROM nicks.guild_486548195137290265 
-*/
-
 const get = async (query: string) => {
 	try {
 		return await db.one(query);
@@ -76,28 +66,4 @@ const createTable = async (guildID: string) => {
 	}
 };
 
-const addNick = async (nick: string, userID: string, guildID: string) => {
-	if (!(await existsTable(guildID))) await createTable(guildID);
-	if (!(await existsRow(guildID, userID))) await createRow(guildID, userID);
-
-	await get(`
-        UPDATE nicks.guild_${guildID}
-        SET nicks = array_append(nicks, ${nick})
-        WHERE id = ${userID};
-    `);
-};
-
-const getNick = async (userID: string, guildID: string) => {
-	if (!(await existsTable(guildID))) await createTable(guildID);
-	if (!(await existsRow(guildID, userID))) await createRow(guildID, userID);
-
-	return (
-		await get(`
-        SELECT nicks
-        FROM nicks.guild_${guildID} 
-        WHERE id = ${userID};
-    `)
-	)?.nicks;
-};
-
-export { get, existsRow, existsTable, createRow, createTable, addNick, getNick };
+export { get, existsRow, existsTable, createRow, createTable };

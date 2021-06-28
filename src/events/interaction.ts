@@ -3,7 +3,7 @@ import { DaClient, Args } from "../resources/definitions.js";
 
 export async function run(client: DaClient, interaction: Interaction) {
 	if (interaction.isCommand()) {
-		if (interaction.channel.type === "dm") return;
+		if (!interaction.channel || interaction.channel.type === "dm") return;
 		const { commandName } = interaction;
 
 		const args: Args = new Collection();

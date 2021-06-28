@@ -1,9 +1,9 @@
-import { CommandInteraction, TextChannel } from "discord.js";
+import { ApplicationCommandData, CommandInteraction, TextChannel } from "discord.js";
 
 import { log } from "../../resources/automaton.js";
 import { Args, DaClient } from "../../resources/definitions.js";
 
-const data = {
+const data: ApplicationCommandData = {
 	name: "",
 	description: "",
 	options: [

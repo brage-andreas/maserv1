@@ -43,7 +43,10 @@ const log = {
 	cmd: function (opt: LogOpt, from: LogFrom, err = false) {
 		const { cmd, msg } = opt;
 		const { user, channel, guild } = from;
+		const [sec, min, hour] = time();
+
 		const toPrint: string[] = [];
+		const cmdStr = chalk`{${err ? FRED : FGREEN} ${cmd.toUpperCase()}}`;
 
 		if (_cache.channel !== channel.id || _cache.user !== user.id) {
 			const fromArray = [];
@@ -68,7 +71,7 @@ const log = {
 			toPrint.push(fromArray.join(" "));
 		}
 
-		toPrint.push(chalk`  {${err ? FRED : FGREEN} ${cmd.toUpperCase()}} ${msg ? chalk`{grey >} ${msg}` : ""}`);
+		toPrint.push(chalk`  {grey [${hour}:${min}:${sec}]} ${cmdStr} ${msg ? chalk`{grey >} ${msg}` : ""}`);
 
 		console.log(toPrint.join("\n"));
 
@@ -78,10 +81,14 @@ const log = {
 
 	event: function (opt: LogEvent) {
 		const { guild, msg } = opt;
+		const [sec, min, hour] = time();
+
 		const toPrint = [];
 
-		toPrint.push(guild ? chalk`{${FYELLOW} ${guild.name}}` : chalk`{${FRED} Unknown guild}`);
-		toPrint.push(chalk`${msg}`);
+		toPrint.push(
+			guild ? chalk`  {grey In} {${FYELLOW} ${guild.name}}` : chalk`  {grey In} {${FRED} unknown guild}`
+		);
+		toPrint.push(chalk`  {grey [${hour}:${min}:${sec}] >} ${msg}`);
 
 		console.log(toPrint.join("\n"));
 

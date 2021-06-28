@@ -20,7 +20,7 @@
   "homepage": "https://github.com/hellobafu/bigbotmaster#readme",
   "dependencies": {
     "chalk": "^4.1.1",
-    "discord.js": "^13.0.0-dev.1816a93b1b1b2bae47e8651e76fa53699de8421d",
+    "discord.js": "^13.0.0-dev.e37ef3af2151e556527ccd8e98ec531bdcc0ed70",
     "dotenv": "^10.0.0",
     "pg-promise": "^10.10.2"
   },
