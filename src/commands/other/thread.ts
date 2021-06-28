@@ -55,9 +55,6 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 	const duration = (args.get("varighet") as Duration | undefined) || 1440;
 	const reason = args.get("grunn") as string | undefined;
 
-	console.log(name);
-	console.log(duration);
-
 	const msg = await channel.send("lol");
 	channel.threads.create({ name, autoArchiveDuration: duration, startMessage: msg, reason }).catch(() => null);
 
