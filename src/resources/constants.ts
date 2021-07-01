@@ -27,3 +27,10 @@ export const CMD_TYPES: { [index: string]: string } = {
 	ROLE: "rolle (@/ID)",
 	MENTIONABLE: "@/ID"
 };
+
+export const USER_STATUS: { [index: string]: string } = {
+	offline: "⬛ Offline",
+	online: "🟩 Online",
+	idle: "🟨 Idle",
+	dnd: "🟥 Do Not Disturb"
+};

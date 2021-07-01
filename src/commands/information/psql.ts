@@ -2,7 +2,7 @@ import { ApplicationCommandData, CommandInteraction, TextChannel } from "discord
 
 import { Args, DaClient } from "../../resources/definitions.js";
 import { log } from "../../resources/automaton.js";
-import { getNick } from "../../resources/psql/nicks.js";
+import { getNick } from "../../resources/psql/nicks/nicks.js";
 
 const data: ApplicationCommandData = {
 	name: "psql",
@@ -25,7 +25,9 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 	//console.log(await exists("row", interaction.user.id, `guild_486548195137290265`));
 
 	const input = args.get("query") as string;
-	interaction.reply(JSON.stringify(await getNick(user.id, "486548195137290265")));
+	interaction.reply(input);
+
+	console.log(await getNick(user.id, "486548195137290265"));
 
 	log.cmd({ cmd: "psql" }, { channel, user, guild });
 }

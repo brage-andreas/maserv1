@@ -60,5 +60,5 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 
 	interaction.reply({ content: "Gjort!", ephemeral: true });
 
-	log.cmd({ cmd: "" }, { guild, channel, user });
+	log.cmd({ cmd: "thread" }, { guild, channel, user });
 }

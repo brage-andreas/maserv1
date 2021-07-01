@@ -2,6 +2,8 @@ import { ApplicationCommandData, CommandInteraction, GuildMember, MessageEmbed, 
 
 import { Args, DaClient } from "../../resources/definitions.js";
 import { log, parseDate } from "../../resources/automaton.js";
+import { USER_STATUS } from "../../resources/constants.js";
+import { getNick } from "../../resources/psql/nicks/nicks.js";
 
 const data: ApplicationCommandData = {
 	name: "userinfo",
@@ -31,33 +33,18 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 
 	if (!member || !user || !guild) return interaction.editReply({ content: "Hmm. Noe gikk galt." });
 
-	const getStatus = (mem: GuildMember): string => {
-		switch (mem.presence.status) {
-			case "online":
-				return "🟩 Online";
-
-			case "idle":
-				return "🟨 Idle";
-
-			case "dnd":
-				return "🟥 Do Not Disturb";
-
-			default:
-				return "⬛ Offline";
-		}
-	};
-
 	const roles = member.roles.cache.filter((r) => r.name !== "@everyone").map((r) => r.toString());
 	const avatar = user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 });
-	const status = getStatus(member);
+	const status = USER_STATUS[member.presence.status] || "⬛ Offline";
 	const came = parseDate(member.joinedTimestamp);
 	const made = parseDate(user.createdTimestamp);
+
+	const nicks = await getNick(user.id, guild.id);
 
 	const infoEmbed = new MessageEmbed()
 		.setColor(["#000000", "#ffffff"].includes(member.displayHexColor) ? "RANDOM" : member.displayHexColor)
 		.setThumbnail(avatar)
 		.setTitle(member.displayName)
-		.setURL("https://youtube.com")
 		.addField("Brukernavn", `${user.tag}`, true)
 		.addField("Avatar", `[Link](${avatar})`, true)
 		.addField("ID", `\`${user.id}\``);
@@ -68,7 +55,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 	infoEmbed.addField("Status", `${status}`).setTimestamp();
 
 	if (roles.length) infoEmbed.addField("Roller", roles.join(", "));
-	//if (nicks?.names.length && guild.id === "486548195137290265") infoEmbed.addField("Navn", `"${nicks.names.reverse().join('"\n"')}"`);
+	if (nicks?.length) infoEmbed.addField("Navn", `"${nicks.reverse().join('"\n"')}"`);
 	if (guild.ownerID === user.id) infoEmbed.setDescription(`👑 Eieren av serveren`);
 
 	interaction.editReply({ embeds: [infoEmbed] });

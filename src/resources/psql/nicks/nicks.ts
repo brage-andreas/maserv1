@@ -1,24 +1,29 @@
-import { get, existsRow, existsTable, createRow, createTable } from "./tables.js";
+import { get, existsRow, existsTable, createRow, createTable } from "./util.js";
 
-const addNick = async (nick: string, userID: string, guildID: string) => {
+const check = async (guildID: string, userID: string) => {
 	if (!(await existsTable(guildID))) await createTable(guildID);
 	if (!(await existsRow(guildID, userID))) await createRow(guildID, userID);
+};
+
+const addNick = async (nick: string, userID: string, guildID: string) => {
+	await check(guildID, userID);
 
 	await get(`
-        UPDATE nicks.${guildID}
+        UPDATE nicks."${guildID}"
         SET nicks = array_append(nicks, ${nick})
         WHERE id = ${userID};
-    `);
+    `)
+		.then(console.log)
+		.catch(console.error);
 };
 
 const getNick = async (userID: string, guildID: string) => {
-	if (!(await existsTable(guildID))) await createTable(guildID);
-	if (!(await existsRow(guildID, userID))) await createRow(guildID, userID);
+	await check(guildID, userID);
 
 	return (
 		await get(`
         SELECT nicks
-        FROM nicks.${guildID} 
+        FROM nicks."${guildID}" 
         WHERE id = ${userID};
     `)
 	)?.nicks as string[] | undefined;
