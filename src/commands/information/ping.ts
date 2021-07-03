@@ -1,4 +1,4 @@
-import { ApplicationCommandData, Collection, CommandInteraction, Message, TextChannel } from "discord.js";
+import { ApplicationCommandData, CommandInteraction, Message, TextChannel } from "discord.js";
 
 import { Args, DaClient } from "../../resources/definitions.js";
 import { log } from "../../resources/automaton.js";

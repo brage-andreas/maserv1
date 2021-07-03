@@ -52,7 +52,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 		return ch as TextChannel;
 	};
 
-	await interaction.reply({ content: "Jobber...", ephemeral: true });
+	await interaction.reply({ content: "Working...", ephemeral: true });
 
 	const amount = allowedAmount(args.get("amount") as number);
 	const targetID = args.get("user") as `${bigint}`;
@@ -74,13 +74,14 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 			new MessageButton().setCustomID("no").setLabel("No").setStyle("DANGER")
 		);
 
+		const filter = (interaction: MessageComponentInteraction) =>
+			interaction.customID === "yes" || interaction.customID === "no";
+
 		const query = (await interaction.editReply({
 			content: `Are you sure you want to delete ${msgsToDelete.size} messages${targetStr}${channelStr}?`,
 			components: [row]
 		})) as Message;
 
-		const filter = (interaction: MessageComponentInteraction) =>
-			interaction.customID === "yes" || interaction.customID === "no";
 		const collector = query.createMessageComponentInteractionCollector({ filter, time: 15000 });
 
 		collector.on("collect", (collectedInteraction: MessageComponentInteraction) => {

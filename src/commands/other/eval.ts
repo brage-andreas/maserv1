@@ -5,7 +5,7 @@ import { log } from "../../resources/automaton.js";
 
 const data = {
 	name: "eval",
-	description: "Kjører kode",
+	description: "Runs code",
 	options: [
 		{
 			name: "code",

@@ -1,4 +1,4 @@
-import { ApplicationCommandData, Collection, CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
+import { ApplicationCommandData, CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
 
 import { CATEGORIES, CMD_TYPES } from "../../resources/constants.js";
 import { Args, DaClient } from "../../resources/definitions.js";
