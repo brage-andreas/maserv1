@@ -98,7 +98,7 @@ const log = {
 };
 
 const parseDate = (timestamp: number | null): string => {
-	if (!timestamp) return "Ukjent dato";
+	if (!timestamp) return "Unknown date";
 	return `<t:${Math.ceil(timestamp / 1000)}:R>`;
 };
 

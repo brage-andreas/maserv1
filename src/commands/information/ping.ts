@@ -5,12 +5,12 @@ import { log } from "../../resources/automaton.js";
 
 const data: ApplicationCommandData = {
 	name: "ping",
-	description: "Sender ping",
+	description: "Sends ping",
 	options: [
 		{
-			name: "full",
+			name: "extended",
 			type: "BOOLEAN",
-			description: "Sender mer info enn vanlig"
+			description: "Sends more information"
 		}
 	]
 };
@@ -21,16 +21,16 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 	interaction.reply("...");
 
 	const reply = (await interaction.fetchReply()) as Message;
-	if (!reply) return interaction.editReply("Noe gikk galt.");
+	if (!reply) return interaction.editReply("Something went wrong");
 
-	const full = args.get("full");
+	const extended = args.get("extended");
 
 	const heartbeat = client.ws.ping;
 	const absPing = reply.createdTimestamp - interaction.createdTimestamp;
 	const ping = absPing - heartbeat < 0 ? absPing - heartbeat * -1 : absPing - heartbeat;
 
-	if (full) {
-		interaction.editReply(`Ping/absolutt: \`${ping}/${absPing} ms\`\nWS heartbeat: \`${heartbeat} ms\``);
+	if (extended) {
+		interaction.editReply(`Ping/absolute: \`${ping}/${absPing} ms\`\nWS heartbeat: \`${heartbeat} ms\``);
 	} else {
 		const [str1, str2, str3] = client.mojis("strength1", "strength2", "strength3");
 		const emoji = ping > 300 ? str1 : ping > 75 ? str2 : str3;

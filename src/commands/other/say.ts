@@ -10,7 +10,7 @@ const data = {
 		{
 			name: "input",
 			type: "STRING",
-			description: "hva jeg skal sende #iol",
+			description: "Content to send",
 			required: true
 		}
 	]

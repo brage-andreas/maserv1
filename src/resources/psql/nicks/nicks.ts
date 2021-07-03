@@ -10,11 +10,9 @@ const addNick = async (nick: string, userID: string, guildID: string) => {
 
 	await get(`
         UPDATE nicks."${guildID}"
-        SET nicks = array_append(nicks, ${nick})
+        SET nicks = array_append(nicks, '${nick}')
         WHERE id = ${userID};
-    `)
-		.then(console.log)
-		.catch(console.error);
+    `);
 };
 
 const getNick = async (userID: string, guildID: string) => {

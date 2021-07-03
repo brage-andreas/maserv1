@@ -1,17 +1,17 @@
 import { ApplicationCommandData, Collection, CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
 
-import { CMD_TYPES } from "../../resources/constants.js";
+import { CATEGORIES, CMD_TYPES } from "../../resources/constants.js";
 import { Args, DaClient } from "../../resources/definitions.js";
 import { log } from "../../resources/automaton.js";
 
 const data: ApplicationCommandData = {
 	name: "help",
-	description: "Sender ræl om kommandoer",
+	description: "Sends either a list of, or information about commands",
 	options: [
 		{
-			name: "kommando",
+			name: "command",
 			type: "STRING",
-			description: "Sender mer ræl om én kommando"
+			description: "What command to send info about"
 		}
 	]
 };
@@ -19,19 +19,17 @@ const data: ApplicationCommandData = {
 export { data };
 export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
 	const { guild, user, channel } = interaction;
-	const targetCmd = args.get("kommando") as string;
+	const targetCmd = args.get("command") as string;
 
 	const [double_right_g, double_right_y] = client.mojis("double_right_g", "double_right_y");
 
-	interaction.defer();
+	await interaction.defer();
 
 	if (targetCmd) {
 		const cmd = client.commands.get(targetCmd as string);
 		if (!cmd)
-			return interaction.reply({
-				content: `Finner ikke kommandoen i ${guild?.name}`,
-				allowedMentions: { repliedUser: false },
-				ephemeral: true
+			return interaction.editReply({
+				content: `I cannot find said command ${guild ? `in ${guild.name}` : ""}`
 			});
 
 		const commandData = cmd.data;
@@ -56,29 +54,17 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 		log.cmd({ cmd: "help", msg: `Sent info about ${targetCmd}` }, { channel: channel as TextChannel, guild, user });
 	} else {
 		const allCmdsEmbed = new MessageEmbed()
-			.setTitle(`**Kommandoer** (${guild})`)
+			.setTitle(`Commands`)
 			.setColor(client.colours.yellow)
 			.setAuthor(user.tag, user.displayAvatarURL());
 
-		const getCategoryString = (category: string): string => {
-			const knownCategoryTable: Map<string, string> = new Map(
-				Object.entries({
-					information: "ehh #stalker much ROFL",
-					moderation: "karen da #managre",
-					other: "xD YDDCD (ya do da command doe) ROFL"
-				})
-			);
-
-			return knownCategoryTable.get(category) || category.toUpperCase();
-		};
-
-		const allCategories: Set<string> = new Set(client.commands.map((cmd) => cmd.category));
+		const allCategories = new Set(client.commands.map((cmd) => cmd.category));
 		allCategories.forEach((category: string) => {
 			const cmds = client.commands
 				.filter((cmd) => cmd.category === category)
 				.array() // collection map has no index in loop
 				.map((cmd, i) => `\`${i + 1 < 10 ? "0" + (i + 1) : i + 1}\` ${cmd.data.name}`);
-			allCmdsEmbed.addField(getCategoryString(category), cmds.join("\n"));
+			allCmdsEmbed.addField(CATEGORIES[category] || category, cmds.join("\n"));
 		});
 
 		interaction.editReply({ embeds: [allCmdsEmbed] });

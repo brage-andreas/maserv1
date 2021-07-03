@@ -1,4 +1,4 @@
-import { YELLOW, GREEN, RED } from "./constants.js";
+import { YELLOW, GREEN, RED, BLACK, WHITE, BLURPLE } from "./constants.js";
 import {
 	ApplicationCommandData,
 	ApplicationCommandOptionData,
@@ -9,7 +9,7 @@ import {
 
 class DaClient extends Client {
 	commands = new Collection<string, Command>();
-	colours = { yellow: YELLOW, green: GREEN, red: RED };
+	colours = { yellow: YELLOW, green: GREEN, red: RED, black: BLACK, white: WHITE, blurple: BLURPLE };
 
 	get moji() {
 		const emojis = new Collection<string, string>();

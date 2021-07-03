@@ -38,9 +38,9 @@ const existsTable = async (guildID: string) => {
 
 const createRow = async (guildID: string, userID: string) => {
 	try {
-		const x = await get(`
-            INSERT INTO nicks."${guildID}" (id, nicks)
-            VALUES ("${userID}", ?);
+		await get(`
+            INSERT INTO nicks."${guildID}" (id)
+            VALUES ('${userID}');
         `);
 	} catch (err) {
 		return err;
@@ -49,7 +49,7 @@ const createRow = async (guildID: string, userID: string) => {
 
 const createTable = async (guildID: string) => {
 	try {
-		const x = await get(`
+		await get(`
             CREATE TABLE nicks."${guildID}"
                 (
                     id bigint PRIMARY KEY,

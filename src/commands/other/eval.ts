@@ -1,4 +1,4 @@
-import { Collection, CommandInteraction, TextChannel } from "discord.js";
+import { CommandInteraction, TextChannel } from "discord.js";
 
 import { Args, DaClient } from "../../resources/definitions.js";
 import { log } from "../../resources/automaton.js";
@@ -10,7 +10,7 @@ const data = {
 		{
 			name: "code",
 			type: "STRING",
-			description: "Koden å kjøre"
+			description: "Code to run"
 		}
 	]
 };
