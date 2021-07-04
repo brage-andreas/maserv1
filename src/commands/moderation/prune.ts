@@ -82,7 +82,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 			components: [row]
 		})) as Message;
 
-		const collector = query.createMessageComponentInteractionCollector({ filter, time: 15000 });
+		const collector = query.createMessageComponentCollector({ filter, time: 15000 });
 
 		collector.on("collect", (collectedInteraction: MessageComponentInteraction) => {
 			if (collectedInteraction.customID === "yes") {

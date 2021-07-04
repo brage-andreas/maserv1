@@ -4,7 +4,8 @@ import {
 	CommandInteraction,
 	GuildChannel,
 	MessageEmbed,
-	TextChannel
+	TextChannel,
+	ThreadChannel
 } from "discord.js";
 
 import { Args, DaClient } from "../../resources/definitions.js";
@@ -30,10 +31,12 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 
 	const made = parseDate(createdTimestamp);
 
-	const oldestChannel = (chl: Collection<`${bigint}`, GuildChannel>) =>
-		chl.sort((a: GuildChannel, b: GuildChannel) => a.createdTimestamp - b.createdTimestamp).first();
+	const oldestChannel = (channels: Collection<`${bigint}`, GuildChannel | ThreadChannel>) => {
+		let nonThreadChannels = channels.filter((ch) => !ch.isThread()) as Collection<`${bigint}`, GuildChannel>;
+		return nonThreadChannels.sort((a, b) => a.createdTimestamp - b.createdTimestamp).first();
+	};
 
-	const textChannels = channels.cache.filter((c) => c.isText());
+	const textChannels = channels.cache.filter((c) => c.isText() && !c.isThread());
 	const voiceChannels = channels.cache.filter((c) => c.type === "voice");
 
 	const oldestTextChannel = oldestChannel(textChannels);
@@ -43,7 +46,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 	const oldVoiceString = oldestVoiceChannel ? `\nOldest voice channel is ${oldestVoiceChannel}` : ``;
 
 	const infoEmbed = new MessageEmbed()
-		.setColor(client.colours.yellow)
+		.setColor(`#${client.colours.yellow}`)
 		.setThumbnail(guild.iconURL({ format: "png", dynamic: true, size: 1024 }) || "")
 		.setTitle(name)
 		.addField("Description", description ? description : "This server has no description")

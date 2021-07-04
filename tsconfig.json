@@ -1,24 +1,17 @@
 {
-  "compilerOptions": {
-    "target": "ES2020",
-    "module": "ESNext",
-    "allowJs": true,
-    "checkJs": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "strict": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-  },
-
-  "include": [
-    "../../node_modules/interactjs/index.d.ts",
-    "./src/**/*"
-  ],
-  
-  "exclude": [
-      "node_modules"
-  ]
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "ESNext",
+		"allowJs": true,
+		"checkJs": true,
+		"outDir": "./dist",
+		"rootDir": "./src",
+		"strict": true,
+		"moduleResolution": "node",
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true
+	},
+	"include": ["../../node_modules/interactjs/index.d.ts", "./src/**/*"],
+	"exclude": ["node_modules"]
 }

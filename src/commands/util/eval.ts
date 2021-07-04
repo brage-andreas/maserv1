@@ -1,16 +1,17 @@
-import { CommandInteraction, TextChannel } from "discord.js";
+import { ApplicationCommandData, CommandInteraction, TextChannel } from "discord.js";
 
 import { Args, DaClient } from "../../resources/definitions.js";
 import { log } from "../../resources/automaton.js";
 
-const data = {
+const data: ApplicationCommandData = {
 	name: "eval",
 	description: "Runs code",
 	options: [
 		{
 			name: "code",
 			type: "STRING",
-			description: "Code to run"
+			description: "Code to run",
+			required: true
 		}
 	]
 };

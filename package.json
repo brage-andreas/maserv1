@@ -1,30 +1,30 @@
 {
-  "name": "bigbotmaster",
-  "version": "3.0.0",
-  "description": "",
-  "type": "module",
-  "main": "./dist/index.js",
-  "scripts": {
-    "prestart": "tsc",
-    "start": "node ."
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hellobafu/bigbotmaster.git"
-  },
-  "author": "Dr Drango",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/hellobafu/bigbotmaster/issues"
-  },
-  "homepage": "https://github.com/hellobafu/bigbotmaster#readme",
-  "dependencies": {
-    "chalk": "^4.1.1",
-    "discord.js": "^13.0.0-dev.e37ef3af2151e556527ccd8e98ec531bdcc0ed70",
-    "dotenv": "^10.0.0",
-    "pg-promise": "^10.10.2"
-  },
-  "devDependencies": {
-    "@types/node": "^15.6.2"
-  }
+	"name": "maser",
+	"version": "3.0.0",
+	"description": "",
+	"type": "module",
+	"main": "./dist/index.js",
+	"scripts": {
+		"prestart": "tsc",
+		"start": "node ."
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/hellobafu/bigbotmaster.git"
+	},
+	"author": "Dr Drango",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/hellobafu/bigbotmaster/issues"
+	},
+	"homepage": "https://github.com/hellobafu/bigbotmaster#readme",
+	"dependencies": {
+		"chalk": "^4.1.1",
+		"discord.js": "^13.0.0-dev.7e30011.1625338909",
+		"dotenv": "^10.0.0",
+		"pg-promise": "^10.10.2"
+	},
+	"devDependencies": {
+		"@types/node": "^15.6.2"
+	}
 }

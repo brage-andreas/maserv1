@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { Guild, TextChannel, User } from "discord.js";
+import { Collection, Guild, GuildChannel, GuildMember, TextChannel, ThreadChannel, User } from "discord.js";
 
 import { FGREEN, FRED, FYELLOW } from "./constants.js";
 
@@ -28,7 +28,7 @@ interface LogEvent {
 /**
  * @returns sec, min, hour [ ]
  */
-const time = (): string[] => {
+export const time = (): string[] => {
 	const now: Date = new Date();
 
 	const sec = _twoCharLength(now.getSeconds());
@@ -39,7 +39,7 @@ const time = (): string[] => {
 };
 
 const _cache = { user: "", channel: "" };
-const log = {
+export const log = {
 	cmd: function (opt: LogOpt, from: LogFrom, err = false) {
 		const { cmd, msg } = opt;
 		const { user, channel, guild } = from;
@@ -97,9 +97,27 @@ const log = {
 	}
 };
 
-const parseDate = (timestamp: number | null): string => {
+export const parseDate = (timestamp: number | null): string => {
 	if (!timestamp) return "Unknown date";
 	return `<t:${Math.ceil(timestamp / 1000)}:R>`;
 };
 
-export { time, log, parseDate };
+export const getDefaultChannel = (opt: { optChannel?: TextChannel; optGuild?: Guild; me: GuildMember }) => {
+	const { optChannel, optGuild, me } = opt;
+
+	const hasPerms = (channel: GuildChannel | TextChannel) => {
+		if (channel.type !== "text") return false;
+		const perms = me.permissionsIn(channel);
+		return perms.has("VIEW_CHANNEL") && perms.has("SEND_MESSAGES");
+	};
+
+	channel: if (optChannel) {
+		const perms = me.permissionsIn(optChannel);
+		if (!perms.has("VIEW_CHANNEL") || !perms.has("SEND_MESSAGES")) break channel;
+	}
+
+	if (optGuild) {
+		const isValid = (ch: GuildChannel | ThreadChannel) => ch.type === "text" && hasPerms(ch);
+		const usableChannels = optGuild.channels.cache.filter(isValid) as Collection<`${bigint}`, TextChannel>;
+	}
+};

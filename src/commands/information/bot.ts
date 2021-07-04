@@ -14,8 +14,10 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 	const { user, guild } = interaction;
 	const channel = interaction.channel as TextChannel;
 
+	const formatBytes = (number: number) => number.toFixed(2).replace(".", ",");
+
 	const { heapUsed, heapTotal } = process.memoryUsage();
-	const heapStr = `\`${(heapUsed / 10 ** 6).toFixed(2)}\`/\`${(heapTotal / 10 ** 6).toFixed(2)}\` MB`;
+	const heapStr = `${formatBytes(heapUsed / 10 ** 6)}/${formatBytes(heapTotal / 10 ** 6)} MB`;
 
 	const platform = PLATFORMS[process.platform] || process.platform;
 	const uptime = process.uptime();
@@ -27,7 +29,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 	const infoEmbed = new MessageEmbed()
 		.setAuthor(`${interaction.guild?.me?.displayName.toUpperCase() || "My info"}`)
 		.setThumbnail(`${client.user?.displayAvatarURL()}` || "")
-		.setColor(client.colours.yellow)
+		.setColor(`#${client.colours.yellow}`)
 		.addField("Platform", platform)
 		.addField("RAM", heapStr)
 		.addField("Uptime", `${Math.ceil(uptime)}s`)
