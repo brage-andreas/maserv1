@@ -11,7 +11,6 @@ const host = process.env.PSQL_HOST;
 const name = process.env.PSQL_DB_NAME;
 
 const connectionString = `postgres://${username}:${password}@${host}:${port}/${name}`;
-console.log(connectionString);
 
 const db = pgp({ connectionString });
 
