@@ -70,12 +70,12 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 		const channelStr = channelID ? ` in ${channel}` : "";
 
 		const row = new MessageActionRow().addComponents(
-			new MessageButton().setCustomID("yes").setLabel("Yes").setStyle("SUCCESS"),
-			new MessageButton().setCustomID("no").setLabel("No").setStyle("DANGER")
+			new MessageButton().setCustomId("yes").setLabel("Yes").setStyle("SUCCESS"),
+			new MessageButton().setCustomId("no").setLabel("No").setStyle("DANGER")
 		);
 
 		const filter = (interaction: MessageComponentInteraction) =>
-			interaction.customID === "yes" || interaction.customID === "no";
+			interaction.customId === "yes" || interaction.customId === "no";
 
 		const query = (await interaction.editReply({
 			content: `Are you sure you want to delete ${msgsToDelete.size} messages${targetStr}${channelStr}?`,
@@ -85,7 +85,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 		const collector = query.createMessageComponentCollector({ filter, time: 15000 });
 
 		collector.on("collect", (collectedInteraction: MessageComponentInteraction) => {
-			if (collectedInteraction.customID === "yes") {
+			if (collectedInteraction.customId === "yes") {
 				channel.bulkDelete(msgsToDelete, true).then((messages: Collection<`${bigint}`, Message>) => {
 					interaction.editReply({ content: "Done!", components: [] });
 					log.cmd(
@@ -95,7 +95,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 				});
 
 				collector.stop("fromCollected");
-			} else if (collectedInteraction.customID === "no") {
+			} else if (collectedInteraction.customId === "no") {
 				collector.stop("fromCollected");
 			}
 		});

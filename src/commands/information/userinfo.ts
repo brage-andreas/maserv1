@@ -66,7 +66,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 
 	if (roles.length) infoEmbed.addField("Roles", roles.join(", "));
 	if (nicks?.length) infoEmbed.addField("Names", `"${nicks.slice(0, 5).reverse().join('"\n"')}"`);
-	if (guild.ownerID === user.id) infoEmbed.setDescription(`👑 Server owner`);
+	if (guild.ownerId === user.id) infoEmbed.setDescription(`👑 Server owner`);
 
 	interaction.editReply({ embeds: [infoEmbed] });
 

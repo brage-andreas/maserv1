@@ -1,11 +1,18 @@
 import pgpImport from "pg-promise";
 import dotenv from "dotenv";
+dotenv.config();
 
 const pgp = pgpImport();
 
-dotenv.config();
-const conStr = process.env.CONNECTIONSTR;
+const username = process.env.PSQL_USER;
+const password = process.env.PSQL_PASS;
+const port = process.env.PSQL_PORT;
+const host = process.env.PSQL_HOST;
+const name = process.env.PSQL_DB_NAME;
 
-const db = pgp({ connectionString: conStr });
+const connectionString = `postgres://${username}:${password}@${host}:${port}/${name}`;
+console.log(connectionString);
+
+const db = pgp({ connectionString });
 
 export default db;
