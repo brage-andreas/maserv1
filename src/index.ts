@@ -4,6 +4,7 @@ import chalk from "chalk";
 dotenv.config();
 
 import { Command, DaClient } from "./resources/definitions.js";
+import { Collection } from "discord.js";
 
 process.stdout.write("\x1Bc\n"); // clears terminal, console.clear() doesn't fully clear it
 
@@ -11,14 +12,14 @@ const client = new DaClient({
 	intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_MEMBERS", "GUILD_PRESENCES"]
 });
 
-const getJSFiles = (dir: string, subfolder: boolean = false): Map<string, string[]> | string[] => {
+const getJSFiles = (dir: string, subfolder: boolean = false): Collection<string, string[]> | string[] => {
 	const allItemsInDir: string[] = readdirSync(new URL(`./${dir}`, import.meta.url));
 
 	if (!subfolder) {
 		const jsFilesInFolder = allItemsInDir.filter((filename: string) => filename.endsWith(".js"));
 		return jsFilesInFolder;
 	} else {
-		const filesToReturn: Map<string, string[]> = new Map();
+		const filesToReturn: Collection<string, string[]> = new Collection();
 
 		allItemsInDir.forEach((folder) => {
 			const allFilesInDir = readdirSync(new URL(`./${dir}/${folder}`, import.meta.url));
@@ -31,12 +32,14 @@ const getJSFiles = (dir: string, subfolder: boolean = false): Map<string, string
 	}
 };
 
-const commandFiles = getJSFiles("./commands", true) as Map<string, string[]>;
-console.log(chalk`  {grey Loading} ${commandFiles.size} {grey commands...}`);
+const commandFiles = getJSFiles("./commands", true) as Collection<string, string[]>;
+const commandAmount = commandFiles.array().reduce((acc, current) => acc + current.length, 0);
+console.log(chalk`  {grey Loading} ${commandAmount} {grey commands...}`);
 
 commandFiles.forEach(async (filesInFolder: string[], folder: string) => {
 	filesInFolder.forEach(async (file: string) => {
 		const cmdFile: Command = await import(new URL(`./commands/${folder}/${file}`, import.meta.url).toString());
+
 		client.commands.set(cmdFile.data.name, {
 			...cmdFile,
 			category: folder
