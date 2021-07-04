@@ -10,14 +10,14 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/hellobafu/bigbotmaster.git"
+		"url": "git+https://github.com/hellobafu/maser.git"
 	},
 	"author": "Dr Drango",
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/hellobafu/bigbotmaster/issues"
+		"url": "https://github.com/hellobafu/maser/issues"
 	},
-	"homepage": "https://github.com/hellobafu/bigbotmaster#readme",
+	"homepage": "https://github.com/hellobafu/maser#readme",
 	"dependencies": {
 		"chalk": "^4.1.1",
 		"discord.js": "^13.0.0-dev.7e30011.1625338909",
