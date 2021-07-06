@@ -39,6 +39,11 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 	const method = args.get("method") as string;
 	const value = args.get("option") as string | undefined;
 
+	if (method === "set") {
+	} else if (method === "view") {
+	} else if (method === "remove") {
+	}
+
 	log.cmd(
 		{ cmd: "config", msg: `Used method ${method} on option ${option}${value ? ` with value "${value}"` : ""}` },
 		{ guild, channel, user }

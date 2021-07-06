@@ -22,7 +22,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 	const channel = interaction.channel as TextChannel;
 	const input = args.get("input") as string;
 
-	await interaction.reply(input);
+	await interaction.reply({ content: input, allowedMentions: { parse: [] } });
 
 	log.cmd({ cmd: "say", msg: `Said: "${input}"` }, { guild, channel, user });
 }

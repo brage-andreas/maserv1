@@ -16,6 +16,23 @@ export const FYELLOW = 'hex("FFC152")';
 export const FGREEN = 'hex("5AD658")';
 export const FRED = 'hex("FF5733")';
 
+export const JOIN_PHRASES = [
+	"Hiii, ¤!",
+	"Hello, ¤!",
+	"Much welcome, ¤!",
+	"What's up, ¤?",
+	"Good morning, ¤!",
+	"Nice to see you, ¤!"
+];
+export const LEAVE_PHRASES = [
+	"Bye bye, ¤!",
+	"Hope too see you soon, ¤!",
+	"See you later, ¤!",
+	"Farewell, ¤!",
+	"Until next time, ¤!",
+	"Adiós, ¤!"
+];
+
 export const PLATFORMS: { [index: string]: string } = {
 	aix: "AIX",
 	darwin: "Darwin",

@@ -83,7 +83,8 @@ export const log = {
 		const { guild, msg } = opt;
 		const [sec, min, hour] = time();
 
-		const toPrint = [];
+		const newLine = _cache.channel || _cache.user;
+		const toPrint = newLine ? [""] : [];
 
 		toPrint.push(
 			guild ? chalk`  {grey In} {${FYELLOW} ${guild.name}}` : chalk`  {grey In} {${FRED} unknown guild}`
@@ -112,12 +113,18 @@ export const getDefaultChannel = (opt: { optChannel?: TextChannel; optGuild?: Gu
 	};
 
 	channel: if (optChannel) {
-		const perms = me.permissionsIn(optChannel);
-		if (!perms.has("VIEW_CHANNEL") || !perms.has("SEND_MESSAGES")) break channel;
+		if (!hasPerms(optChannel)) break channel;
+		console.log("channel");
+		return optChannel;
 	}
 
 	if (optGuild) {
 		const isValid = (ch: GuildChannel | ThreadChannel) => ch.type === "text" && hasPerms(ch);
 		const usableChannels = optGuild.channels.cache.filter(isValid) as Collection<`${bigint}`, TextChannel>;
+		if (!usableChannels.size) return;
+
+		const priorityChannel =
+			usableChannels.find((ch) => ch.name === "general") || usableChannels.find((ch) => ch.name === "main");
+		return priorityChannel || usableChannels.first();
 	}
 };
