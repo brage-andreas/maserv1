@@ -12,9 +12,9 @@ export const GREEN = "5AD658";
 export const WHITE = "FFFFFF";
 export const RED = "FF5733";
 
-export const FYELLOW = 'hex("FFC152")';
-export const FGREEN = 'hex("5AD658")';
-export const FRED = 'hex("FF5733")';
+export const FYELLOW = `hex("${YELLOW}")`;
+export const FGREEN = `hex("${GREEN}")`;
+export const FRED = `hex("${RED}")`;
 
 export const JOIN_PHRASES = [
 	"Hiii, ¤!",
