@@ -1,6 +1,6 @@
-import { ApplicationCommandData, CommandInteraction, Guild, MessageEmbed, TextChannel } from "discord.js";
+import { ApplicationCommandData, CommandInteraction, Guild, GuildMember, MessageEmbed, TextChannel } from "discord.js";
 
-import { log } from "../../resources/automaton.js";
+import { log, confirm, hasPerms } from "../../resources/automaton.js";
 import { Args, DaClient } from "../../resources/definitions.js";
 
 const data: ApplicationCommandData = {
@@ -35,9 +35,17 @@ export { data };
 export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
 	const { user } = interaction;
 	const guild = interaction.guild as Guild;
+	const member = interaction.member as GuildMember;
 	const channel = interaction.channel as TextChannel;
 
 	await interaction.defer();
+
+	const err = client.moji.get("err");
+	if (!hasPerms(["BAN_MEMBERS"], guild.me))
+		return interaction.editReply(`${err || ""} I don't have sufficient permissions`);
+
+	if (!hasPerms(["BAN_MEMBERS"], member))
+		return interaction.editReply(`${err || ""} You don't have sufficient permissions`);
 
 	const targetId = args.get("member") as `${bigint}`;
 	const reason = args.get("reason") as string | undefined;
@@ -47,31 +55,39 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 	const days = !rawDays ? 7 : rawDays > 7 ? 7 : rawDays < 1 ? 1 : rawDays;
 	const target = await client.users.fetch(targetId);
 
-	/*await guild.bans.create(targetId, { days, reason }).catch(() => {
-        const banErrorEmbed = new MessageEmbed()
-            .setAuthor(user.tag, user.displayAvatarURL())
-            .setColor(`#${client.colours.red}`)
-            .addField("Failed to ban", `${target.toString()} (\`${targetId}\`)`)
-            .setFooter("Ban failed")
-            .setTimestamp();
+	const sendBanEmbed = () => {
+		const banEmbed = new MessageEmbed()
+			.setAuthor(user.tag, user.displayAvatarURL())
+			.setColor(`#${client.colours.green}`)
+			.setThumbnail(!nsfw ? target.displayAvatarURL({ size: 1024, dynamic: false }) : "")
+			.addField("Succsessfully banned", `${target.toString()} (\`${targetId}\`)`)
+			.setFooter("User banned")
+			.setTimestamp();
 
-	    interaction.editReply({ embeds: [banErrorEmbed] });
-    });*/
+		if (reason) banEmbed.addField("Reason", reason);
+		banEmbed.addField(
+			"Info",
+			`Last ${days} days of messages pruned${nsfw ? `\nNSFW avatar removed from embed` : ""}`
+		);
 
-	const banEmbed = new MessageEmbed()
-		.setAuthor(user.tag, user.displayAvatarURL())
-		.setColor(`#${client.colours.green}`)
-		.setThumbnail(!nsfw ? target.displayAvatarURL({ size: 1024, dynamic: false }) : "")
-		.addField("Succsessfully banned", `${target.toString()} (\`${targetId}\`)`)
-		.setFooter("User banned")
-		.setTimestamp();
+		interaction.editReply({ embeds: [banEmbed] });
 
-	if (reason) banEmbed.addField("Reason", reason);
-	banEmbed.addField("Info", `Last ${days} days of messages pruned${nsfw ? `\nNSFW avatar removed from embed` : ""}`);
+		log.cmd({ cmd: "ban", msg: `Banned ${target.tag} (${targetId})` }, { guild, channel, user });
+	};
 
-	// TODO add confirmation buttons + system for them
+	const sendError = () => {
+		const banErrorEmbed = new MessageEmbed()
+			.setAuthor(user.tag, user.displayAvatarURL())
+			.setColor(`#${client.colours.red}`)
+			.addField("Failed to ban", `${target.toString()} (\`${targetId}\`)`)
+			.setFooter("Ban failed")
+			.setTimestamp();
 
-	interaction.editReply({ embeds: [banEmbed] });
+		interaction.editReply({ embeds: [banErrorEmbed] });
+	};
 
-	log.cmd({ cmd: "ban", msg: `Banned ${target.tag} (${targetId})` }, { guild, channel, user });
+	const query = `Are you sure you want to ban ${target.tag} (${targetId})?`;
+	await confirm(interaction, query)
+		.then(() => guild.bans.create(targetId, { days, reason }).catch(sendError).then(sendBanEmbed))
+		.catch(() => null);
 }

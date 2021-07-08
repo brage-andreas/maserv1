@@ -1,5 +1,18 @@
 import chalk from "chalk";
-import { Collection, Guild, GuildChannel, GuildMember, TextChannel, ThreadChannel, User } from "discord.js";
+import {
+	Collection,
+	CommandInteraction,
+	Guild,
+	GuildChannel,
+	GuildMember,
+	Message,
+	MessageButton,
+	MessageComponentInteraction,
+	PermissionResolvable,
+	TextChannel,
+	ThreadChannel,
+	User
+} from "discord.js";
 
 import { FGREEN, FRED, FYELLOW } from "./constants.js";
 
@@ -106,25 +119,65 @@ export const parseDate = (timestamp: number | null): string => {
 export const getDefaultChannel = (opt: { optChannel?: TextChannel; optGuild?: Guild; me: GuildMember }) => {
 	const { optChannel, optGuild, me } = opt;
 
-	const hasPerms = (channel: GuildChannel | TextChannel) => {
-		if (channel.type !== "text") return false;
-		const perms = me.permissionsIn(channel);
-		return perms.has("VIEW_CHANNEL") && perms.has("SEND_MESSAGES");
-	};
+	const perms: PermissionResolvable[] = ["VIEW_CHANNEL", "SEND_MESSAGES"];
 
 	channel: if (optChannel) {
-		if (!hasPerms(optChannel)) break channel;
-		console.log("channel");
+		if (!hasPerms(perms, me, optChannel)) break channel;
 		return optChannel;
 	}
 
 	if (optGuild) {
-		const isValid = (ch: GuildChannel | ThreadChannel) => ch.type === "text" && hasPerms(ch);
+		const isValid = (ch: GuildChannel | ThreadChannel) => ch.type === "text" && !hasPerms(perms, me, ch);
 		const usableChannels = optGuild.channels.cache.filter(isValid) as Collection<`${bigint}`, TextChannel>;
 		if (!usableChannels.size) return;
 
-		const priorityChannel =
-			usableChannels.find((ch) => ch.name === "general") || usableChannels.find((ch) => ch.name === "main");
+		const priorityChannel = usableChannels.find((ch) => ch.name === "general" || ch.name === "main");
 		return priorityChannel || usableChannels.first();
 	}
+};
+
+export const confirm = async (itr: CommandInteraction, customContent?: string) => {
+	return new Promise(async (resolve, reject) => {
+		const row = [
+			new MessageButton().setCustomId("yes").setLabel("Yes").setStyle("SUCCESS"),
+			new MessageButton().setCustomId("no").setLabel("No").setStyle("DANGER")
+		];
+
+		const filter = (itr: MessageComponentInteraction) => itr.customId === "yes" || itr.customId === "no";
+
+		const query = (await itr.editReply({
+			content: customContent || `Are you sure?`,
+			components: [row]
+		})) as Message;
+
+		const collector = query.createMessageComponentCollector({ filter, time: 15000 });
+
+		collector.on("collect", (collectedInteraction: MessageComponentInteraction) => {
+			if (collectedInteraction.customId === "yes") {
+				collector.stop("fromCollected");
+				resolve("");
+			} else if (collectedInteraction.customId === "no") {
+				collector.stop("fromCollected");
+				reject("");
+			}
+		});
+
+		collector.on("end", (useless: unknown, reason: string) => {
+			if (reason === "fromCollected") itr.editReply({ content: "Okay!", components: [] });
+			else {
+				itr.editReply({ content: "Command canceled", components: [] });
+				reject("");
+			}
+		});
+	});
+};
+
+type Perm = PermissionResolvable | PermissionResolvable[];
+export const hasPerms = (permissions: Perm, member: GuildMember | null, channel?: GuildChannel | TextChannel) => {
+	if (!member) return false;
+
+	const toCheck = typeof permissions === "object" ? permissions : [permissions];
+	const perms = channel ? member.permissionsIn(channel) : member.permissions;
+
+	return perms.has(toCheck);
 };

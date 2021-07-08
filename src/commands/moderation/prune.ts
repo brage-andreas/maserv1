@@ -11,7 +11,7 @@ import {
 } from "discord.js";
 
 import { Args, DaClient } from "../../resources/definitions.js";
-import { log } from "../../resources/automaton.js";
+import { confirm, log } from "../../resources/automaton.js";
 
 const data: ApplicationCommandData = {
 	name: "prune",
@@ -69,23 +69,9 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 		const targetStr = target ? ` from ${target}` : "";
 		const channelStr = channelID ? ` in ${channel}` : "";
 
-		const row = new MessageActionRow().addComponents(
-			new MessageButton().setCustomId("yes").setLabel("Yes").setStyle("SUCCESS"),
-			new MessageButton().setCustomId("no").setLabel("No").setStyle("DANGER")
-		);
-
-		const filter = (interaction: MessageComponentInteraction) =>
-			interaction.customId === "yes" || interaction.customId === "no";
-
-		const query = (await interaction.editReply({
-			content: `Are you sure you want to delete ${msgsToDelete.size} messages${targetStr}${channelStr}?`,
-			components: [row]
-		})) as Message;
-
-		const collector = query.createMessageComponentCollector({ filter, time: 15000 });
-
-		collector.on("collect", (collectedInteraction: MessageComponentInteraction) => {
-			if (collectedInteraction.customId === "yes") {
+		const query = `Are you sure you want to delete ${msgsToDelete.size} messages${targetStr}${channelStr}?`;
+		await confirm(interaction, query)
+			.then(() => {
 				channel.bulkDelete(msgsToDelete, true).then((messages: Collection<`${bigint}`, Message>) => {
 					interaction.editReply({ content: "Done!", components: [] });
 					log.cmd(
@@ -93,16 +79,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 						{ channel: interaction.channel as TextChannel, user, guild }
 					);
 				});
-
-				collector.stop("fromCollected");
-			} else if (collectedInteraction.customId === "no") {
-				collector.stop("fromCollected");
-			}
-		});
-
-		collector.on("end", (collected: Collection<string, MessageComponentInteraction>, reason: string) => {
-			if (reason === "fromCollected") interaction.editReply({ content: "Okay!", components: [] });
-			else interaction.editReply({ content: "Command canceled", components: [] });
-		});
+			})
+			.catch(() => null);
 	});
 }
