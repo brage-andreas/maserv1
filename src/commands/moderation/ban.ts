@@ -70,7 +70,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 			`Last ${days} days of messages pruned${nsfw ? `\nNSFW avatar removed from embed` : ""}`
 		);
 
-		interaction.editReply({ embeds: [banEmbed] });
+		interaction.editReply({ content: "", embeds: [banEmbed] });
 
 		log.cmd({ cmd: "ban", msg: `Banned ${target.tag} (${targetId})` }, { guild, channel, user });
 	};
