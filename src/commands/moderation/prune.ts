@@ -1,14 +1,4 @@
-import {
-	ApplicationCommandData,
-	Collection,
-	CommandInteraction,
-	GuildMember,
-	Message,
-	MessageActionRow,
-	MessageButton,
-	MessageComponentInteraction,
-	TextChannel
-} from "discord.js";
+import { ApplicationCommandData, Collection, CommandInteraction, GuildMember, Message, TextChannel } from "discord.js";
 
 import { Args, DaClient } from "../../resources/definitions.js";
 import { confirm, log } from "../../resources/automaton.js";

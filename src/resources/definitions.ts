@@ -22,7 +22,7 @@ class DaClient extends Client {
 		return emojis;
 	}
 
-	mojis(...mojis: string[]): (string | undefined)[] {
+	mojis(...mojis: string[]) {
 		return mojis.map((emoji) => {
 			const em = this.emojis.cache.find((em) => em.name === emoji);
 			if (em) return em.toString();

@@ -163,8 +163,7 @@ export const confirm = async (itr: CommandInteraction, customContent?: string) =
 		});
 
 		collector.on("end", (useless: unknown, reason: string) => {
-			if (reason === "fromCollected") itr.editReply({ content: "Okay!", components: [] });
-			else {
+			if (reason !== "fromCollected") {
 				itr.editReply({ content: "Command canceled", components: [] });
 				reject("");
 			}

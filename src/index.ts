@@ -9,7 +9,8 @@ import { Collection } from "discord.js";
 process.stdout.write("\x1Bc\n"); // clears terminal, console.clear() doesn't fully clear it
 
 const client = new DaClient({
-	intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_MEMBERS", "GUILD_PRESENCES"]
+	intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_MEMBERS", "GUILD_PRESENCES"],
+	allowedMentions: { repliedUser: false }
 });
 
 const getJSFiles = (dir: string, subfolder: boolean = false): Collection<string, string[]> | string[] => {

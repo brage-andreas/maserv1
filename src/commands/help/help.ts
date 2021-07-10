@@ -58,7 +58,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 			.setColor(`#${client.colours.yellow}`)
 			.setAuthor(member.displayName || user.tag, user.displayAvatarURL());
 
-		const allCategories = new Set(client.commands.map((cmd) => cmd.category));
+		const allCategories = new Set(client.commands.map((cmd) => cmd.category).sort());
 		allCategories.forEach((category: string) => {
 			const cmds = client.commands
 				.filter((cmd) => cmd.category === category)
