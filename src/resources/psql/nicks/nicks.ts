@@ -30,7 +30,7 @@ const check = async (guildID: string, userID: string) => {
 	if (!(await existsRow(guildID, userID, "nicks"))) await createNickRow(guildID, userID);
 };
 
-const addNick = async (nick: string, userID: string, guildID: string) => {
+export const addNick = async (nick: string, userID: string, guildID: string) => {
 	await check(guildID, userID);
 
 	await get(`
@@ -40,7 +40,7 @@ const addNick = async (nick: string, userID: string, guildID: string) => {
     `);
 };
 
-const getNick = async (userID: string, guildID: string) => {
+export const getNick = async (userID: string, guildID: string) => {
 	await check(guildID, userID);
 
 	return (
@@ -51,5 +51,3 @@ const getNick = async (userID: string, guildID: string) => {
     `)
 	)?.nicks as string[] | undefined;
 };
-
-export { addNick, getNick };

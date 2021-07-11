@@ -2,11 +2,11 @@ import { ApplicationCommandData, CommandInteraction, GuildMember, MessageEmbed, 
 
 import { Args, DaClient } from "../../resources/definitions.js";
 import { log, parseDate } from "../../resources/automaton.js";
-import { USER_STATUS, ID_REGEX } from "../../resources/constants.js";
+import { USER_STATUS } from "../../resources/constants.js";
 import { getNick } from "../../resources/psql/nicks/nicks.js";
 
 const data: ApplicationCommandData = {
-	name: "userinfo",
+	name: "user",
 	description: "Sends information about a user",
 	options: [
 		{
@@ -28,8 +28,6 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 		let member = interaction.member as GuildMember | null;
 
 		if (raw) {
-			if (!ID_REGEX.test(raw)) return member;
-
 			let fetchedMember = await guild?.members.fetch({ user: raw as `${bigint}`, withPresences: true });
 
 			if (!fetchedMember) return member;
@@ -65,7 +63,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 	infoEmbed.addField("Status", `${status}`).setTimestamp();
 
 	if (roles.length) infoEmbed.addField("Roles", roles.join(", "));
-	if (nicks?.length) infoEmbed.addField("Names", `"${nicks.reverse().slice(0, 5).join('"\n"')}"`);
+	if (nicks && nicks?.length > 1) infoEmbed.addField("Names", `"${nicks.reverse().slice(1, 6).join('"\n"')}"`);
 	if (guild.ownerId === user.id) infoEmbed.setDescription(`👑 Server owner`);
 
 	interaction.editReply({ embeds: [infoEmbed] });

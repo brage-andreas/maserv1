@@ -1,39 +1,27 @@
 import db from "./db.js";
 
-const get = async (query: string) => {
-	try {
-		return await db.one(query);
-	} catch (err) {
-		return err;
-	}
+export const get = async (query: string) => await db.one(query).catch(() => null);
+
+export const existsRow = async (table: string, id: string, schema: string) => {
+	const ans = await get(`
+        SELECT EXISTS (
+            SELECT 1 FROM ${schema}."${table}" 
+            WHERE id = ${id}
+        );
+        `).catch(() => null);
+
+	return ans?.exists ? true : false;
 };
 
-const existsRow = async (guildID: string, userID: string, table: string) => {
-	try {
-		const ans = await get(`SELECT EXISTS (
-            SELECT 1 FROM ${table}."${guildID}" 
-            WHERE id = ${userID});`);
-
-		return ans?.exists ? true : false;
-	} catch (err) {
-		return err;
-	}
-};
-
-const existsTable = async (table: string) => {
-	try {
-		const ans = await get(`
+export const existsTable = async (table: string) => {
+	const ans = await get(`
         SELECT EXISTS (
             SELECT 1 FROM information_schema.tables 
             WHERE table_catalog='bigbot' AND 
                 table_schema='public' AND 
                 table_name='${table}'
-        );`);
+        );
+        `).catch(() => null);
 
-		return ans?.exists ? true : false;
-	} catch (err) {
-		return err;
-	}
+	return ans?.exists ? true : false;
 };
-
-export { get, existsRow, existsTable };

@@ -25,6 +25,8 @@
 		"pg-promise": "^10.10.2"
 	},
 	"devDependencies": {
-		"@types/node": "^15.6.2"
+		"@types/ms": "^0.7.31",
+		"@types/node": "^15.6.2",
+		"ms": "^2.1.3"
 	}
 }

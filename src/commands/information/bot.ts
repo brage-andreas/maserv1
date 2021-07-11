@@ -1,4 +1,5 @@
 import { ApplicationCommandData, CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
+import ms from "ms";
 
 import { Args, DaClient } from "../../resources/definitions.js";
 import { PLATFORMS } from "../../resources/constants.js";
@@ -32,7 +33,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 		.setColor(`#${client.colours.yellow}`)
 		.addField("Platform", platform)
 		.addField("RAM", heapStr)
-		.addField("Uptime", `${Math.ceil(uptime)}s`)
+		.addField("Uptime", ms(uptime * 1000, { long: true }))
 		.addField("Servers and channels", `${guilds} servers, and ${channels} channels`)
 		.addField("Users", `${roughUserCount} users`);
 

@@ -12,7 +12,7 @@ import { Args, DaClient } from "../../resources/definitions.js";
 import { log, parseDate } from "../../resources/automaton.js";
 
 const data: ApplicationCommandData = {
-	name: "serverinfo",
+	name: "server",
 	description: "Sends information about this server"
 };
 

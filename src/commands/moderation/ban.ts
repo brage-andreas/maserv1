@@ -60,7 +60,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 			.setAuthor(user.tag, user.displayAvatarURL())
 			.setColor(`#${client.colours.green}`)
 			.setThumbnail(!nsfw ? target.displayAvatarURL({ size: 1024, dynamic: false }) : "")
-			.addField("Succsessfully banned", `${target.toString()} (\`${targetId}\`)`)
+			.addField("Succsessfully banned", `${target.toString()} (${targetId})`)
 			.setFooter("User banned")
 			.setTimestamp();
 
@@ -70,7 +70,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 			`Last ${days} days of messages pruned${nsfw ? `\nNSFW avatar removed from embed` : ""}`
 		);
 
-		interaction.editReply({ content: "", embeds: [banEmbed] });
+		interaction.editReply({ embeds: [banEmbed], content: null, components: [] });
 
 		log.cmd({ cmd: "ban", msg: `Banned ${target.tag} (${targetId})` }, { guild, channel, user });
 	};
@@ -83,7 +83,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 			.setFooter("Ban failed")
 			.setTimestamp();
 
-		interaction.editReply({ embeds: [banErrorEmbed] });
+		interaction.editReply({ embeds: [banErrorEmbed], content: null, components: [] });
 	};
 
 	const query = `Are you sure you want to ban ${target.tag} (${targetId})?`;

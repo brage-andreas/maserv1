@@ -1,8 +1,12 @@
 import { ApplicationCommandOptionChoice } from "discord.js";
 
-export const CODEBLOCK_REGEX = /```(?:(?<lang>\S+)\n)?\s?(?<code>[^]+?)\s?```/;
 export const INVITE_REGEX = /(?:https?:\/\/)?(?:www\.)?discord(?:\.gg|(?:app)?\.com\/invite)\/(\S+)/;
+export const CODEBLOCK_REGEX = /```(?:(?<lang>\S+)\n)?\s?(?<code>[^]+?)\s?```/;
 export const TOKEN_REGEX = /[\w-]{24}\.[\w-]{6}\.[\w-]{27}/;
+
+export const CHANNEL_REGEX = /^(<#(\d{17,19})>)$/;
+export const USER_REGEX = /^(<@!?(\d{17,19})>)$/;
+export const ROLE_REGEX = /^(<@&(\d{17,19})>)$/;
 export const ID_REGEX = /^(\d{17,19})$/;
 
 export const BLURPLE = "5865F2";
@@ -17,48 +21,48 @@ export const FGREEN = `hex("${GREEN}")`;
 export const FRED = `hex("${RED}")`;
 
 export const JOIN_PHRASES = [
-	"Hiii, ¤!",
-	"Hello, ¤!",
+	"Nice to see you, ¤!",
 	"Much welcome, ¤!",
-	"What's up, ¤?",
 	"Good morning, ¤!",
-	"Nice to see you, ¤!"
+	"What's up, ¤?",
+	"Hello, ¤!",
+	"Hiii, ¤!"
 ];
 export const LEAVE_PHRASES = [
-	"Bye bye, ¤!",
 	"Hope too see you soon, ¤!",
+	"Until next time, ¤!",
 	"See you later, ¤!",
 	"Farewell, ¤!",
-	"Until next time, ¤!",
+	"Bye bye, ¤!",
 	"Adiós, ¤!"
 ];
 
 export const PLATFORMS: { [index: string]: string } = {
-	aix: "AIX",
-	darwin: "Darwin",
 	freebsd: "FreeBSD",
-	linux: "Linux",
+	android: "Android",
 	openbsd: "OpenBSD",
-	sunos: "SunOS",
+	darwin: "Darwin",
 	win32: "Windows",
-	android: "Android"
+	linux: "Linux",
+	sunos: "SunOS",
+	aix: "AIX"
 };
 
 export const CMD_TYPES: { [index: string]: string } = {
-	STRING: "string",
-	INTEGER: "number",
-	BOOLEAN: "true/false",
-	USER: "user (@/ID)",
 	CHANNEL: "channel (@/ID)",
+	BOOLEAN: "true/false",
+	MENTIONABLE: "@/ID",
+	USER: "user (@/ID)",
 	ROLE: "role (@/ID)",
-	MENTIONABLE: "@/ID"
+	INTEGER: "number",
+	STRING: "string"
 };
 
 export const USER_STATUS: { [index: string]: string } = {
+	dnd: "🟥 Do Not Disturb",
 	offline: "⬛ Offline",
 	online: "🟩 Online",
-	idle: "🟨 Idle",
-	dnd: "🟥 Do Not Disturb"
+	idle: "🟨 Idle"
 };
 
 export const CATEGORIES: { [index: string]: string } = {
@@ -71,18 +75,24 @@ export const CATEGORIES: { [index: string]: string } = {
 
 export const CONFIG_OPTION_CHOICES: ApplicationCommandOptionChoice[] = [
 	{
-		name: "mute role",
+		name: "Mute Role",
 		value: "mute_role"
 	},
 	{
-		name: "default channel",
-		value: "default_channel"
+		name: "Member Log Channel",
+		value: "member_log_channel"
 	},
 	{
-		name: "action log channel",
+		name: "Action Log Channel",
 		value: "log_channel"
 	}
 ];
+
+export const CONFIG_OPTION_INFO: { [index: string]: { type: string; reg: RegExp } } = {
+	mute_role: { type: "ROLE", reg: ROLE_REGEX },
+	member_log_channel: { type: "CHANNEL", reg: CHANNEL_REGEX },
+	log_channel: { type: "CHANNEL", reg: CHANNEL_REGEX }
+};
 
 export const CONFIG_METHOD_CHOICES: ApplicationCommandOptionChoice[] = [
 	{
