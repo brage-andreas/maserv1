@@ -123,7 +123,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 
 		let nameStr = `${getNameFromID(value as `${bigint}`)} (${value})`;
 
-		configEmbed.addField(`${optionName}`, `Set value to ${nameStr}`);
+		configEmbed.addField(`${tools} ${optionName}`, `Set value to ${nameStr}`);
 		interaction.editReply({ embeds: [configEmbed] });
 	};
 
@@ -147,10 +147,14 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 	};
 
 	const viewOption = async (option: string, optionName: string) => {
-		const setting = (await viewValue(option, guild.id)) || "none";
-		const settingStr = ID_REGEX.test(setting) ? `${getNameFromID(setting)} (${setting})` : `${setting}`;
+		const setting = await viewValue(option, guild.id);
+		const settingStr = setting
+			? ID_REGEX.test(setting)
+				? `Is set to ${getNameFromID(setting)} (${setting})`
+				: ` Is set to ${setting}`
+			: "Not set";
 
-		configEmbed.addField(`${checklist} ${optionName.toUpperCase()}`, `Is set to ${settingStr}`);
+		configEmbed.addField(`${checklist} ${optionName}`, settingStr);
 		interaction.editReply({ embeds: [configEmbed] });
 	};
 
@@ -159,7 +163,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 
 		await removeValue(option, guild.id);
 
-		configEmbed.addField(`${tools} ${optionName.toUpperCase()}`, `Removed value`);
+		configEmbed.addField(`${tools} ${optionName}`, `Removed value`);
 		interaction.editReply({ embeds: [configEmbed] });
 	};
 
