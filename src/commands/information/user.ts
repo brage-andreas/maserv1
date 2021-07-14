@@ -5,7 +5,7 @@ import { log, parseDate } from "../../resources/automaton.js";
 import { USER_STATUS } from "../../resources/constants.js";
 import { getNick } from "../../resources/psql/nicks/nicks.js";
 
-const data: ApplicationCommandData = {
+export const data: ApplicationCommandData = {
 	name: "user",
 	description: "Sends information about a user",
 	options: [
@@ -17,7 +17,6 @@ const data: ApplicationCommandData = {
 	]
 };
 
-export { data };
 export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
 	const { guild } = interaction;
 	const channel = interaction.channel as TextChannel;
@@ -38,7 +37,8 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 	const member = await getMember(args.get("user") as string | undefined);
 	const user = member?.user;
 
-	if (!member || !user || !guild) return interaction.editReply({ content: "Hmm. Something went wrong" });
+	if (!member || !member.presence || !user || !guild)
+		return interaction.editReply({ content: "Hmm. Something went wrong" });
 
 	const roles = member.roles.cache.filter((r) => r.name !== "@everyone").map((r) => r.toString());
 	const avatar = user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 });

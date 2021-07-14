@@ -3,7 +3,7 @@ import { ApplicationCommandData, CommandInteraction, TextChannel } from "discord
 import { Args, DaClient } from "../../resources/definitions.js";
 import { log } from "../../resources/automaton.js";
 
-const data: ApplicationCommandData = {
+export const data: ApplicationCommandData = {
 	name: "eval",
 	description: "Runs code",
 	options: [
@@ -16,7 +16,6 @@ const data: ApplicationCommandData = {
 	]
 };
 
-export { data };
 export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
 	const { user, guild } = interaction;
 	const channel = interaction.channel as TextChannel;

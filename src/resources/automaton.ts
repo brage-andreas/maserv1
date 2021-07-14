@@ -6,6 +6,7 @@ import {
 	GuildChannel,
 	GuildMember,
 	Message,
+	MessageActionRow,
 	MessageButton,
 	MessageComponentInteraction,
 	PermissionResolvable,
@@ -127,7 +128,7 @@ export const getDefaultChannel = (opt: { optChannel?: TextChannel; optGuild?: Gu
 	}
 
 	if (optGuild) {
-		const isValid = (ch: GuildChannel | ThreadChannel) => ch.type === "text" && !hasPerms(perms, me, ch);
+		const isValid = (ch: GuildChannel | ThreadChannel) => ch.type === "GUILD_TEXT" && !hasPerms(perms, me, ch);
 		const usableChannels = optGuild.channels.cache.filter(isValid) as Collection<`${bigint}`, TextChannel>;
 		if (!usableChannels.size) return;
 
@@ -138,10 +139,10 @@ export const getDefaultChannel = (opt: { optChannel?: TextChannel; optGuild?: Gu
 
 export const confirm = async (itr: CommandInteraction, customContent?: string) => {
 	return new Promise(async (resolve, reject) => {
-		const row = [
+		const row = new MessageActionRow().addComponents([
 			new MessageButton().setCustomId("yes").setLabel("Yes").setStyle("SUCCESS"),
 			new MessageButton().setCustomId("no").setLabel("No").setStyle("DANGER")
-		];
+		]);
 
 		const filter = (itr: MessageComponentInteraction) => itr.customId === "yes" || itr.customId === "no";
 

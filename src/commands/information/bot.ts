@@ -5,12 +5,11 @@ import { Args, DaClient } from "../../resources/definitions.js";
 import { PLATFORMS } from "../../resources/constants.js";
 import { log } from "../../resources/automaton.js";
 
-const data: ApplicationCommandData = {
+export const data: ApplicationCommandData = {
 	name: "bot",
 	description: "Sends information about me"
 };
 
-export { data };
 export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
 	const { user, guild } = interaction;
 	const channel = interaction.channel as TextChannel;

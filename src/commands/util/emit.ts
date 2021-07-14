@@ -3,7 +3,7 @@ import { ApplicationCommandData, CommandInteraction, GuildMember, TextChannel } 
 import { log } from "../../resources/automaton.js";
 import { Args, DaClient } from "../../resources/definitions.js";
 
-const data: ApplicationCommandData = {
+export const data: ApplicationCommandData = {
 	name: "emit",
 	description: "Emits an event",
 	options: [
@@ -26,7 +26,6 @@ const data: ApplicationCommandData = {
 	]
 };
 
-export { data };
 export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
 	const { user, guild } = interaction;
 	const channel = interaction.channel as TextChannel;

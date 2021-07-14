@@ -3,7 +3,7 @@ import { ApplicationCommandData, Collection, CommandInteraction, GuildMember, Me
 import { Args, DaClient } from "../../resources/definitions.js";
 import { confirm, log } from "../../resources/automaton.js";
 
-const data: ApplicationCommandData = {
+export const data: ApplicationCommandData = {
 	name: "prune",
 	description: "Deletes up to 100 messages",
 	options: [
@@ -26,7 +26,6 @@ const data: ApplicationCommandData = {
 	]
 };
 
-export { data };
 export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
 	const { guild, user } = interaction;
 	const member = interaction.member as GuildMember;
@@ -36,9 +35,8 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 
 	const allowedAmount = (n: number) => (Math.ceil(n) > 100 ? 100 : Math.ceil(n) < 0 ? 0 : Math.ceil(n));
 	const getChannel = (id?: `${bigint}`): TextChannel | undefined => {
-		let ch: any = interaction.channel;
-		if (id) ch = guild?.channels.cache.get(id);
-		if (ch?.type !== "text") return;
+		const ch = id ? guild?.channels.cache.get(id) || interaction.channel : interaction.channel;
+		if (ch?.type !== "GUILD_TEXT") return;
 		return ch as TextChannel;
 	};
 

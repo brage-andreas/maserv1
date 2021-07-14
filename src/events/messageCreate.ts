@@ -8,7 +8,7 @@ export async function run(client: DaClient, msg: Message) {
 	const { content, author, guild, channel } = msg;
 	const isBotOwner = (): boolean => author.id === client.application?.owner?.id;
 
-	if (channel.type !== "text") return;
+	if (channel.type !== "GUILD_TEXT") return;
 
 	if (TOKEN_REGEX.test(content)) return msg.delete();
 

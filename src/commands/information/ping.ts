@@ -3,7 +3,7 @@ import { ApplicationCommandData, CommandInteraction, Message, TextChannel } from
 import { Args, DaClient } from "../../resources/definitions.js";
 import { log } from "../../resources/automaton.js";
 
-const data: ApplicationCommandData = {
+export const data: ApplicationCommandData = {
 	name: "ping",
 	description: "Sends ping",
 	options: [
@@ -15,7 +15,6 @@ const data: ApplicationCommandData = {
 	]
 };
 
-export { data };
 export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
 	const { channel, guild, user } = interaction;
 	interaction.reply("...");

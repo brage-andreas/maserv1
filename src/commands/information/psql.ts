@@ -4,7 +4,7 @@ import { Args, DaClient } from "../../resources/definitions.js";
 import { log } from "../../resources/automaton.js";
 import { getNick } from "../../resources/psql/nicks/nicks.js";
 
-const data: ApplicationCommandData = {
+export const data: ApplicationCommandData = {
 	name: "psql",
 	description: "psql lol",
 	options: [
@@ -17,7 +17,6 @@ const data: ApplicationCommandData = {
 	]
 };
 
-export { data };
 export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
 	const { user, guild } = interaction;
 	const channel = interaction.channel as TextChannel;

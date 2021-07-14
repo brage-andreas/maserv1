@@ -11,12 +11,11 @@ import {
 import { Args, DaClient } from "../../resources/definitions.js";
 import { log, parseDate } from "../../resources/automaton.js";
 
-const data: ApplicationCommandData = {
+export const data: ApplicationCommandData = {
 	name: "server",
 	description: "Sends information about this server"
 };
 
-export { data };
 export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
 	const { guild, user } = interaction;
 	const channel = interaction.channel as TextChannel;
@@ -37,7 +36,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 	};
 
 	const textChannels = channels.cache.filter((c) => c.isText() && !c.isThread());
-	const voiceChannels = channels.cache.filter((c) => c.type === "voice");
+	const voiceChannels = channels.cache.filter((c) => c.type === "GUILD_VOICE");
 
 	const oldestTextChannel = oldestChannel(textChannels);
 	const oldestVoiceChannel = oldestChannel(voiceChannels);

@@ -4,7 +4,7 @@ import { CATEGORIES, CMD_TYPES } from "../../resources/constants.js";
 import { Args, DaClient } from "../../resources/definitions.js";
 import { log } from "../../resources/automaton.js";
 
-const data: ApplicationCommandData = {
+export const data: ApplicationCommandData = {
 	name: "help",
 	description: "Sends either a list of, or information about commands",
 	options: [
@@ -16,7 +16,6 @@ const data: ApplicationCommandData = {
 	]
 };
 
-export { data };
 export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
 	const { guild, user } = interaction;
 	const channel = interaction.channel as TextChannel;
