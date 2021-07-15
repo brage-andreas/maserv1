@@ -1,5 +1,7 @@
 import { ApplicationCommandOptionChoice } from "discord.js";
 
+type StringObject = { [index: string]: string };
+
 export const INVITE_REGEX = /(?:https?:\/\/)?(?:www\.)?discord(?:\.gg|(?:app)?\.com\/invite)\/(\S+)/;
 export const CODEBLOCK_REGEX = /```(?:(?<lang>\S+)\n)?\s?(?<code>[^]+?)\s?```/;
 export const TOKEN_REGEX = /[\w-]{24}\.[\w-]{6}\.[\w-]{27}/;
@@ -37,7 +39,7 @@ export const LEAVE_PHRASES = [
 	"Adiós, ¤!"
 ];
 
-export const PLATFORMS: { [index: string]: string } = {
+export const PLATFORMS: StringObject = {
 	freebsd: "FreeBSD",
 	android: "Android",
 	openbsd: "OpenBSD",
@@ -48,7 +50,7 @@ export const PLATFORMS: { [index: string]: string } = {
 	aix: "AIX"
 };
 
-export const CMD_TYPES: { [index: string]: string } = {
+export const CMD_TYPES: StringObject = {
 	CHANNEL: "channel (@/ID)",
 	BOOLEAN: "true/false",
 	MENTIONABLE: "@/ID",
@@ -58,14 +60,14 @@ export const CMD_TYPES: { [index: string]: string } = {
 	STRING: "string"
 };
 
-export const USER_STATUS: { [index: string]: string } = {
+export const USER_STATUS: StringObject = {
 	dnd: "🟥 Do Not Disturb",
 	offline: "⬛ Offline",
 	online: "🟩 Online",
 	idle: "🟨 Idle"
 };
 
-export const CATEGORIES: { [index: string]: string } = {
+export const CATEGORIES: StringObject = {
 	information: "Info",
 	moderation: "Mod",
 	config: "Config",

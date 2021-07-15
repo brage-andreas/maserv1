@@ -16,6 +16,7 @@ import {
 } from "discord.js";
 
 import { FGREEN, FRED, FYELLOW } from "./constants.js";
+import { viewValue } from "./psql/config/config.js";
 
 const _twoCharLength = (num: number): string => (num < 10 ? String("0" + num) : String(num));
 
@@ -117,24 +118,41 @@ export const parseDate = (timestamp: number | null): string => {
 	return `<t:${Math.ceil(timestamp / 1000)}:R>`;
 };
 
-export const getDefaultChannel = (opt: { optChannel?: TextChannel; optGuild?: Guild; me: GuildMember }) => {
-	const { optChannel, optGuild, me } = opt;
+interface DefaultChannelOpt {
+	optChannel?: TextChannel;
+	optGuild?: Guild;
+	me: GuildMember;
+	type?: "member_log" | "bot_log";
+}
+export const getDefaultChannel = async (opt: DefaultChannelOpt): Promise<TextChannel | undefined> => {
+	return new Promise(async (resolve, reject) => {
+		const { optChannel, optGuild, me, type } = opt;
 
-	const perms: PermissionResolvable[] = ["VIEW_CHANNEL", "SEND_MESSAGES"];
+		const perms: PermissionResolvable[] = ["VIEW_CHANNEL", "SEND_MESSAGES"];
 
-	channel: if (optChannel) {
-		if (!hasPerms(perms, me, optChannel)) break channel;
-		return optChannel;
-	}
+		channel: if (optChannel) {
+			if (!hasPerms(perms, me, optChannel)) break channel;
+			resolve(optChannel);
+		}
 
-	if (optGuild) {
-		const isValid = (ch: GuildChannel | ThreadChannel) => ch.type === "GUILD_TEXT" && !hasPerms(perms, me, ch);
-		const usableChannels = optGuild.channels.cache.filter(isValid) as Collection<`${bigint}`, TextChannel>;
-		if (!usableChannels.size) return;
+		if (optGuild) {
+			const isValid = (ch: GuildChannel | ThreadChannel) => ch.type === "GUILD_TEXT" && !hasPerms(perms, me, ch);
+			const usableChannels = optGuild.channels.cache.filter(isValid) as Collection<`${bigint}`, TextChannel>;
+			if (!usableChannels.size) resolve(undefined);
 
-		const priorityChannel = usableChannels.find((ch) => ch.name === "general" || ch.name === "main");
-		return priorityChannel || usableChannels.first();
-	}
+			// TODO: fix
+			const dbChannelID = type ? await viewValue(`${type}_channel`, optGuild.id) : null;
+			const dbChannel = dbChannelID
+				? (optGuild.channels.cache.get(dbChannelID as `${bigint}`) as TextChannel | undefined)
+				: null;
+			if (dbChannel && isValid(dbChannel)) resolve(dbChannel);
+			if (dbChannel && !isValid(dbChannel))
+				reject(`Default ${type} is set, but I cannot send messages in ${dbChannel}.`);
+
+			const priorityChannel = usableChannels.find((ch) => ch.name === "general" || ch.name === "main");
+			resolve(priorityChannel || usableChannels.first());
+		}
+	});
 };
 
 export const confirm = async (itr: CommandInteraction, customContent?: string) => {

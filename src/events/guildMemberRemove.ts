@@ -11,7 +11,7 @@ export async function run(client: DaClient, member: GuildMember) {
 
 	if (!me) return;
 
-	const channel = getDefaultChannel({ optGuild: guild, me });
+	const channel = await getDefaultChannel({ optGuild: guild, me });
 	if (!channel) return;
 
 	const randomElement = (array: string[]) => array[Math.floor(Math.random() * array.length)];
