@@ -136,15 +136,16 @@ export const getDefaultChannel = async (opt: DefaultChannelOpt): Promise<TextCha
 		}
 
 		if (optGuild) {
-			const isValid = (ch: GuildChannel | ThreadChannel) => ch.type === "GUILD_TEXT" && !hasPerms(perms, me, ch);
+			const isValid = (ch: GuildChannel | ThreadChannel) => ch.type === "GUILD_TEXT" && hasPerms(perms, me, ch);
 			const usableChannels = optGuild.channels.cache.filter(isValid) as Collection<`${bigint}`, TextChannel>;
 			if (!usableChannels.size) resolve(undefined);
 
-			// TODO: fix
 			const dbChannelID = type ? await viewValue(`${type}_channel`, optGuild.id) : null;
+
 			const dbChannel = dbChannelID
 				? (optGuild.channels.cache.get(dbChannelID as `${bigint}`) as TextChannel | undefined)
 				: null;
+
 			if (dbChannel && isValid(dbChannel)) resolve(dbChannel);
 			if (dbChannel && !isValid(dbChannel))
 				reject(`Default ${type} is set, but I cannot send messages in ${dbChannel}.`);

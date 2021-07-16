@@ -5,11 +5,12 @@ dotenv.config();
 
 import { Command, DaClient } from "./resources/definitions.js";
 import { Collection } from "discord.js";
+import { INTENTS_BITFIELD } from "./resources/constants.js";
 
 process.stdout.write("\x1Bc\n"); // clears terminal, console.clear() doesn't fully clear it
 
 const client = new DaClient({
-	intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_MEMBERS", "GUILD_PRESENCES"],
+	intents: INTENTS_BITFIELD,
 	allowedMentions: { repliedUser: false }
 });
 

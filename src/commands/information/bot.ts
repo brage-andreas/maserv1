@@ -1,4 +1,4 @@
-import { ApplicationCommandData, CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
+import { ApplicationCommandData, CommandInteraction, Guild, MessageEmbed, TextChannel } from "discord.js";
 import ms from "ms";
 
 import { Args, DaClient } from "../../resources/definitions.js";
@@ -11,7 +11,8 @@ export const data: ApplicationCommandData = {
 };
 
 export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
-	const { user, guild } = interaction;
+	const { user } = interaction;
+	const guild = interaction.guild as Guild;
 	const channel = interaction.channel as TextChannel;
 
 	const formatBytes = (number: number) => number.toFixed(2).replace(".", ",");
@@ -23,7 +24,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 	const uptime = process.uptime();
 
 	const guilds = client.guilds.cache.size;
-	const channels = client.channels.cache.size;
+	const channels = client.channels.cache.filter((ch) => !ch.isThread()).size;
 	const roughUserCount = client.guilds.cache.reduce((count, guild) => count + guild.memberCount, 0);
 
 	const infoEmbed = new MessageEmbed()
