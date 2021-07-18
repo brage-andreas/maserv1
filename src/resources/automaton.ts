@@ -55,7 +55,7 @@ export const time = (): string[] => {
 
 const _cache = { user: "", channel: "" };
 export const log = {
-	cmd: function (opt: LogOpt, from: LogFrom, err = false) {
+	cmd: function (opt: LogOpt, from: LogFrom, err = false): void {
 		const { cmd, msg } = opt;
 		const { user, channel, guild } = from;
 		const [sec, min, hour] = time();
@@ -94,7 +94,7 @@ export const log = {
 		_cache.user = user.id;
 	},
 
-	event: function (opt: LogEvent) {
+	event: function (opt: LogEvent): void {
 		const { guild, msg } = opt;
 		const [sec, min, hour] = time();
 
@@ -146,9 +146,10 @@ export const getDefaultChannel = async (opt: DefaultChannelOpt): Promise<TextCha
 				? (optGuild.channels.cache.get(dbChannelID as `${bigint}`) as TextChannel | undefined)
 				: null;
 
-			if (dbChannel && isValid(dbChannel)) resolve(dbChannel);
-			if (dbChannel && !isValid(dbChannel))
-				reject(`Default ${type} is set, but I cannot send messages in ${dbChannel}.`);
+			if (dbChannel) {
+				if (isValid(dbChannel)) resolve(dbChannel);
+				else reject(`Default ${type} is set, but I cannot send messages in ${dbChannel}.`);
+			}
 
 			const priorityChannel = usableChannels.find((ch) => ch.name === "general" || ch.name === "main");
 			resolve(priorityChannel || usableChannels.first());
@@ -163,10 +164,10 @@ export const confirm = async (itr: CommandInteraction, customContent?: string) =
 			new MessageButton().setCustomId("no").setLabel("No").setStyle("DANGER")
 		]);
 
-		const filter = (itr: MessageComponentInteraction) => itr.customId === "yes" || itr.customId === "no";
+		const filter = (it: MessageComponentInteraction) => it.customId === "yes" || it.customId === "no";
 
 		const query = (await itr.editReply({
-			content: customContent || `Are you sure?`,
+			content: customContent || "Are you sure?",
 			components: [row]
 		})) as Message;
 

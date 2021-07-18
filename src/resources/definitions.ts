@@ -11,21 +11,21 @@ class DaClient extends Client {
 	commands = new Collection<string, Command>();
 	colours = { yellow: YELLOW, green: GREEN, red: RED, black: BLACK, white: WHITE, blurple: BLURPLE };
 
-	get moji() {
+	get moji(): Collection<string, string> {
 		const emojis = new Collection<string, string>();
 
-		this.emojis.cache.forEach((em) => {
-			if (!em.name) return;
-			emojis.set(em.name, em.toString());
+		this.emojis.cache.forEach((emoji) => {
+			if (!emoji.name) return;
+			emojis.set(emoji.name, emoji.toString());
 		});
 
 		return emojis;
 	}
 
-	mojis(...mojis: string[]) {
+	mojis(...mojis: string[]): (string | undefined)[] {
 		return mojis.map((emoji) => {
-			const em = this.emojis.cache.find((em) => em.name === emoji);
-			if (em) return em.toString();
+			const emojiStr = this.emojis.cache.find((em) => em.name === emoji)?.toString();
+			if (emojiStr) return emojiStr;
 		});
 	}
 }

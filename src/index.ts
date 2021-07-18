@@ -14,7 +14,7 @@ const client = new DaClient({
 	allowedMentions: { repliedUser: false }
 });
 
-const getJSFiles = (dir: string, subfolder: boolean = false): Collection<string, string[]> | string[] => {
+const getJSFiles = (dir: string, subfolder = false): Collection<string, string[]> | string[] => {
 	const allItemsInDir: string[] = readdirSync(new URL(`./${dir}`, import.meta.url));
 
 	if (!subfolder) {
@@ -57,7 +57,8 @@ eventFiles.forEach(async (fullFileName: string) => {
 	const fileName = fullFileName.split(".")[0];
 
 	if (!fileName) return;
-	if (file) client.on(fileName, (...args: any) => file.run(client, ...args));
+
+	if (file) client.on(fileName, (...args: unknown[]) => file.run(client, ...args));
 });
 
 void client.login(process.env.TOKEN);
