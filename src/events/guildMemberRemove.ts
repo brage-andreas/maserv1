@@ -1,9 +1,10 @@
 import { GuildMember, MessageEmbed } from "discord.js";
 import { getDefaultChannel, log, parseDate } from "../resources/automaton.js";
-import { LEAVE_PHRASES } from "../resources/constants.js";
+import { LEAVE_PHRASES } from "../constants.js";
 import { DaClient } from "../resources/definitions.js";
 
 export async function run(client: DaClient, member: GuildMember) {
+	console.log(member.displayName);
 	const { guild, user } = member;
 	const me = guild.me;
 

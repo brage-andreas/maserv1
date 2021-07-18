@@ -1,6 +1,6 @@
 import { ApplicationCommandData, CommandInteraction, GuildMember, MessageEmbed, TextChannel } from "discord.js";
 
-import { CATEGORIES, CMD_TYPES } from "../../resources/constants.js";
+import { CATEGORIES, CMD_TYPES } from "../../constants.js";
 import { Args, DaClient } from "../../resources/definitions.js";
 import { log } from "../../resources/automaton.js";
 

@@ -1,4 +1,4 @@
-import { YELLOW, GREEN, RED, BLACK, WHITE, BLURPLE } from "./constants.js";
+import { YELLOW, GREEN, RED, BLACK, WHITE, BLURPLE } from "../constants.js";
 import {
 	ApplicationCommandData,
 	ApplicationCommandOptionData,

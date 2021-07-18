@@ -1,7 +1,7 @@
 import { ApplicationCommandData, Message } from "discord.js";
 
 import { DaClient } from "../resources/definitions.js";
-import { CODEBLOCK_REGEX, TOKEN_REGEX } from "../resources/constants.js";
+import { CODEBLOCK_REGEX, TOKEN_REGEX } from "../constants.js";
 import { log } from "../resources/automaton.js";
 
 export async function run(client: DaClient, msg: Message) {

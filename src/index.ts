@@ -1,12 +1,12 @@
-import { readdirSync } from "fs";
 import dotenv from "dotenv";
 import chalk from "chalk";
-dotenv.config();
+import { Collection } from "discord.js";
+import { readdirSync } from "fs";
 
 import { Command, DaClient } from "./resources/definitions.js";
-import { Collection } from "discord.js";
-import { INTENTS_BITFIELD } from "./resources/constants.js";
+import { INTENTS_BITFIELD } from "./constants.js";
 
+dotenv.config();
 process.stdout.write("\x1Bc\n"); // clears terminal, console.clear() doesn't fully clear it
 
 const client = new DaClient({

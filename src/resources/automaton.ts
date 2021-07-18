@@ -15,7 +15,7 @@ import {
 	User
 } from "discord.js";
 
-import { FGREEN, FRED, FYELLOW } from "./constants.js";
+import { FGREEN, FRED, FYELLOW } from "../constants.js";
 import { viewValue } from "./psql/config/config.js";
 
 const _twoCharLength = (num: number): string => (num < 10 ? String("0" + num) : String(num));

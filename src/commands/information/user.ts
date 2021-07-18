@@ -2,7 +2,7 @@ import { ApplicationCommandData, CommandInteraction, GuildMember, MessageEmbed, 
 
 import { Args, DaClient } from "../../resources/definitions.js";
 import { log, parseDate } from "../../resources/automaton.js";
-import { USER_STATUS } from "../../resources/constants.js";
+import { USER_STATUS } from "../../constants.js";
 import { getNick } from "../../resources/psql/nicks/nicks.js";
 
 export const data: ApplicationCommandData = {

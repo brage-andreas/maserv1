@@ -4,11 +4,13 @@ dotenv.config();
 
 const pgp = pgpImport();
 
-const username = process.env.PSQL_USER;
-const password = process.env.PSQL_PASS;
-const port = process.env.PSQL_PORT;
-const host = process.env.PSQL_HOST;
-const name = process.env.PSQL_DB_NAME;
+const { DB_USER, DB_PASS, DB_PORT, DB_HOST, DB_BASENAME } = process.env;
+
+const username = DB_USER;
+const password = DB_PASS;
+const name = DB_BASENAME;
+const port = DB_PORT;
+const host = DB_HOST;
 
 const connectionString = `postgres://${username}:${password}@${host}:${port}/${name}`;
 

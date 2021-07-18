@@ -1,4 +1,4 @@
-import { CONFIG_OPTION_CHOICES } from "../../constants.js";
+import { CONFIG_OPTION_CHOICES } from "../../../constants.js";
 import { get, existsRow, existsTable } from "../util.js";
 
 const createConfigRow = async (guildID: string) => {

@@ -2,7 +2,7 @@ import { ApplicationCommandData, CommandInteraction, Guild, MessageEmbed, TextCh
 import ms from "ms";
 
 import { Args, DaClient } from "../../resources/definitions.js";
-import { PLATFORMS } from "../../resources/constants.js";
+import { PLATFORMS } from "../../constants.js";
 import { log } from "../../resources/automaton.js";
 
 export const data: ApplicationCommandData = {

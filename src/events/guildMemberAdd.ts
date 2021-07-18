@@ -1,6 +1,6 @@
 import { GuildMember, MessageEmbed } from "discord.js";
 import { getDefaultChannel, log, parseDate } from "../resources/automaton.js";
-import { JOIN_PHRASES } from "../resources/constants.js";
+import { JOIN_PHRASES } from "../constants.js";
 import { DaClient } from "../resources/definitions.js";
 
 export async function run(client: DaClient, member: GuildMember) {

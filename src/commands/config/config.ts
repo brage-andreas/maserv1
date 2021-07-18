@@ -10,12 +10,7 @@ import {
 	ThreadChannel
 } from "discord.js";
 
-import {
-	CONFIG_METHOD_CHOICES,
-	CONFIG_OPTION_CHOICES,
-	CONFIG_OPTION_INFO,
-	ID_REGEX
-} from "../../resources/constants.js";
+import { CONFIG_METHOD_CHOICES, CONFIG_OPTION_CHOICES, CONFIG_OPTION_INFO, ID_REGEX } from "../../constants.js";
 import { removeValue, setValue, viewConfig, viewValue } from "../../resources/psql/config/config.js";
 import { Args, DaClient } from "../../resources/definitions.js";
 import { log } from "../../resources/automaton.js";
