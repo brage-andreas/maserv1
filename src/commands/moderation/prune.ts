@@ -47,7 +47,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 	await interaction.reply({ content: "Working...", ephemeral: true });
 
 	// --- Args
-	const rawChannel = interaction.options.getChannel("channel") as GuildChannel | null;
+	const rawChannel = (interaction.options.getChannel("channel") as GuildChannel | null) ?? interaction.channel;
 	const rawAmount = interaction.options.getInteger("amount") ?? 50;
 	const target = interaction.options.getUser("user");
 
