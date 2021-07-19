@@ -1,6 +1,6 @@
-import { ApplicationCommandData, CommandInteraction, GuildMember, MessageEmbed, TextChannel } from "discord.js";
+import { ApplicationCommandData, MessageEmbed } from "discord.js";
 
-import { Args, DaClient } from "../../resources/definitions.js";
+import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { log, parseDate } from "../../resources/automaton.js";
 import { USER_STATUS } from "../../constants.js";
 import { getNick } from "../../resources/psql/nicks/nicks.js";
@@ -17,28 +17,25 @@ export const data: ApplicationCommandData = {
 	]
 };
 
-export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
-	const { guild } = interaction;
-	const channel = interaction.channel as TextChannel;
+export async function run(client: DaClient, interaction: CmdInteraction) {
+	const { guild, channel } = interaction;
 
 	await interaction.defer();
 
-	const getMember = async (raw: string | undefined) => {
-		let member = interaction.member as GuildMember | null;
+	const getMember = async (raw: `${bigint}` | undefined) => {
+		let member = interaction.member;
 
-		if (raw) {
-			let fetchedMember = await guild?.members.fetch({ user: raw as `${bigint}`, withPresences: true });
+		if (!raw) return member;
 
-			if (!fetchedMember) return member;
-			else return fetchedMember;
-		} else return member;
+		let fetchedMember = await guild.members.fetch({ user: raw, withPresences: true });
+		return fetchedMember ?? member;
 	};
 
-	const member = await getMember(args.get("user") as string | undefined);
-	const user = member?.user;
+	const rawUser = interaction.options.getUser("user");
+	const member = await getMember(rawUser?.id);
+	const user = member.user;
 
-	if (!member || !member.presence || !user || !guild)
-		return interaction.editReply({ content: "Hmm. Something went wrong" });
+	if (!member.presence) return interaction.editReply({ content: "Hmm. Something went wrong" });
 
 	const roles = member.roles.cache.filter((r) => r.name !== "@everyone").map((r) => r.toString());
 	const avatar = user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 });

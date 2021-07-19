@@ -1,7 +1,7 @@
 import { ApplicationCommandData, CommandInteraction, Guild, MessageEmbed, TextChannel } from "discord.js";
 import ms from "ms";
 
-import { Args, DaClient } from "../../resources/definitions.js";
+import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { PLATFORMS } from "../../constants.js";
 import { log } from "../../resources/automaton.js";
 
@@ -10,10 +10,8 @@ export const data: ApplicationCommandData = {
 	description: "Sends information about me"
 };
 
-export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
-	const { user } = interaction;
-	const guild = interaction.guild as Guild;
-	const channel = interaction.channel as TextChannel;
+export async function run(client: DaClient, interaction: CmdInteraction) {
+	const { user, guild, channel } = interaction;
 
 	const formatBytes = (number: number) => number.toFixed(2).replace(".", ",");
 

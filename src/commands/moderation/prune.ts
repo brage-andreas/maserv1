@@ -1,7 +1,7 @@
-import { ApplicationCommandData, Collection, CommandInteraction, GuildMember, Message, TextChannel } from "discord.js";
+import { ApplicationCommandData, Collection, GuildChannel, Message, TextChannel } from "discord.js";
 
-import { Args, DaClient } from "../../resources/definitions.js";
-import { confirm, log } from "../../resources/automaton.js";
+import { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import { confirm, hasPerms, log } from "../../resources/automaton.js";
 
 export const data: ApplicationCommandData = {
 	name: "prune",
@@ -10,8 +10,7 @@ export const data: ApplicationCommandData = {
 		{
 			name: "amount",
 			type: "INTEGER",
-			description: "How many messages",
-			required: true
+			description: "How many messages"
 		},
 		{
 			name: "user",
@@ -26,36 +25,43 @@ export const data: ApplicationCommandData = {
 	]
 };
 
-export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
-	const { guild, user } = interaction;
-	const member = interaction.member as GuildMember;
+export async function run(client: DaClient, interaction: CmdInteraction) {
+	const { user, member, guild } = interaction;
 
-	if (!member.permissions.has("MANAGE_MESSAGES"))
-		return interaction.reply({ content: "You don't have sufficient permissions", ephemeral: true });
+	// --- Perms
+	const err = client.moji.get("err");
+	if (!hasPerms(["BAN_MEMBERS"], guild.me))
+		return interaction.editReply(`${err || ""} I don't have sufficient permissions`);
 
+	if (!hasPerms(["BAN_MEMBERS"], member))
+		return interaction.editReply(`${err || ""} You don't have sufficient permissions`);
+
+	// --- Functions
 	const allowedAmount = (n: number) => (Math.ceil(n) > 100 ? 100 : Math.ceil(n) < 0 ? 0 : Math.ceil(n));
-	const getChannel = (id?: `${bigint}`): TextChannel | undefined => {
-		const ch = id ? guild?.channels.cache.get(id) || interaction.channel : interaction.channel;
-		if (ch?.type !== "GUILD_TEXT") return;
+	const getChannel = (ch: GuildChannel | null): TextChannel | null => {
+		if (ch?.type !== "GUILD_TEXT") return null;
 		return ch as TextChannel;
 	};
 
+	// --- Deferring
 	await interaction.reply({ content: "Working...", ephemeral: true });
 
-	const amount = allowedAmount(args.get("amount") as number);
-	const targetID = args.get("user") as `${bigint}`;
-	const channelID = args.get("channel") as `${bigint}`;
+	// --- Args
+	const rawChannel = interaction.options.getChannel("channel") as GuildChannel | null;
+	const rawAmount = interaction.options.getInteger("amount") ?? 50;
+	const target = interaction.options.getUser("user");
 
-	const target = targetID ? await client.users.fetch(targetID) : null;
-	const channel = getChannel(channelID);
+	const channel = getChannel(rawChannel);
+	const amount = allowedAmount(rawAmount);
 
 	if (!channel) return interaction.editReply({ content: "Something went wrong with the channel" });
 
+	// --- Prune
 	channel.messages.fetch({ limit: amount }).then(async (messages: Collection<`${bigint}`, Message>) => {
 		const msgsToDelete = target ? messages.filter((msg) => msg.author.id === target.id) : messages;
 
 		const targetStr = target ? ` from ${target}` : "";
-		const channelStr = channelID ? ` in ${channel}` : "";
+		const channelStr = channel ? ` in ${channel}` : "";
 
 		const query = `Are you sure you want to delete ${msgsToDelete.size} messages${targetStr}${channelStr}?`;
 		await confirm(interaction, query)

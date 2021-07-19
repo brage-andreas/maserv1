@@ -1,7 +1,5 @@
-import { CommandInteraction, TextChannel } from "discord.js";
-
-import { log } from "../../resources/automaton.js";
-import { Args, DaClient } from "../../resources/definitions.js";
+import { hasPerms, log } from "../../resources/automaton.js";
+import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 
 export const data = {
 	name: "say",
@@ -16,12 +14,17 @@ export const data = {
 	]
 };
 
-export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
-	const { user, guild } = interaction;
-	const channel = interaction.channel as TextChannel;
-	const input = args.get("input") as string;
+export async function run(client: DaClient, interaction: CmdInteraction) {
+	const { user, guild, channel, member } = interaction;
 
-	await interaction.reply({ content: input, allowedMentions: { parse: [] } });
+	const input = interaction.options.getString("input", true);
+
+	const mentionOpt = { content: input };
+	const opt = { content: input, allowedMentions: { parse: [] } };
+
+	const perms = hasPerms("MENTION_EVERYONE", member) || hasPerms("MANAGE_MESSAGES", member);
+
+	await interaction.reply(perms ? mentionOpt : opt);
 
 	log.cmd({ cmd: "say", msg: `Said: "${input}"` }, { guild, channel, user });
 }

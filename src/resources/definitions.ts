@@ -4,7 +4,10 @@ import {
 	ApplicationCommandOptionData,
 	Client,
 	Collection,
-	CommandInteraction
+	CommandInteraction,
+	Guild,
+	GuildMember,
+	TextChannel
 } from "discord.js";
 
 class DaClient extends Client {
@@ -36,9 +39,13 @@ interface Command {
 	options?: ApplicationCommandOptionData[];
 	data: ApplicationCommandData;
 	category: string;
-	run(client: DaClient, interaction: CommandInteraction, args: Args): void;
+	run(client: DaClient, interaction: CommandInteraction): void;
 }
 
-type Args = Collection<string, string | number | boolean | undefined>;
+interface CmdInteraction extends CommandInteraction {
+	member: GuildMember;
+	channel: TextChannel;
+	guild: Guild;
+}
 
-export { DaClient, Command, Args };
+export { DaClient, Command, CmdInteraction };

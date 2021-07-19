@@ -1,7 +1,7 @@
-import { ApplicationCommandData, CommandInteraction, GuildMember, MessageEmbed, TextChannel } from "discord.js";
+import { ApplicationCommandData, MessageEmbed } from "discord.js";
 
 import { CATEGORIES, CMD_TYPES } from "../../constants.js";
-import { Args, DaClient } from "../../resources/definitions.js";
+import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { log } from "../../resources/automaton.js";
 
 export const data: ApplicationCommandData = {
@@ -16,15 +16,13 @@ export const data: ApplicationCommandData = {
 	]
 };
 
-export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
-	const { guild, user } = interaction;
-	const channel = interaction.channel as TextChannel;
-	const member = (interaction.member as GuildMember) || null;
-	const targetCmd = args.get("command") as string;
-
+export async function run(client: DaClient, interaction: CmdInteraction) {
+	const { guild, user, channel, member } = interaction;
 	const [greenArrow, yellowArrow] = client.mojis("doubletick_g", "doubletick_y");
 
 	await interaction.defer();
+
+	const targetCmd = interaction.options.getString("command");
 
 	if (targetCmd) {
 		const cmd = client.commands.get(targetCmd as string);
@@ -50,7 +48,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 
 		interaction.editReply({ embeds: [oneCmdEmbed] });
 
-		log.cmd({ cmd: "help", msg: `Sent info about ${targetCmd}` }, { channel: channel as TextChannel, guild, user });
+		log.cmd({ cmd: "help", msg: `Sent info about ${targetCmd}` }, { channel: channel, guild, user });
 	} else {
 		const allCmdsEmbed = new MessageEmbed()
 			.setTitle(`Commands`)
@@ -68,6 +66,6 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 
 		interaction.editReply({ embeds: [allCmdsEmbed] });
 
-		log.cmd({ cmd: "help", msg: "Sent all commands" }, { channel: channel as TextChannel, guild, user });
+		log.cmd({ cmd: "help", msg: "Sent all commands" }, { channel: channel, guild, user });
 	}
 }

@@ -1,14 +1,6 @@
-import {
-	ApplicationCommandData,
-	Collection,
-	CommandInteraction,
-	GuildChannel,
-	MessageEmbed,
-	TextChannel,
-	ThreadChannel
-} from "discord.js";
+import { ApplicationCommandData, Collection, GuildChannel, MessageEmbed, ThreadChannel } from "discord.js";
 
-import { Args, DaClient } from "../../resources/definitions.js";
+import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { log, parseDate } from "../../resources/automaton.js";
 
 export const data: ApplicationCommandData = {
@@ -16,9 +8,8 @@ export const data: ApplicationCommandData = {
 	description: "Sends information about this server"
 };
 
-export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
-	const { guild, user } = interaction;
-	const channel = interaction.channel as TextChannel;
+export async function run(client: DaClient, interaction: CmdInteraction) {
+	const { guild, user, channel } = interaction;
 
 	await interaction.defer();
 
@@ -59,7 +50,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 		.addField("Members", `${memberCount}`)
 		.addField(
 			"Channels",
-			`${textChannels.size} text channels and ${voiceChannels.size} voice channels\n${oldTextString}${oldVoiceString}`
+			`**${textChannels.size}** text channels and **${voiceChannels.size}** voice channels\n${oldTextString}${oldVoiceString}`
 		)
 		.addField("Roles", `${roles.cache.size - 1} custom roles`)
 		.setTimestamp();

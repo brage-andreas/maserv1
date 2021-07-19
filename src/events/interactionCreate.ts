@@ -1,15 +1,13 @@
-import { Collection, Interaction } from "discord.js";
-import { DaClient, Args } from "../resources/definitions.js";
+import { Interaction } from "discord.js";
+import { DaClient } from "../resources/definitions.js";
 
-export async function run(client: DaClient, interaction: Interaction) {
-	if (interaction.isCommand()) {
-		if (!interaction.channel || interaction.channel.type === "DM") return;
-		const { commandName } = interaction;
+export async function run(client: DaClient, itr: Interaction) {
+	if (itr.isCommand()) {
+		if (!itr.channel || itr.channel.type !== "GUILD_TEXT") {
+			itr.reply({ content: "Try this in a guild text channel!", ephemeral: true });
+			return;
+		}
 
-		const args: Args = new Collection();
-		interaction.options.each((option) => args.set(option.name, option.value));
-
-		const cmd = client.commands.get(commandName);
-		if (cmd) cmd.run(client, interaction, args);
+		void client.commands.get(itr.commandName)?.run(client, itr);
 	}
 }

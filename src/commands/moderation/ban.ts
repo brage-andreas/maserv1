@@ -1,7 +1,7 @@
-import { ApplicationCommandData, CommandInteraction, Guild, GuildMember, MessageEmbed, TextChannel } from "discord.js";
+import { ApplicationCommandData, MessageEmbed } from "discord.js";
 
 import { log, confirm, hasPerms } from "../../resources/automaton.js";
-import { Args, DaClient } from "../../resources/definitions.js";
+import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 
 export const data: ApplicationCommandData = {
 	name: "ban",
@@ -31,35 +31,31 @@ export const data: ApplicationCommandData = {
 	]
 };
 
-export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
-	const { user } = interaction;
-	const guild = interaction.guild as Guild;
-	const member = interaction.member as GuildMember;
-	const channel = interaction.channel as TextChannel;
+export async function run(client: DaClient, interaction: CmdInteraction) {
+	const { user, guild, member, channel } = interaction;
 
 	await interaction.defer();
 
 	const err = client.moji.get("err");
-	if (!hasPerms(["BAN_MEMBERS"], guild.me))
+	if (!hasPerms("BAN_MEMBERS", guild.me))
 		return interaction.editReply(`${err || ""} I don't have sufficient permissions`);
 
-	if (!hasPerms(["BAN_MEMBERS"], member))
+	if (!hasPerms("BAN_MEMBERS", member))
 		return interaction.editReply(`${err || ""} You don't have sufficient permissions`);
 
-	const targetId = args.get("member") as `${bigint}`;
-	const reason = args.get("reason") as string | undefined;
-	const rawDays = args.get("days") ? Math.ceil(args.get("days") as number) : undefined;
-	const nsfw = (args.get("nsfw") as boolean | undefined) || false;
+	const target = interaction.options.getUser("member", true);
+	const reason = interaction.options.getString("reason") ?? undefined;
+	const rawDays = interaction.options.getInteger("days") ?? 7;
+	const nsfw = interaction.options.getBoolean("nsfw");
 
-	const days = !rawDays ? 7 : rawDays > 7 ? 7 : rawDays < 1 ? 1 : rawDays;
-	const target = await client.users.fetch(targetId);
+	const days = Math.ceil(rawDays) > 7 ? 7 : Math.ceil(rawDays) < 0 ? 0 : Math.ceil(rawDays);
 
 	const sendBanEmbed = () => {
 		const banEmbed = new MessageEmbed()
 			.setAuthor(user.tag, user.displayAvatarURL())
 			.setColor(`#${client.colours.green}`)
 			.setThumbnail(!nsfw ? target.displayAvatarURL({ size: 1024, dynamic: false }) : "")
-			.addField("Succsessfully banned", `${target.toString()} (${targetId})`)
+			.addField("Succsessfully banned", `${target} (${target.id})`)
 			.setFooter("User banned")
 			.setTimestamp();
 
@@ -71,22 +67,22 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 
 		interaction.editReply({ embeds: [banEmbed], content: null, components: [] });
 
-		log.cmd({ cmd: "ban", msg: `Banned ${target.tag} (${targetId})` }, { guild, channel, user });
+		log.cmd({ cmd: "ban", msg: `Banned ${target.tag} (${target.id})` }, { guild, channel, user });
 	};
 
 	const sendError = () => {
 		const banErrorEmbed = new MessageEmbed()
 			.setAuthor(user.tag, user.displayAvatarURL())
 			.setColor(`#${client.colours.red}`)
-			.addField("Failed to ban", `${target.toString()} (\`${targetId}\`)`)
+			.addField("Failed to ban", `${target.toString()} (${target.id})`)
 			.setFooter("Ban failed")
 			.setTimestamp();
 
 		interaction.editReply({ embeds: [banErrorEmbed], content: null, components: [] });
 	};
 
-	const query = `Are you sure you want to ban ${target.tag} (${targetId})?`;
+	const query = `Are you sure you want to ban ${target.tag} (${target.id})?`;
 	await confirm(interaction, query)
-		.then(() => guild.bans.create(targetId, { days, reason }).catch(sendError).then(sendBanEmbed))
+		.then(() => guild.bans.create(target.id, { days, reason }).catch(sendError).then(sendBanEmbed))
 		.catch(() => null);
 }

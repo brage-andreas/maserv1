@@ -1,18 +1,8 @@
-import {
-	ApplicationCommandData,
-	Collection,
-	CommandInteraction,
-	Guild,
-	GuildChannel,
-	MessageEmbed,
-	Role,
-	TextChannel,
-	ThreadChannel
-} from "discord.js";
+import { ApplicationCommandData, GuildChannel, GuildMember, MessageEmbed, Role, TextChannel, User } from "discord.js";
 
-import { CONFIG_METHOD_CHOICES, CONFIG_OPTION_CHOICES, CONFIG_OPTION_INFO, ID_REGEX } from "../../constants.js";
+import { CONFIG_METHOD_CHOICES, CONFIG_OPTION_CHOICES, ID_REGEX } from "../../constants.js";
 import { removeValue, setValue, viewConfig, viewValue } from "../../resources/psql/config/config.js";
-import { Args, DaClient } from "../../resources/definitions.js";
+import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { log } from "../../resources/automaton.js";
 
 export const data: ApplicationCommandData = {
@@ -40,55 +30,31 @@ export const data: ApplicationCommandData = {
 	]
 };
 
-export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
-	const { user } = interaction;
-	const channel = interaction.channel as TextChannel;
-	const guild = interaction.guild as Guild;
+export async function run(client: DaClient, interaction: CmdInteraction) {
+	const { user, channel, guild } = interaction;
 
-	const getIdFromValue = (option: string | undefined) => {
-		const value = args.get("value") as string | undefined;
-		if (!value || !option) return;
+	const getIdFromValue = (option: string | null) => {
+		const valueOpt = interaction.options.getString("value");
+		if (!valueOpt || !option) return null;
 
-		const type = CONFIG_OPTION_INFO[option].type;
-		const regexp = CONFIG_OPTION_INFO[option].reg;
+		const baseOpt = interaction.options;
+		let value =
+			(baseOpt.getMentionable(option) as GuildMember | User | Role | null) ??
+			(baseOpt.getChannel(option) as GuildChannel | null);
 
-		type Stupid = Collection<string, { name: string; id: string }> | null;
-		const base: Stupid = type === "ROLE" ? guild.roles.cache : type === "CHANNEL" ? guild.channels.cache : null;
-		if (!base) return "STOP";
+		if (value) return value;
 
-		if (ID_REGEX.test(value) || regexp.test(value)) {
-			const id = base.get(value.replace(/\D+/g, ""))?.id;
+		const role = guild.roles.cache.find((role) => role.name === valueOpt);
+		const channel = guild.channels.cache.find((channel) => channel.name === valueOpt);
 
-			if (!id) {
-				interaction.reply({
-					content: `I cannot find a ${type.toLowerCase()} with the ID your provided`,
-					ephemeral: true
-				});
-				return "STOP";
-			}
-
-			return id;
-		} else {
-			const fn = (e: { name: string }) => e.name.toLowerCase() === value.toLowerCase();
-			const id = base.find(fn)?.id;
-
-			if (!id) {
-				interaction.reply({
-					content: `I cannot find a ${type.toLowerCase()} with the name your provided`,
-					ephemeral: true
-				});
-				return "STOP";
-			}
-
-			return id;
-		}
+		return role ?? channel?.type === "GUILD_TEXT" ? (channel as TextChannel) : null ?? null;
 	};
 
-	const method = args.get("method") as string;
-	const option = args.get("option") as string | undefined;
+	const method = interaction.options.getString("method", true);
+	const option = interaction.options.getString("option");
 	const value = getIdFromValue(option);
 
-	if (value === "STOP") return;
+	if (!value) return;
 
 	await interaction.defer();
 
@@ -100,10 +66,7 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 
 	const optionName = option ? getOptionName(option) : null;
 
-	const checklist = client.moji.get("checklist");
-	const tools = client.moji.get("apparatus");
-	const gear = client.moji.get("gears");
-	const err = client.moji.get("err");
+	const [checklist, tools, gear, err] = client.mojis("checklist", "apparatus", "gears", "err");
 
 	const configEmbed = new MessageEmbed()
 		.setAuthor(user.tag, user.displayAvatarURL())
@@ -113,9 +76,9 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 	const setOption = async () => {
 		if (!option || !optionName || !value) return interaction.editReply(`${err} Something went wrong`);
 
-		await setValue(option, value, guild.id);
+		await setValue(option, value.id, guild.id);
 
-		let nameStr = `${getNameFromID(value as `${bigint}`)} (${value})`;
+		let nameStr = `${value} (${value.id})`;
 
 		configEmbed.addField(`${tools} ${optionName}`, `Set value to ${nameStr}`);
 		interaction.editReply({ embeds: [configEmbed] });

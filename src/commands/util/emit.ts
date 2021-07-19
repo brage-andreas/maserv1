@@ -1,7 +1,7 @@
 import { ApplicationCommandData, CommandInteraction, GuildMember, TextChannel } from "discord.js";
 
 import { log } from "../../resources/automaton.js";
-import { Args, DaClient } from "../../resources/definitions.js";
+import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 
 export const data: ApplicationCommandData = {
 	name: "emit",
@@ -26,12 +26,10 @@ export const data: ApplicationCommandData = {
 	]
 };
 
-export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
-	const { user, guild } = interaction;
-	const channel = interaction.channel as TextChannel;
-	const member = interaction.member as GuildMember;
+export async function run(client: DaClient, interaction: CmdInteraction) {
+	const { user, guild, channel, member } = interaction;
 
-	const event = args.get("event") as string;
+	const event = interaction.options.getString("event", true);
 
 	client.emit(event, member);
 	interaction.reply({ content: "Done", ephemeral: true });

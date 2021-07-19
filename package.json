@@ -20,7 +20,7 @@
 	"homepage": "https://github.com/hellobafu/maser#readme",
 	"dependencies": {
 		"chalk": "^4.1.1",
-		"discord.js": "^13.0.0-dev.f200f14.1626436969",
+		"discord.js": "^13.0.0-dev.77784ac.1626696170",
 		"dotenv": "^10.0.0",
 		"pg-promise": "^10.10.2"
 	},

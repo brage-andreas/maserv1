@@ -10,6 +10,7 @@ import {
 	MessageButton,
 	MessageComponentInteraction,
 	PermissionResolvable,
+	Role,
 	TextChannel,
 	ThreadChannel,
 	User

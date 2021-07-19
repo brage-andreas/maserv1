@@ -1,6 +1,6 @@
-import { ApplicationCommandData, CommandInteraction, Message, TextChannel } from "discord.js";
+import { ApplicationCommandData, Message } from "discord.js";
 
-import { Args, DaClient } from "../../resources/definitions.js";
+import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { log } from "../../resources/automaton.js";
 
 export const data: ApplicationCommandData = {
@@ -15,14 +15,14 @@ export const data: ApplicationCommandData = {
 	]
 };
 
-export async function run(client: DaClient, interaction: CommandInteraction, args: Args) {
+export async function run(client: DaClient, interaction: CmdInteraction) {
 	const { channel, guild, user } = interaction;
 	interaction.reply("...");
 
 	const reply = (await interaction.fetchReply()) as Message;
 	if (!reply) return interaction.editReply("Something went wrong");
 
-	const extended = args.get("extended");
+	const extended = interaction.options.getBoolean("extended");
 
 	const heartbeat = client.ws.ping;
 	const absPing = reply.createdTimestamp - interaction.createdTimestamp;
@@ -37,5 +37,5 @@ export async function run(client: DaClient, interaction: CommandInteraction, arg
 		interaction.editReply(`Ping: ${emoji} ${ping} ms`);
 	}
 
-	log.cmd({ cmd: "ping" }, { channel: channel as TextChannel, guild, user });
+	log.cmd({ cmd: "ping" }, { channel: channel, guild, user });
 }
