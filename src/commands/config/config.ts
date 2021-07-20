@@ -54,8 +54,6 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 	const option = interaction.options.getString("option");
 	const value = getIdFromValue(option);
 
-	if (!value) return;
-
 	await interaction.defer();
 
 	const getOptionName = (valueName: string) =>

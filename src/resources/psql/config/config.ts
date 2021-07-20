@@ -50,7 +50,7 @@ export const viewValue = async (key: string, guildID: string) => {
         FROM config."${guildID}" 
         WHERE id = ${guildID};
     `)
-	)[key];
+	)?.[key];
 };
 
 export const removeValue = async (key: string, guildID: string) => {

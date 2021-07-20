@@ -1,4 +1,4 @@
-import { ApplicationCommandData, MessageEmbed } from "discord.js";
+import { ApplicationCommandData, MessageEmbed, PresenceStatus } from "discord.js";
 
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { log, parseDate } from "../../resources/automaton.js";
@@ -19,6 +19,8 @@ export const data: ApplicationCommandData = {
 
 export async function run(client: DaClient, interaction: CmdInteraction) {
 	const { guild, channel } = interaction;
+	const [online, idle, dnd, offline] = client.mojis("online", "idle", "dnd", "offline");
+	const emojis: { [index: string]: string | undefined } = { online, idle, dnd, offline };
 
 	await interaction.defer();
 
@@ -39,7 +41,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	const roles = member.roles.cache.filter((r) => r.name !== "@everyone").map((r) => r.toString());
 	const avatar = user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 });
-	const status = USER_STATUS[member.presence.status] || "⬛ Offline";
+	const status = `${emojis[member.presence.status]} ${USER_STATUS[member.presence.status]}`;
 	const came = parseDate(member.joinedTimestamp);
 	const made = parseDate(user.createdTimestamp);
 	const colour = ["#000000", "#ffffff"].includes(member.displayHexColor) ? "RANDOM" : member.displayHexColor;

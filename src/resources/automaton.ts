@@ -123,7 +123,7 @@ interface DefaultChannelOpt {
 	optChannel?: TextChannel;
 	optGuild?: Guild;
 	me: GuildMember;
-	type?: "member_log" | "bot_log";
+	type?: "member_log" | "log";
 }
 export const getDefaultChannel = async (opt: DefaultChannelOpt): Promise<TextChannel | undefined> => {
 	return new Promise(async (resolve, reject) => {

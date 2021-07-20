@@ -2,17 +2,19 @@ import { ApplicationCommandOptionChoice } from "discord.js";
 
 type StringObject = { [index: string]: string };
 
+const _clientScope = "scope=bot+applications.commands";
+const _clientId = "client_id=836883384399167498";
+
 export const INTENTS_BITFIELD = 771; // GUILDS, GUILD_MEMBERS, GUILD_PRESENCES, GUILD_MESSAGES
 
-export const INVITE_LINK =
-	"https://discord.com/oauth2/authorize?client_id=836883384399167498&scope=bot+applications.commands&permissions=388102";
+export const INVITE_LINK = `https://discord.com/oauth2/authorize?${_clientId}&${_clientScope}`;
 
 export const CODEBLOCK_REGEX = /```(?:(?<lang>\S+)\n)?\s?(?<code>[^]+?)\s?```/;
-export const CHANNEL_REGEX = /^<#(\d{17,19})>$/;
+export const CHANNEL_REGEX = /^<#\d{17,19}>$/;
 export const INVITE_REGEX = /(?:https?:\/\/)?(?:www\.)?discord(?:\.gg|(?:app)?\.com\/invite)\/(\S+)/;
 export const TOKEN_REGEX = /[\w-]{24}\.[\w-]{6}\.[\w-]{27}/;
-export const USER_REGEX = /^<@!?(\d{17,19})>$/;
-export const ROLE_REGEX = /^<@&(\d{17,19})>$/;
+export const USER_REGEX = /^<@!?\d{17,19}>$/;
+export const ROLE_REGEX = /^<@&\d{17,19}>$/;
 export const ID_REGEX = /^\d{17,19}$/;
 
 export const BLURPLE = "5865F2";
@@ -64,10 +66,10 @@ export const CMD_TYPES: StringObject = {
 };
 
 export const USER_STATUS: StringObject = {
-	dnd: "$dnd$ Do Not Disturb",
-	offline: "$offline$ Offline",
-	online: "$online$ Online",
-	idle: "$idle$ Idle"
+	dnd: "Do Not Disturb",
+	offline: "Offline",
+	online: "Online",
+	idle: "Idle"
 };
 
 export const CATEGORIES: StringObject = {
