@@ -1,4 +1,4 @@
-import { ApplicationCommandData, CommandInteraction, Guild, MessageEmbed, TextChannel } from "discord.js";
+import { ApplicationCommandData, MessageEmbed } from "discord.js";
 import ms from "ms";
 
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
