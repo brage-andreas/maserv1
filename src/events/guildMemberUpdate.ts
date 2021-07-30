@@ -1,6 +1,6 @@
 import { GuildMember } from "discord.js";
 import { DaClient } from "../resources/definitions.js";
-import { addNick } from "../resources/psql/nicks/nicks.js";
+import { addNick } from "../resources/psql/schemas/nicks.js";
 
 export async function run(client: DaClient, oldMember: GuildMember, newMember: GuildMember) {
 	if (oldMember.displayName !== newMember.displayName) {

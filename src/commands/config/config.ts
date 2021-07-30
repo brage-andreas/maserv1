@@ -1,7 +1,7 @@
 import { ApplicationCommandData, GuildChannel, GuildMember, MessageEmbed, Role, TextChannel, User } from "discord.js";
 
 import { CONFIG_METHOD_CHOICES, CONFIG_OPTION_CHOICES, ID_REGEX } from "../../constants.js";
-import { removeValue, setValue, viewConfig, viewValue } from "../../resources/psql/config/config.js";
+import { removeValue, setValue, viewConfig, viewValue } from "../../resources/psql/schemas/config.js";
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { log } from "../../resources/automaton.js";
 

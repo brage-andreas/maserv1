@@ -112,3 +112,10 @@ export const CONFIG_METHOD_CHOICES: ApplicationCommandOptionChoice[] = [
 		value: "remove"
 	}
 ];
+
+export type RESTRICTIONS_STR = "embed" | "emoji" | "reaction";
+export const RESTRICTIONS: { [index: string]: number } = {
+	embed: 1 << 0,
+	emoji: 1 << 1,
+	reaction: 1 << 2
+};
