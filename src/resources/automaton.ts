@@ -65,7 +65,7 @@ interface DefaultChannelOpt {
 	me: GuildMember;
 	type?: "member_log" | "log";
 }
-export const getDefaultChannel = async (opt: DefaultChannelOpt): Promise<TextChannel | undefined> => {
+export const getDefaultChannel = async (opt: DefaultChannelOpt): Promise<TextChannel | null> => {
 	return new Promise(async (resolve, reject) => {
 		const { optChannel, optGuild, me, type } = opt;
 
@@ -79,7 +79,7 @@ export const getDefaultChannel = async (opt: DefaultChannelOpt): Promise<TextCha
 		if (optGuild) {
 			const isValid = (ch: GuildChannel | ThreadChannel) => ch.type === "GUILD_TEXT" && hasPerms(perms, me, ch);
 			const usableChannels = optGuild.channels.cache.filter(isValid) as Collection<`${bigint}`, TextChannel>;
-			if (!usableChannels.size) resolve(undefined);
+			if (!usableChannels.size) resolve(null);
 
 			const dbChannelID = type ? await viewValue(`${type}_channel`, optGuild.id) : null;
 
@@ -93,7 +93,7 @@ export const getDefaultChannel = async (opt: DefaultChannelOpt): Promise<TextCha
 			}
 
 			const priorityChannel = usableChannels.find((ch) => ch.name === "general" || ch.name === "main");
-			resolve(priorityChannel || usableChannels.first());
+			resolve(priorityChannel ?? usableChannels.first() ?? null);
 		}
 	});
 };
@@ -200,17 +200,5 @@ export const log = {
 
 		_cache.channel = "";
 		_cache.user = "";
-	},
-
-	mod: async function (cmd: string, guild: Guild | null | undefined, embed: MessageEmbed) {
-		if (!guild || !guild.me) return null;
-
-		const channel = await getDefaultChannel({
-			optGuild: guild,
-			me: guild.me,
-			type: "log"
-		});
-
-		if (!channel) return null;
 	}
 };
