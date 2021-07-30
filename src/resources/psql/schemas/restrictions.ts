@@ -26,7 +26,7 @@ const hasRestriction = (restriction: RESTRICTIONS_STR, int: number) => {
 	return flags.has(rst);
 };
 
-export const updateRestriction = (restriction: RESTRICTIONS_STR, int: number, add: boolean) => {
+const updateRestriction = (restriction: RESTRICTIONS_STR, int: number, add: boolean) => {
 	const faultyAdd = hasRestriction(restriction, int) && add;
 	const faultyDel = !hasRestriction(restriction, int) && !add;
 	if (faultyAdd || faultyDel) return int;
