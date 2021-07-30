@@ -9,8 +9,8 @@ import {
 	MessageActionRow,
 	MessageButton,
 	MessageComponentInteraction,
+	MessageEmbed,
 	PermissionResolvable,
-	Role,
 	TextChannel,
 	ThreadChannel,
 	User
@@ -52,66 +52,6 @@ export const time = (): string[] => {
 	const hour = _twoCharLength(now.getHours());
 
 	return [sec, min, hour];
-};
-
-const _cache = { user: "", channel: "" };
-export const log = {
-	cmd: function (opt: LogOpt, from: LogFrom, err = false): void {
-		const { cmd, msg } = opt;
-		const { user, channel, guild } = from;
-		const [sec, min, hour] = time();
-
-		const toPrint: string[] = [];
-		const cmdStr = chalk`{${err ? FRED : FGREEN} ${cmd.toUpperCase()}}`;
-
-		if (_cache.channel !== channel.id || _cache.user !== user.id) {
-			const fromArray = [];
-
-			// User
-			fromArray.push(chalk`\n  {${FYELLOW} ${user.tag}} {grey (${user.id})}`);
-
-			// Channel
-			if (fromArray.length) {
-				fromArray.push(chalk`{grey in} #${channel.name}`);
-			} else {
-				fromArray.push(chalk`  {grey In} {${FYELLOW} #${channel.name}}`);
-			}
-
-			// Guild
-			if (fromArray.length) {
-				fromArray.push(chalk`{grey in} ${guild?.name || "unknown guild"}`);
-			} else {
-				fromArray.push(chalk`  {grey In} {${FYELLOW} ${guild?.name || "unknown guild"}}`);
-			}
-
-			toPrint.push(fromArray.join(" "));
-		}
-
-		toPrint.push(chalk`  {grey [${hour}:${min}:${sec}]} ${cmdStr} ${msg ? chalk`{grey >} ${msg}` : ""}`);
-
-		console.log(toPrint.join("\n"));
-
-		_cache.channel = channel.id;
-		_cache.user = user.id;
-	},
-
-	event: function (opt: LogEvent): void {
-		const { guild, msg } = opt;
-		const [sec, min, hour] = time();
-
-		const newLine = _cache.channel || _cache.user;
-		const toPrint = newLine ? [""] : [];
-
-		toPrint.push(
-			guild ? chalk`  {grey In} {${FYELLOW} ${guild.name}}` : chalk`  {grey In} {${FRED} unknown guild}`
-		);
-		toPrint.push(chalk`  {grey [${hour}:${min}:${sec}] >} ${msg}`);
-
-		console.log(toPrint.join("\n"));
-
-		_cache.channel = "";
-		_cache.user = "";
-	}
 };
 
 export const parseDate = (timestamp: number | null): string => {
@@ -201,4 +141,76 @@ export const hasPerms = (permissions: Perm, member: GuildMember | null, channel?
 	const perms = channel ? member.permissionsIn(channel) : member.permissions;
 
 	return perms.has(toCheck);
+};
+
+const _cache = { user: "", channel: "" };
+export const log = {
+	cmd: function (opt: LogOpt, from: LogFrom, err = false): void {
+		const { cmd, msg } = opt;
+		const { user, channel, guild } = from;
+		const [sec, min, hour] = time();
+
+		const toPrint: string[] = [];
+		const cmdStr = chalk`{${err ? FRED : FGREEN} ${cmd.toUpperCase()}}`;
+
+		if (_cache.channel !== channel.id || _cache.user !== user.id) {
+			const fromArray = [];
+
+			// User
+			fromArray.push(chalk`\n  {${FYELLOW} ${user.tag}} {grey (${user.id})}`);
+
+			// Channel
+			if (fromArray.length) {
+				fromArray.push(chalk`{grey in} #${channel.name}`);
+			} else {
+				fromArray.push(chalk`  {grey In} {${FYELLOW} #${channel.name}}`);
+			}
+
+			// Guild
+			if (fromArray.length) {
+				fromArray.push(chalk`{grey in} ${guild?.name || "unknown guild"}`);
+			} else {
+				fromArray.push(chalk`  {grey In} {${FYELLOW} ${guild?.name || "unknown guild"}}`);
+			}
+
+			toPrint.push(fromArray.join(" "));
+		}
+
+		toPrint.push(chalk`  {grey [${hour}:${min}:${sec}]} ${cmdStr} ${msg ? chalk`{grey >} ${msg}` : ""}`);
+
+		console.log(toPrint.join("\n"));
+
+		_cache.channel = channel.id;
+		_cache.user = user.id;
+	},
+
+	event: function (opt: LogEvent): void {
+		const { guild, msg } = opt;
+		const [sec, min, hour] = time();
+
+		const newLine = _cache.channel || _cache.user;
+		const toPrint = newLine ? [""] : [];
+
+		toPrint.push(
+			guild ? chalk`  {grey In} {${FYELLOW} ${guild.name}}` : chalk`  {grey In} {${FRED} unknown guild}`
+		);
+		toPrint.push(chalk`  {grey [${hour}:${min}:${sec}] >} ${msg}`);
+
+		console.log(toPrint.join("\n"));
+
+		_cache.channel = "";
+		_cache.user = "";
+	},
+
+	mod: async function (cmd: string, guild: Guild | null | undefined, embed: MessageEmbed) {
+		if (!guild || !guild.me) return null;
+
+		const channel = await getDefaultChannel({
+			optGuild: guild,
+			me: guild.me,
+			type: "log"
+		});
+
+		if (!channel) return null;
+	}
 };

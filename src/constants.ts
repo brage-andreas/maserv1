@@ -2,12 +2,7 @@ import { ApplicationCommandOptionChoice } from "discord.js";
 
 type StringObject = { [index: string]: string };
 
-const _clientScope = "scope=bot+applications.commands";
-const _clientId = "client_id=836883384399167498";
-
 export const INTENTS_BITFIELD = 771; // GUILDS, GUILD_MEMBERS, GUILD_PRESENCES, GUILD_MESSAGES
-
-export const INVITE_LINK = `https://discord.com/oauth2/authorize?${_clientId}&${_clientScope}`;
 
 export const CODEBLOCK_REGEX = /```(?:(?<lang>\S+)\n)?\s?(?<code>[^]+?)\s?```/;
 export const CHANNEL_REGEX = /^<#\d{17,19}>$/;

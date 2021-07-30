@@ -9,6 +9,11 @@ import { INTENTS_BITFIELD } from "./constants.js";
 dotenv.config();
 process.stdout.write("\x1Bc\n"); // clears terminal, console.clear() doesn't fully clear it
 
+/*
+INVITE URL
+https://discord.com/oauth2/authorize?client_id=836883384399167498&scope=bot+applications.commands
+*/
+
 const client = new DaClient({
 	intents: INTENTS_BITFIELD,
 	allowedMentions: { repliedUser: false }
