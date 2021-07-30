@@ -1,12 +1,15 @@
-**Database**
+# Databases
+**Maser**
 ```
-Maser -> Schemas
+Schemas
 ├── config
 ├── nicks
 ├── mutes
 └── restrictions
 ```
 
+
+# Schemas
 **config**
 ```
 guild_id -> Columns
