@@ -4,13 +4,19 @@ import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { log } from "../../resources/automaton.js";
 
 export const data: ApplicationCommandData = {
-	name: "",
-	description: "",
+	name: "restrict",
+	description: "Restricts a member",
 	options: [
 		{
-			name: "",
-			type: "",
-			description: "",
+			name: "member",
+			type: "USER",
+			description: "Member to restrict",
+			required: true
+		},
+		{
+			name: "restriction",
+			type: "STRING",
+			description: "Restrict to give",
 			required: true
 		}
 	]
@@ -19,7 +25,7 @@ export const data: ApplicationCommandData = {
 export async function run(client: DaClient, interaction: CmdInteraction) {
 	const { user, guild, channel } = interaction;
 
-	const option = interaction.options.getString("option", true);
+	const targetId = interaction.options.get("member", true).value;
 
-	log.cmd({ cmd: "" }, { guild, channel, user });
+	log.cmd({ cmd: "restrict" }, { guild, channel, user });
 }

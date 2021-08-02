@@ -17,6 +17,7 @@ import {
 } from "discord.js";
 
 import { FGREEN, FRED, FYELLOW } from "../constants.js";
+import { CmdInteraction } from "./definitions.js";
 import { viewValue } from "./psql/schemas/config.js";
 
 const _twoCharLength = (num: number): string => (num < 10 ? String("0" + num) : String(num));
@@ -137,10 +138,27 @@ type Perm = PermissionResolvable | PermissionResolvable[];
 export const hasPerms = (permissions: Perm, member: GuildMember | null, channel?: GuildChannel | TextChannel) => {
 	if (!member) return false;
 
-	const toCheck = typeof permissions === "object" ? permissions : [permissions];
+	const toCheck = Array.isArray(permissions) ? permissions : [permissions];
 	const perms = channel ? member.permissionsIn(channel) : member.permissions;
 
 	return perms.has(toCheck);
+};
+
+export const permCheck = (perm: Perm, me: GuildMember, member: GuildMember, target: GuildMember) => {
+	if (!hasPerms(perm, me)) return "I don't have sufficient permissions";
+	if (!hasPerms(perm, member)) return "You don't have sufficient permissions";
+
+	if (target.id === member.user.id) return "You can't do this action on yourself";
+};
+
+export const sendLog = async (interaction: CmdInteraction, embed: MessageEmbed, reply: string) => {
+	const optGuild = interaction.guild;
+	const me = optGuild.me as GuildMember;
+
+	const logChannel = await getDefaultChannel({ optGuild, me, type: "log" });
+	interaction.editReply({ content: reply, components: [] });
+
+	if (logChannel) logChannel.send({ embeds: [embed] });
 };
 
 const _cache = { user: "", channel: "" };

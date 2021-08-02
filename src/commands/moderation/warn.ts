@@ -4,13 +4,13 @@ import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { log } from "../../resources/automaton.js";
 
 export const data: ApplicationCommandData = {
-	name: "",
-	description: "",
+	name: "warn",
+	description: "Warns a member",
 	options: [
 		{
-			name: "",
-			type: "",
-			description: "",
+			name: "member",
+			type: "USER",
+			description: "Member to warn",
 			required: true
 		}
 	]

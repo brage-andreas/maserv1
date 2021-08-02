@@ -4,14 +4,13 @@ import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { log } from "../../resources/automaton.js";
 
 export const data: ApplicationCommandData = {
-	name: "",
-	description: "",
+	name: "history",
+	description: "Shows a member's history",
 	options: [
 		{
-			name: "",
-			type: "",
-			description: "",
-			required: true
+			name: "member",
+			type: "USER",
+			description: "Who to show history of"
 		}
 	]
 };
@@ -19,7 +18,7 @@ export const data: ApplicationCommandData = {
 export async function run(client: DaClient, interaction: CmdInteraction) {
 	const { user, guild, channel } = interaction;
 
-	const option = interaction.options.getString("option", true);
+	const targetId = (interaction.options.get("member")?.value as `${bigint}` | undefined) ?? user.id;
 
-	log.cmd({ cmd: "" }, { guild, channel, user });
+	log.cmd({ cmd: "history", msg: `Showed history of X (${targetId})` }, { guild, channel, user });
 }

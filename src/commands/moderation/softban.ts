@@ -4,14 +4,25 @@ import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { log } from "../../resources/automaton.js";
 
 export const data: ApplicationCommandData = {
-	name: "",
-	description: "",
+	name: "softban",
+	description: "Softbans a member",
 	options: [
 		{
-			name: "",
-			type: "",
-			description: "",
+			name: "member",
+			type: "USER",
+			description: "Member to softban",
 			required: true
+		},
+		{
+			name: "days",
+			type: "INTEGER",
+			description: "Days to prune messages",
+			choices: [
+				{
+					name: "",
+					value: ""
+				}
+			]
 		}
 	]
 };

@@ -1,6 +1,6 @@
 import { ApplicationCommandData, MessageEmbed } from "discord.js";
 
-import { log, confirm, hasPerms, getDefaultChannel } from "../../resources/automaton.js";
+import { log, confirm, hasPerms, sendLog, permCheck } from "../../resources/automaton.js";
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 
 export const data: ApplicationCommandData = {
@@ -34,34 +34,17 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	await interaction.defer();
 
-	if (!hasPerms("KICK_MEMBERS", guild.me)) {
-		interaction.editReply(`${err || ""} I don't have sufficient permissions`);
-		return;
-	}
-
-	if (!hasPerms("KICK_MEMBERS", member)) {
-		interaction.editReply(`${err || ""} You don't have sufficient permissions`);
-		return;
-	}
-
 	const targetId = interaction.options.get("member", true).value as `${bigint}`;
 	const reason = interaction.options.getString("reason");
 	const nsfw = interaction.options.getBoolean("nsfw");
 
-	if (targetId === interaction.user.id) {
-		interaction.editReply(`${err || ""} You can't kick yourself`);
-		return;
-	}
-
 	const target = await guild.members.fetch(targetId).catch(() => null);
-	if (!target) return interaction.editReply({ content: "This user is not in the server" });
+	if (!target) return "This user is not in the server";
 
-	if (target.permissions.has("KICK_MEMBERS")) {
-		interaction.editReply(`${err || ""} You can't kick this user`);
-		return;
-	}
+	const permError = permCheck("KICK_MEMBERS", guild.me, member, target);
+	if (permError) return interaction.editReply({ content: `${err || ""} ${permError}` });
 
-	const logChannel = await getDefaultChannel({ optGuild: guild, me: guild.me, type: "log" });
+	if (target.permissions.has("KICK_MEMBERS")) return interaction.editReply(`${err || ""} You can't kick this user`);
 
 	const sendKickEmbed = () => {
 		const kickEmbed = new MessageEmbed()
@@ -75,9 +58,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 		if (reason) kickEmbed.addField("Reason", reason);
 		if (nsfw) kickEmbed.addField("Info", "NSFW avatar removed from embed");
 
-		interaction.editReply({ content: `Successfully kicked ${target.user.tag} (${target.id})`, components: [] });
-		if (logChannel) logChannel.send({ embeds: [kickEmbed] });
-
+		sendLog(interaction, kickEmbed, `Successfully kicked ${target.user.tag} (${target.id})`);
 		log.cmd({ cmd: "kick", msg: `Kicked ${target.user.tag} (${target.id})` }, { guild, channel, user });
 	};
 

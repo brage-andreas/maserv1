@@ -89,6 +89,26 @@ export const CONFIG_OPTION_CHOICES: ApplicationCommandOptionChoice[] = [
 	{
 		name: "Action Log Channel",
 		value: "log_channel"
+	},
+	{
+		name: "Mod Role",
+		value: "mod_role"
+	},
+	{
+		name: "Embed Restrict Role",
+		value: "embed_restrict"
+	},
+	{
+		name: "Emoji Restrict Role",
+		value: "emoji_restrict"
+	},
+	{
+		name: "Reaction Restrict Role",
+		value: "reaction_restrict"
+	},
+	{
+		name: "Bot Restrict Role",
+		value: "bot_restrict"
 	}
 ];
 

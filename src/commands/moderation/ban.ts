@@ -1,6 +1,6 @@
 import { ApplicationCommandData, MessageEmbed } from "discord.js";
 
-import { log, confirm, hasPerms, getDefaultChannel } from "../../resources/automaton.js";
+import { log, confirm, hasPerms, getDefaultChannel, permCheck } from "../../resources/automaton.js";
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 
 export const data: ApplicationCommandData = {
@@ -39,32 +39,18 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	await interaction.defer();
 
-	if (!hasPerms("BAN_MEMBERS", guild.me)) {
-		interaction.editReply(`${err || ""} I don't have sufficient permissions`);
-		return;
-	}
-
-	if (!hasPerms("BAN_MEMBERS", member)) {
-		interaction.editReply(`${err || ""} You don't have sufficient permissions`);
-		return;
-	}
-
-	const target = interaction.options.getUser("member", true);
+	const targetId = interaction.options.getUser("member", true);
 	const reason = interaction.options.getString("reason") ?? undefined;
 	const rawDays = interaction.options.getInteger("days") ?? 7;
 	const nsfw = interaction.options.getBoolean("nsfw");
 
-	const targetMember = await guild.members.fetch(target).catch(() => null);
+	const target = await guild.members.fetch(targetId).catch(() => null);
+	if (!target) return "This user is not in the server";
 
-	if (target.id === interaction.user.id) {
-		interaction.editReply(`${err || ""} You can't ban yourself`);
-		return;
-	}
+	const permError = permCheck("BAN_MEMBERS", guild.me, member, target);
+	if (permError) return interaction.editReply({ content: `${err || ""} ${permError}` });
 
-	if (targetMember?.permissions.has("BAN_MEMBERS")) {
-		interaction.editReply(`${err || ""} You can't ban this user`);
-		return;
-	}
+	if (target.permissions.has("BAN_MEMBERS")) return interaction.editReply(`${err || ""} You can't kick this user`);
 
 	const logChannel = await getDefaultChannel({ optGuild: guild, me: guild.me, type: "log" });
 
@@ -74,7 +60,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 		const banEmbed = new MessageEmbed()
 			.setAuthor(user.tag, user.displayAvatarURL())
 			.setColor(`#${client.colours.red}`)
-			.setThumbnail(!nsfw ? target.displayAvatarURL({ size: 1024, dynamic: false }) : "")
+			.setThumbnail(!nsfw ? target.user.displayAvatarURL({ size: 1024, dynamic: false }) : "")
 			.addField("Succsessfully banned", `${target} (${target.id})`)
 			.setFooter("User banned")
 			.setTimestamp();
@@ -85,10 +71,10 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 			`Last ${days} days of messages pruned${nsfw ? `\nNSFW avatar removed from embed` : ""}`
 		);
 
-		interaction.editReply({ content: `Successfully banned ${target.tag} (${target.id})`, components: [] });
+		interaction.editReply({ content: `Successfully banned ${target.user.tag} (${target.id})`, components: [] });
 		if (logChannel) logChannel.send({ embeds: [banEmbed] });
 
-		log.cmd({ cmd: "ban", msg: `Banned ${target.tag} (${target.id})` }, { guild, channel, user });
+		log.cmd({ cmd: "ban", msg: `Banned ${target.user.tag} (${target.id})` }, { guild, channel, user });
 	};
 
 	const sendError = () => {
@@ -103,7 +89,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 	};
 
 	const auditReason = `${reason ? `${reason} | ` : ""}Banned by ${user.tag} (${user.id})`;
-	const query = `Are you sure you want to ban ${target.tag} (${target.id})?`;
+	const query = `Are you sure you want to ban ${target.user.tag} (${target.id})?`;
 	await confirm(interaction, query)
 		.then(() => guild.bans.create(target.id, { days, reason: auditReason }).catch(sendError).then(sendBanEmbed))
 		.catch(() => null);
