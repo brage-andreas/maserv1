@@ -4,7 +4,8 @@
 Schemas
 ├── config
 ├── nicks
-├── mutes
+├── history
+├── cases
 └── restrictions
 ```
 
@@ -13,10 +14,10 @@ Schemas
 **config**
 ```
 guild_id -> Columns
-├── id          (bigint)
-├── mute_role   (bigint)
-├── member_logl (bigint)
-└── log         (bigint)
+├── id         (bigint)
+├── mute_role  (bigint)
+├── member_log (bigint)
+└── log        (bigint)
 ```
 
 **nicks**
@@ -30,7 +31,7 @@ guild_id -> Columns
 ```
 guild_id -> Columns
 ├── id       (bigint)
-├── bot      (integer[])
+├── bot      (integer[]) case IDs
 ├── mutes    (integer[])
 ├── emoji    (integer[])
 ├── embed    (integer[])
@@ -41,6 +42,20 @@ guild_id -> Columns
 ```
 guild_id -> Columns
 ├── id     (integer)
-├── id     (integer)
-└── author (bigint)
+├── msg    (bigint) message ID
+├── author (bigint)
+├── target (bigint)
+├── reason (string)
+└── nsfw   (integer) 0/1
+```
+
+**restrictions**
+```
+guild_id -> Columns
+├── id       (bigint)
+├── mute     (integer) 0/1
+├── bot      (integer)
+├── emoji    (integer)
+├── embed    (integer)
+└── reaction (integer)
 ```
