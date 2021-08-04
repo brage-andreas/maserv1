@@ -26,16 +26,21 @@ guild_id -> Columns
 └── nicks (text[])
 ```
 
-**mutes**
+**history**
 ```
 guild_id -> Columns
 ├── id (bigint)
-└── end (string)
+├── bot (integer[])
+├── mutes (integer[])
+├── emoji (integer[])
+├── embed (integer[])
+└── reaction (integer[])
 ```
 
-**restrictions**
+**cases**
 ```
 guild_id -> Columns
-├── id (bigint)
-└── bitfield (integer)
+├── id (integer)
+├── id (integer)
+└── author (bigint)
 ```

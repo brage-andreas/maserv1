@@ -17,6 +17,7 @@ export const YELLOW = "FFC152";
 export const BLACK = "000000";
 export const GREEN = "5AD658";
 export const WHITE = "FFFFFF";
+export const INVIS = "2F3136";
 export const RED = "FF5733";
 export const FYELLOW = `hex("${YELLOW}")`;
 export const FGREEN = `hex("${GREEN}")`;

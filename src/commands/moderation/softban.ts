@@ -16,13 +16,7 @@ export const data: ApplicationCommandData = {
 		{
 			name: "days",
 			type: "INTEGER",
-			description: "Days to prune messages",
-			choices: [
-				{
-					name: "",
-					value: ""
-				}
-			]
+			description: "Days to prune messages"
 		}
 	]
 };

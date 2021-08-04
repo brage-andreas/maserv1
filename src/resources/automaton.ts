@@ -164,9 +164,11 @@ export const sendLog = async (interaction: CmdInteraction, embed: MessageEmbed, 
 const _cache = { user: "", channel: "" };
 export const log = {
 	cmd: function (opt: LogOpt, from: LogFrom, err = false): void {
-		const { cmd, msg } = opt;
+		const { cmd } = opt;
 		const { user, channel, guild } = from;
 		const [sec, min, hour] = time();
+
+		const msg = opt.msg?.replace(/[\r\n]/g, "\n  ");
 
 		const toPrint: string[] = [];
 		const cmdStr = chalk`{${err ? FRED : FGREEN} ${cmd.toUpperCase()}}`;
@@ -203,8 +205,10 @@ export const log = {
 	},
 
 	event: function (opt: LogEvent): void {
-		const { guild, msg } = opt;
+		const { guild } = opt;
 		const [sec, min, hour] = time();
+
+		const msg = opt.msg.replace(/[\r\n]/g, "\n  ");
 
 		const newLine = _cache.channel || _cache.user;
 		const toPrint = newLine ? [""] : [];

@@ -1,59 +1,53 @@
-import { ApplicationCommandData, Message } from "discord.js";
+import { Message, MessageEmbed } from "discord.js";
+import { performance } from "perf_hooks";
+import ms from "ms";
 
 import { DaClient } from "../resources/definitions.js";
 import { CODEBLOCK_REGEX, TOKEN_REGEX } from "../constants.js";
 import { log } from "../resources/automaton.js";
+import { evalCmd } from "../commands/util/eval.js";
 
 export async function run(client: DaClient, msg: Message) {
 	const { content, author, guild, channel } = msg;
-	const isBotOwner = (): boolean => author.id === client.application?.owner?.id;
-
-	if (channel.type !== "GUILD_TEXT") return;
-
-	if (TOKEN_REGEX.test(content)) return msg.delete();
 
 	if (!client.application?.owner) await client.application?.fetch();
+	const isBotOwner = () => author.id === client.application?.owner?.id;
+
+	if (channel.type !== "GUILD_TEXT") return;
+	if (TOKEN_REGEX.test(content)) return msg.delete();
+
+	if (!guild) return;
 
 	if (content === "?build" && isBotOwner()) {
-		if (!guild) return;
-
+		const data = client.commands.map((cmd) => cmd.data);
+		guild.commands.set(data);
 		msg.delete();
-		const data: ApplicationCommandData[] = client.commands.map((cmd) => cmd.data);
-		await guild.commands.set(data);
+		return;
 	}
 
 	if (content === "?clear" && isBotOwner()) {
-		if (!guild) return;
-
+		guild.commands.set([]);
 		msg.delete();
-		await guild.commands.set([]);
 	}
 
-	if (content.toLowerCase().startsWith("?eval ") && isBotOwner()) {
+	if (content.toLowerCase().startsWith("?eval") && isBotOwner()) {
+		const user = author;
+		const that = msg;
+
 		const getCode = (content: string) => {
 			const captured = content.match(CODEBLOCK_REGEX);
 			let code = captured?.groups?.code;
-
 			return code ? code : content.slice(6).trim();
 		};
 
 		const code = getCode(content);
 
-		try {
-			const evaluated = await eval(`(async () => { ${code} })()`);
-			msg.reply(`Output: \`\`\`js\n${evaluated}\`\`\``);
+		const { error, embed, output } = await evalCmd(client, { code, user, that });
 
-			log.cmd({ cmd: "eval", msg: `Output: "${evaluated}"` }, { guild, channel, user: author });
-		} catch (err) {
-			const errEmoji = client.moji.get("err");
-			msg.reply(`${errEmoji} Error: \`\`\`js\n${err}\n\`\`\``);
+		if (embed) msg.reply({ embeds: [embed] });
+		else msg.reply({ content: "Something went wrong" });
 
-			log.cmd({ cmd: "eval", msg: `Error: "${err}"` }, { guild, channel, user: author }, true);
-		}
+		if (error) log.cmd({ cmd: "eval", msg: `Error: "${error}"` }, { guild, channel, user }, true);
+		else log.cmd({ cmd: "eval", msg: `Output: ${output ? output : "No output"}` }, { guild, channel, user });
 	}
-
-	/*
-        msg.reply("iolbanan");
-        channel.send({ content: "iolbanan", allowedMentions: { repliedUser: false }, reply: { messageReference: msg.id } });
-    */
 }
