@@ -14,14 +14,13 @@ Schemas
 **config**
 ```
 guild_id -> Columns
-├── id         (bigint)
-├── member_log (bigint)
-├── log        (bigint)
-├── mute       (bigint)
-├── bot        (bigint)
-├── emoji      (bigint)
-├── embed      (bigint)
-└── reaction   (bigint)
+├── member_log        (bigint)
+├── log               (bigint)
+├── mute              (bigint)
+├── bot_restrict      (bigint)
+├── emoji_restrict    (bigint)
+├── embed_restrict    (bigint)
+└── reaction_restrict (bigint)
 ```
 
 **nicks**
@@ -34,8 +33,8 @@ guild_id -> Columns
 **history**
 ```
 guild_id -> Columns
-├── id       (bigint)
-├── bot      (integer[]) case IDs
+├── id       (bigint)    user id
+├── bot      (integer[]) case ids
 ├── mutes    (integer[])
 ├── emoji    (integer[])
 ├── embed    (integer[])
@@ -45,8 +44,8 @@ guild_id -> Columns
 **cases**
 ```
 guild_id -> Columns
-├── id     (integer)
-├── msg    (bigint) message ID
+├── id     (integer) case id
+├── msg    (bigint)  message id
 ├── author (bigint)
 ├── target (bigint)
 ├── reason (string)
@@ -56,7 +55,7 @@ guild_id -> Columns
 **restrictions**
 ```
 guild_id -> Columns
-├── id       (bigint)
+├── id       (bigint)  user id
 ├── mute     (integer) 0/1
 ├── bot      (integer)
 ├── emoji    (integer)
