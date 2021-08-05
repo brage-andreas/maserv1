@@ -79,13 +79,13 @@ export const getDefaultChannel = async (opt: DefaultChannelOpt): Promise<TextCha
 
 		if (optGuild) {
 			const isValid = (ch: GuildChannel | ThreadChannel) => ch.type === "GUILD_TEXT" && hasPerms(perms, me, ch);
-			const usableChannels = optGuild.channels.cache.filter(isValid) as Collection<`${bigint}`, TextChannel>;
+			const usableChannels = optGuild.channels.cache.filter(isValid) as Collection<string, TextChannel>;
 			if (!usableChannels.size) resolve(null);
 
 			const dbChannelID = type ? await viewValue(`${type}_channel`, optGuild.id) : null;
 
 			const dbChannel = dbChannelID
-				? (optGuild.channels.cache.get(dbChannelID as `${bigint}`) as TextChannel | undefined)
+				? (optGuild.channels.cache.get(dbChannelID as string) as TextChannel | undefined)
 				: null;
 
 			if (dbChannel) {

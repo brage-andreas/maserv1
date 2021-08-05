@@ -15,9 +15,13 @@ Schemas
 ```
 guild_id -> Columns
 ├── id         (bigint)
-├── mute_role  (bigint)
 ├── member_log (bigint)
-└── log        (bigint)
+├── log        (bigint)
+├── mute       (bigint)
+├── bot        (bigint)
+├── emoji      (bigint)
+├── embed      (bigint)
+└── reaction   (bigint)
 ```
 
 **nicks**

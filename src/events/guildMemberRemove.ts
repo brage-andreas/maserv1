@@ -4,7 +4,6 @@ import { LEAVE_PHRASES } from "../constants.js";
 import { DaClient } from "../resources/definitions.js";
 
 export async function run(client: DaClient, member: GuildMember) {
-	console.log(member.displayName);
 	const { guild, user } = member;
 	const me = guild.me;
 

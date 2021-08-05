@@ -57,7 +57,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 	if (!channel) return interaction.editReply({ content: "Something went wrong with the channel" });
 
 	// --- Prune
-	channel.messages.fetch({ limit: amount }).then(async (messages: Collection<`${bigint}`, Message>) => {
+	channel.messages.fetch({ limit: amount }).then(async (messages: Collection<string, Message>) => {
 		const msgsToDelete = target ? messages.filter((msg) => msg.author.id === target.id) : messages;
 
 		const targetStr = target ? ` from ${target}` : "";
@@ -66,7 +66,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 		const query = `Are you sure you want to delete ${msgsToDelete.size} messages${targetStr}${channelStr}?`;
 		await confirm(interaction, query)
 			.then(() => {
-				channel.bulkDelete(msgsToDelete, true).then((messages: Collection<`${bigint}`, Message>) => {
+				channel.bulkDelete(msgsToDelete, true).then((messages: Collection<string, Message>) => {
 					interaction.editReply({ content: "Done!", components: [] });
 					log.cmd(
 						{ cmd: "prune", msg: `Deleted ${messages.size} messages` },

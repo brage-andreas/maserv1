@@ -25,7 +25,7 @@
 	},
 	"dependencies": {
 		"chalk": "^4.1.1",
-		"discord.js": "^13.0.0-dev.77784ac.1626696170",
+		"discord.js": "^13.0.0-dev.t1628165339.3eb4140",
 		"dotenv": "^10.0.0",
 		"ms": "^2.1.3",
 		"pg-promise": "^10.10.2"

@@ -34,7 +34,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	await interaction.defer();
 
-	const targetId = interaction.options.get("member", true).value as `${bigint}`;
+	const targetId = interaction.options.get("member", true).value as string;
 	const reason = interaction.options.getString("reason");
 	const nsfw = interaction.options.getBoolean("nsfw");
 
@@ -49,7 +49,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 	const sendKickEmbed = () => {
 		const kickEmbed = new MessageEmbed()
 			.setAuthor(user.tag, user.displayAvatarURL())
-			.setColor(`#${client.colours.yellow}`)
+			.setColor(`#${client.colours.orange}`)
 			.setThumbnail(!nsfw ? target.user.displayAvatarURL({ size: 1024, dynamic: false }) : "")
 			.addField("Succsessfully kicked", `${target} (${target.id})`)
 			.setFooter("User kicked")
@@ -65,7 +65,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 	const sendError = () => {
 		const kickErrorEmbed = new MessageEmbed()
 			.setAuthor(user.tag, user.displayAvatarURL())
-			.setColor(`#${client.colours.red}`)
+			.setColor(`#${client.colours.black}`)
 			.addField("Failed to kick", `${target.toString()} (${target.id})`)
 			.setFooter("Kick failed")
 			.setTimestamp();

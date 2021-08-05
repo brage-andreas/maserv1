@@ -18,7 +18,7 @@ export const data: ApplicationCommandData = {
 export async function run(client: DaClient, interaction: CmdInteraction) {
 	const { user, guild, channel } = interaction;
 
-	const targetId = (interaction.options.get("member")?.value as `${bigint}` | undefined) ?? user.id;
+	const targetId = (interaction.options.get("member")?.value as string | undefined) ?? user.id;
 
 	log.cmd({ cmd: "history", msg: `Showed history of X (${targetId})` }, { guild, channel, user });
 }

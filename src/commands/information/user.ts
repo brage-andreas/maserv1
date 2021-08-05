@@ -24,7 +24,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	await interaction.defer();
 
-	const getMember = async (raw: `${bigint}` | undefined) => {
+	const getMember = async (raw: string | undefined) => {
 		let member = interaction.member;
 
 		if (!raw) return member;

@@ -1,4 +1,4 @@
-import { ApplicationCommandData, Message, MessageEmbed, User } from "discord.js";
+import { ApplicationCommandData, Message, MessageAttachment, MessageEmbed, User } from "discord.js";
 import { performance } from "perf_hooks";
 import ms from "ms";
 
@@ -31,20 +31,21 @@ interface evalObj {
 	that: Message | CmdInteraction;
 }
 interface evalOutput {
-	error?: string | undefined;
-	output?: string | undefined;
-	embed?: MessageEmbed | undefined;
+	error?: string;
+	output?: string;
+	embeds?: MessageEmbed[];
+	files?: MessageAttachment[];
 }
 
 const wrap = (str: string) => `\`\`\`js\n${str}\n\`\`\``;
 
 export async function evalCmd(client: DaClient, opt: evalObj): Promise<evalOutput> {
-	const { code, user, that } = opt;
+	const { code, user, that } = opt; // destructure "that" for use in eval command
 	const noReply = opt.noReply ?? false;
 
 	try {
 		const start = performance.now();
-		const evaluatedRaw = await eval(`(async () => { ${code} })()`);
+		const evaluatedRaw = (await eval(`(async () => {\n${code}\n})()`)) ?? "";
 		const end = performance.now();
 
 		const evaluated = JSON.stringify(evaluatedRaw, null, 2);
@@ -55,21 +56,35 @@ export async function evalCmd(client: DaClient, opt: evalObj): Promise<evalOutpu
 			const type = typeof evaluatedRaw;
 			const constructor = evaluatedRaw?.constructor.name ?? "Nullish";
 			const timeTaken = ms(Number((end - start).toFixed(3)), { long: true }).replace(".", ",");
+			let files: MessageAttachment[] | undefined = [];
 
-			const evalStr = `${wrap(evaluated)}\n${timeTaken}\n${type} (${constructor})`;
+			const evalStr = `${timeTaken}\n${type} (${constructor})`;
+
+			if (evaluated.length >= 1023 - evalStr.length) {
+				const buffer = Buffer.from(evaluated);
+				const file = new MessageAttachment(buffer, "evaluated.js");
+				files.push(file);
+			}
+
+			files = files.length ? files : undefined;
+
+			const codeStr = wrap(code).length >= 1024 ? "Code was too long." : wrap(code);
+			const response = files ? "Response was too long. Sent as an attachment." : `${wrap(evaluated)}\n${evalStr}`;
 
 			const evaluatedEmbed = new MessageEmbed()
 				.setAuthor(user.tag, user.displayAvatarURL())
 				.setColor(`#${client.colours.yellow}`)
-				.addField("📥 Input", wrap(code))
-				.addField("📤 Output", evalStr)
+				.addField("📥 Input", codeStr)
+				.addField("📤 Output", response)
 				.setFooter("Succsessfully evaluated")
 				.setTimestamp();
 
-			return { embed: evaluatedEmbed, output: evaluated };
+			return { embeds: [evaluatedEmbed], output: evaluated, files };
 		} else return {};
 	} catch (err) {
 		const errEmoji = client.moji.get("err");
+
+		err = err.length >= 1002 ? `${err.slice(998)}\n...` : `${err}`;
 
 		const evaluatedEmbed = new MessageEmbed()
 			.setAuthor(user.tag, user.displayAvatarURL())
@@ -79,7 +94,7 @@ export async function evalCmd(client: DaClient, opt: evalObj): Promise<evalOutpu
 			.setFooter("Evaluation failed")
 			.setTimestamp();
 
-		return { embed: evaluatedEmbed, output: err };
+		return { embeds: [evaluatedEmbed], output: err };
 	}
 }
 
@@ -94,9 +109,9 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 	const code = interaction.options.getString("code", true);
 	const noReply = interaction.options.getBoolean("reply") ?? false;
 
-	const { error, embed, output } = await evalCmd(client, { code, noReply, user, that });
+	const { error, embeds, output, files } = await evalCmd(client, { code, noReply, user, that });
 
-	if (embed) interaction.editReply({ embeds: [embed] });
+	if (embeds) interaction.editReply({ embeds, files });
 	else interaction.editReply({ content: "Something went wrong" });
 
 	if (error) log.cmd({ cmd: "eval", msg: `Error: "${error}"` }, { guild, channel, user }, true);

@@ -17,7 +17,7 @@ export const existsTable = async (table: string) => {
 	const ans = await get(`
         SELECT EXISTS (
             SELECT 1 FROM information_schema.tables 
-            WHERE table_catalog='bigbot' AND 
+            WHERE table_catalog='maser' AND 
                 table_schema='public' AND 
                 table_name='${table}'
         );

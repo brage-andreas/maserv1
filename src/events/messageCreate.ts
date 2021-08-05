@@ -42,9 +42,9 @@ export async function run(client: DaClient, msg: Message) {
 
 		const code = getCode(content);
 
-		const { error, embed, output } = await evalCmd(client, { code, user, that });
+		const { error, embeds, output, files } = await evalCmd(client, { code, user, that });
 
-		if (embed) msg.reply({ embeds: [embed] });
+		if (embeds) msg.reply({ embeds, files });
 		else msg.reply({ content: "Something went wrong" });
 
 		if (error) log.cmd({ cmd: "eval", msg: `Error: "${error}"` }, { guild, channel, user }, true);

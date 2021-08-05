@@ -59,7 +59,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 	const getOptionName = (valueName: string) =>
 		CONFIG_OPTION_CHOICES.find((opt) => opt.value === valueName)?.name || option;
 
-	const getNameFromID = (id: `${bigint}`) =>
+	const getNameFromID = (id: string) =>
 		guild.channels.cache.get(id)?.toString() || guild.roles.cache.get(id)?.toString() || "unknown";
 
 	const optionName = option ? getOptionName(option) : null;
@@ -90,7 +90,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 		Object.entries(response).forEach(([key, value]) => {
 			const strKey = getOptionName(key);
-			const strValue = getNameFromID(value as `${bigint}`);
+			const strValue = getNameFromID(value as string);
 
 			if (!strKey) return;
 			descStr += `${strKey}:\n${strValue !== "unknown" ? strValue : "Not set/unknown"}\n\n`;

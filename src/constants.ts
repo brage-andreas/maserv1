@@ -13,12 +13,14 @@ export const ROLE_REGEX = /^<@&\d{17,19}>$/;
 export const ID_REGEX = /^\d{17,19}$/;
 
 export const BLURPLE = "5865F2";
+export const ORANGE = "FF8741";
 export const YELLOW = "FFC152";
 export const BLACK = "000000";
 export const GREEN = "5AD658";
-export const WHITE = "FFFFFF";
 export const INVIS = "2F3136";
+export const WHITE = "FFFFFF";
 export const RED = "FF5733";
+
 export const FYELLOW = `hex("${YELLOW}")`;
 export const FGREEN = `hex("${GREEN}")`;
 export const FRED = `hex("${RED}")`;
@@ -85,11 +87,11 @@ export const CONFIG_OPTION_CHOICES: ApplicationCommandOptionChoice[] = [
 	},
 	{
 		name: "Member Log Channel",
-		value: "member_log_channel"
+		value: "member_log"
 	},
 	{
 		name: "Action Log Channel",
-		value: "log_channel"
+		value: "log"
 	},
 	{
 		name: "Mod Role",

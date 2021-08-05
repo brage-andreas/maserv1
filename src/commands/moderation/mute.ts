@@ -2,7 +2,7 @@ import { MessageEmbed, Role } from "discord.js";
 import ms from "ms";
 
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
-import { confirm, getDefaultChannel, hasPerms, log, parseDate } from "../../resources/automaton.js";
+import { confirm, getDefaultChannel, hasPerms, log } from "../../resources/automaton.js";
 import { viewValue } from "../../resources/psql/schemas/config.js";
 
 export const data = {
@@ -47,7 +47,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	const logChannel = await getDefaultChannel({ optGuild: guild, me: guild.me, type: "log" });
 
-	const configMuteRoleId: `${bigint}` | null = await viewValue("mute_role", guild.id);
+	const configMuteRoleId: string | null = await viewValue("mute_role", guild.id);
 	const configMuteRole = configMuteRoleId ? guild.roles.cache.get(configMuteRoleId) ?? null : null;
 	const muteRole: Role | null =
 		configMuteRole ??
@@ -56,7 +56,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	if (!muteRole) return sendError("Couldn't find a mute role. Set one with the config command");
 
-	const targetId = interaction.options.get("member", true).value as `${bigint}`;
+	const targetId = interaction.options.get("member", true).value as string;
 	const rawDuration = interaction.options.getString("duration") ?? "1h";
 	const reason = interaction.options.getString("reason");
 	const nsfw = interaction.options.getBoolean("nsfw") ?? false;
@@ -80,12 +80,11 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	await interaction.defer();
 
-	const roleIdsSet = new Set(target.roles.cache.keyArray());
+	const roleIdsSet = new Set(target.roles.cache.map((role) => role.id));
 	roleIdsSet.delete(guild.id);
 
 	// SAVE MEMBER TO DB
 
-	const doneTimestamp = parseDate(Date.now() + duration);
 	const durationStr = ms(duration, { long: true });
 
 	const query = `Are you sure you want to mute ${target.user.tag} (${target.id}) for ${durationStr}?`;
@@ -97,10 +96,10 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 				.then(() => {
 					const muteEmbed = new MessageEmbed()
 						.setAuthor(user.tag, user.displayAvatarURL())
-						.setColor(`#${client.colours.black}`)
+						.setColor(`#${client.colours.yellow}`)
 						.setThumbnail(!nsfw ? target.user.displayAvatarURL({ size: 1024, dynamic: false }) : "")
 						.addField("Succsessfully muted", `${target} (${target.id})`)
-						.addField("Duration", `${durationStr} (${doneTimestamp})`)
+						.addField("Duration", `${durationStr}`)
 						.setFooter("User muted")
 						.setTimestamp();
 					if (reason) muteEmbed.addField("Reason", reason);
@@ -113,8 +112,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 					if (logChannel) logChannel.send({ embeds: [muteEmbed] });
 
 					setTimeout(() => {
-						target.roles.remove(muteRole);
-						setTimeout(() => target.roles.add([...roleIdsSet]), 1000);
+						target.roles.set([...roleIdsSet]);
 					}, duration);
 
 					log.cmd(

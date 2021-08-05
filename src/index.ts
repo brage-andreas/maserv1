@@ -40,7 +40,7 @@ const getJSFiles = (dir: string, subfolder = false): Collection<string, string[]
 };
 
 const commandFiles = getJSFiles("./commands", true) as Collection<string, string[]>;
-const commandAmount = commandFiles.array().reduce((acc, current) => acc + current.length, 0);
+const commandAmount = commandFiles.reduce((acc, current) => acc + current.length, 0);
 console.log(chalk`  {grey Loading} ${commandAmount} {grey commands...}`);
 
 commandFiles.forEach(async (filesInFolder: string[], folder: string) => {

@@ -1,4 +1,12 @@
-import { ApplicationCommandData, Collection, GuildChannel, MessageEmbed, ThreadChannel } from "discord.js";
+import {
+	ApplicationCommandData,
+	Collection,
+	GuildChannel,
+	MessageEmbed,
+	TextChannel,
+	ThreadChannel,
+	VoiceChannel
+} from "discord.js";
 
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { log, parseDate } from "../../resources/automaton.js";
@@ -21,19 +29,19 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	const made = parseDate(createdTimestamp);
 
-	const oldestChannel = (channels: Collection<`${bigint}`, GuildChannel | ThreadChannel>) => {
-		let nonThreadChannels = channels.filter((ch) => !ch.isThread()) as Collection<`${bigint}`, GuildChannel>;
+	const oldestChannel = (channels: Collection<string, GuildChannel | ThreadChannel>) => {
+		let nonThreadChannels = channels.filter((ch) => !ch.isThread()) as Collection<string, GuildChannel>;
 		return nonThreadChannels.sort((a, b) => a.createdTimestamp - b.createdTimestamp).first();
 	};
 
-	const textChannels = channels.cache.filter((c) => c.isText() && !c.isThread());
-	const voiceChannels = channels.cache.filter((c) => c.type === "GUILD_VOICE");
+	const textChs = channels.cache.filter((c) => c.type === "GUILD_TEXT") as Collection<string, TextChannel>;
+	const voiceChs = channels.cache.filter((c) => c.type === "GUILD_VOICE") as Collection<string, VoiceChannel>;
 
-	const oldestTextChannel = oldestChannel(textChannels);
-	const oldestVoiceChannel = oldestChannel(voiceChannels);
+	const oldestTextChannel = oldestChannel(textChs);
+	const oldestVoiceChannel = oldestChannel(voiceChs);
 
-	const oldTextString = oldestTextChannel ? `\nOldest text channel is ${oldestTextChannel}` : ``;
-	const oldVoiceString = oldestVoiceChannel ? `\nOldest voice channel is ${oldestVoiceChannel}` : ``;
+	const oldTextString = oldestTextChannel ? `\nOldest text channel is ${oldestTextChannel}` : "";
+	const oldVoiceString = oldestVoiceChannel ? `\nOldest voice channel is ${oldestVoiceChannel}` : "";
 
 	const infoEmbed = new MessageEmbed()
 		.setColor(`#${client.colours.yellow}`)
@@ -50,7 +58,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 		.addField("Members", `${memberCount}`)
 		.addField(
 			"Channels",
-			`**${textChannels.size}** text channels and **${voiceChannels.size}** voice channels\n${oldTextString}${oldVoiceString}`
+			`**${textChs.size}** text channels and **${voiceChs.size}** voice channels\n${oldTextString}${oldVoiceString}`
 		)
 		.addField("Roles", `${roles.cache.size - 1} custom roles`)
 		.setTimestamp();
