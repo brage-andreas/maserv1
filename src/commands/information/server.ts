@@ -19,7 +19,7 @@ export const data: ApplicationCommandData = {
 export async function run(client: DaClient, interaction: CmdInteraction) {
 	const { guild, user, channel } = interaction;
 
-	await interaction.defer();
+	await interaction.deferReply();
 
 	if (!guild || !guild.available) return interaction.editReply({ content: "Hmm. Noe gikk galt." });
 

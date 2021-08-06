@@ -1,6 +1,6 @@
 import { ApplicationCommandData, MessageEmbed } from "discord.js";
 
-import { log, confirm, hasPerms, sendLog, permCheck } from "../../resources/automaton.js";
+import { log, confirm, sendLog, permCheck } from "../../resources/automaton.js";
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 
 export const data: ApplicationCommandData = {
@@ -32,7 +32,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	if (!guild.me) return interaction.reply({ content: "Something went wrong", ephemeral: true });
 
-	await interaction.defer();
+	await interaction.deferReply();
 
 	const targetId = interaction.options.get("member", true).value as string;
 	const reason = interaction.options.getString("reason");

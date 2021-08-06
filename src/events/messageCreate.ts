@@ -1,6 +1,4 @@
-import { Message, MessageEmbed } from "discord.js";
-import { performance } from "perf_hooks";
-import ms from "ms";
+import { Message } from "discord.js";
 
 import { DaClient } from "../resources/definitions.js";
 import { CODEBLOCK_REGEX, TOKEN_REGEX } from "../constants.js";
@@ -9,7 +7,6 @@ import { evalCmd } from "../commands/util/eval.js";
 
 export async function run(client: DaClient, msg: Message) {
 	const { content, author, guild, channel } = msg;
-
 	if (!client.application?.owner) await client.application?.fetch();
 	const isBotOwner = () => author.id === client.application?.owner?.id;
 

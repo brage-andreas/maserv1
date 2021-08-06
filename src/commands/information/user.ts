@@ -22,7 +22,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 	const [online, idle, dnd, offline] = client.mojis("online", "idle", "dnd", "offline");
 	const emojis: { [index: string]: string | undefined } = { online, idle, dnd, offline };
 
-	await interaction.defer();
+	await interaction.deferReply();
 
 	const getMember = async (raw: string | undefined) => {
 		let member = interaction.member;

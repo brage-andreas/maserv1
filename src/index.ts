@@ -14,6 +14,11 @@ INVITE URL
 https://discord.com/oauth2/authorize?client_id=836883384399167498&scope=bot+applications.commands
 */
 
+process.on("uncaughtException", (err) => {
+	const errStr = err.toString().replace(/[\r\n]/g, "\n  ");
+	console.error(`  There was an uncaught error:\n${errStr}`);
+});
+
 const client = new DaClient({
 	intents: INTENTS_BITFIELD,
 	allowedMentions: { repliedUser: false }

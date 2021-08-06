@@ -161,12 +161,14 @@ export const sendLog = async (interaction: CmdInteraction, embed: MessageEmbed, 
 	if (logChannel) logChannel.send({ embeds: [embed] });
 };
 
-const _cache = { user: "", channel: "" };
+const _cache = { user: "", channel: "", guild: "" };
 export const log = {
 	cmd: function (opt: LogOpt, from: LogFrom, err = false): void {
 		const { cmd } = opt;
 		const { user, channel, guild } = from;
 		const [sec, min, hour] = time();
+
+		_cache.guild = "";
 
 		const msg = opt.msg?.replace(/[\r\n]/g, "\n  ");
 
@@ -213,13 +215,15 @@ export const log = {
 		const newLine = _cache.channel || _cache.user;
 		const toPrint = newLine ? [""] : [];
 
-		toPrint.push(
-			guild ? chalk`  {grey In} {${FYELLOW} ${guild.name}}` : chalk`  {grey In} {${FRED} unknown guild}`
-		);
+		const namedGuild = guild ? chalk`  {grey In} {${FYELLOW} ${guild.name}}` : null;
+		const unnamedGuild = chalk`  {grey In} {${FRED} unknown guild}`;
+
+		if (_cache.guild !== guild?.id) toPrint.push(namedGuild ?? unnamedGuild);
 		toPrint.push(chalk`  {grey [${hour}:${min}:${sec}] >} ${msg}`);
 
 		console.log(toPrint.join("\n"));
 
+		_cache.guild = guild?.id ?? "";
 		_cache.channel = "";
 		_cache.user = "";
 	}

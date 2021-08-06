@@ -1,6 +1,6 @@
-import { ApplicationCommandData, GuildChannel, GuildMember, MessageEmbed, Role, TextChannel, User } from "discord.js";
+import { ApplicationCommandData, GuildChannel, MessageEmbed, Role, TextChannel, ThreadChannel } from "discord.js";
 
-import { CONFIG_METHOD_CHOICES, CONFIG_OPTION_CHOICES, ID_REGEX } from "../../constants.js";
+import { CHANNEL_REGEX, CONFIG_METHOD_CHOICES, CONFIG_OPTION_CHOICES, ID_REGEX, ROLE_REGEX } from "../../constants.js";
 import { removeValue, setValue, viewConfig, viewValue } from "../../resources/psql/schemas/config.js";
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { log } from "../../resources/automaton.js";
@@ -33,28 +33,33 @@ export const data: ApplicationCommandData = {
 export async function run(client: DaClient, interaction: CmdInteraction) {
 	const { user, channel, guild } = interaction;
 
-	const getIdFromValue = (option: string | null) => {
-		const valueOpt = interaction.options.getString("value");
-		if (!valueOpt || !option) return null;
+	const getValue = async (raw: string | null) => {
+		if (!raw) return null;
 
-		const baseOpt = interaction.options;
-		let value =
-			(baseOpt.getMentionable(option) as GuildMember | User | Role | null) ??
-			(baseOpt.getChannel(option) as GuildChannel | null);
+		const roBase = guild.roles.cache;
+		const chBase = guild.channels.cache;
 
-		if (value) return value;
+		let role: Role | null = null;
+		let channel: GuildChannel | ThreadChannel | null = null;
 
-		const role = guild.roles.cache.find((role) => role.name === valueOpt);
-		const channel = guild.channels.cache.find((channel) => channel.name === valueOpt);
+		if (ROLE_REGEX.test(raw) || ID_REGEX.test(raw)) role = roBase.get(raw.replace(/\D/g, "")) ?? null;
+		if (CHANNEL_REGEX.test(raw) || ID_REGEX.test(raw)) channel = chBase.get(raw.replace(/\D/g, "")) ?? null;
 
-		return role ?? channel?.type === "GUILD_TEXT" ? (channel as TextChannel) : null ?? null;
+		const fn = (that: Role | GuildChannel | ThreadChannel) => that.name.toLowerCase() === raw.toLowerCase();
+		if (!role) role = guild.roles.cache.find(fn) ?? null;
+		if (!channel) channel = guild.channels.cache.find(fn) ?? null;
+
+		channel = channel?.type === "GUILD_TEXT" ? (channel as TextChannel) : null;
+
+		return role ?? channel ?? null;
 	};
 
 	const method = interaction.options.getString("method", true);
 	const option = interaction.options.getString("option");
-	const value = getIdFromValue(option);
+	const rawValue = interaction.options.getString("value");
+	const value = await getValue(rawValue);
 
-	await interaction.defer();
+	await interaction.deferReply();
 
 	const getOptionName = (valueName: string) =>
 		CONFIG_OPTION_CHOICES.find((opt) => opt.value === valueName)?.name || option;
@@ -72,7 +77,9 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 		.setTimestamp();
 
 	const setOption = async () => {
-		if (!option || !optionName || !value) return interaction.editReply(`${err} Something went wrong`);
+		if (!option) return interaction.editReply(`${err} Something went wrong with your option`);
+		if (!value)
+			return interaction.editReply(`${err} Something went wrong with your value.\n"${rawValue}" didn't resolve.`);
 
 		await setValue(option, value.id, guild.id);
 

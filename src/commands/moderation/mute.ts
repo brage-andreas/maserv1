@@ -78,7 +78,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 	if (duration < MIN_TIME) return sendError("Provide a longer duration. Minimum is five minutes (5 min)");
 	if (duration > MAX_TIME) return sendError("Provide a shorter duration. Maximum is one week (1 w)");
 
-	await interaction.defer();
+	await interaction.deferReply();
 
 	const roleIdsSet = new Set(target.roles.cache.map((role) => role.id));
 	roleIdsSet.delete(guild.id);

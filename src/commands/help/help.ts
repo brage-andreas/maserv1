@@ -20,7 +20,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 	const { guild, user, channel, member } = interaction;
 	const [greenArrow, yellowArrow] = client.mojis("doubletick_g", "doubletick_y");
 
-	await interaction.defer();
+	await interaction.deferReply();
 
 	const targetCmd = interaction.options.getString("command");
 

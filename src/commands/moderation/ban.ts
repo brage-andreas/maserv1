@@ -37,7 +37,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	if (!guild.me) return interaction.reply({ content: "Something went wrong", ephemeral: true });
 
-	await interaction.defer();
+	await interaction.deferReply();
 
 	const target = interaction.options.getUser("member", true);
 	const reason = interaction.options.getString("reason") ?? undefined;

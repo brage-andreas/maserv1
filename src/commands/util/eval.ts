@@ -45,7 +45,7 @@ export async function evalCmd(client: DaClient, opt: evalObj): Promise<evalOutpu
 
 	try {
 		const start = performance.now();
-		const evaluatedRaw = (await eval(`(async () => {\n${code}\n})()`)) ?? "";
+		const evaluatedRaw = await eval(`(async () => {\n${code}\n})()`);
 		const end = performance.now();
 
 		const evaluated = JSON.stringify(evaluatedRaw, null, 2);
@@ -60,7 +60,7 @@ export async function evalCmd(client: DaClient, opt: evalObj): Promise<evalOutpu
 
 			const evalStr = `${timeTaken}\n${type} (${constructor})`;
 
-			if (evaluated.length >= 1023 - evalStr.length) {
+			if (evaluated?.length >= 1023 - evalStr.length) {
 				const buffer = Buffer.from(evaluated);
 				const file = new MessageAttachment(buffer, "evaluated.js");
 				files.push(file);
@@ -94,7 +94,7 @@ export async function evalCmd(client: DaClient, opt: evalObj): Promise<evalOutpu
 			.setFooter("Evaluation failed")
 			.setTimestamp();
 
-		return { embeds: [evaluatedEmbed], output: err };
+		return { embeds: [evaluatedEmbed], error: err };
 	}
 }
 
@@ -102,7 +102,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 	const { user, guild, channel } = interaction;
 	const that = interaction;
 
-	await interaction.defer();
+	await interaction.deferReply();
 
 	if (interaction.user.id !== "196333104183508992") return interaction.editReply({ content: "Command rejected" });
 
@@ -112,7 +112,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 	const { error, embeds, output, files } = await evalCmd(client, { code, noReply, user, that });
 
 	if (embeds) interaction.editReply({ embeds, files });
-	else interaction.editReply({ content: "Something went wrong" });
+	else if (!noReply) interaction.editReply({ content: "Something went wrong" });
 
 	if (error) log.cmd({ cmd: "eval", msg: `Error: "${error}"` }, { guild, channel, user }, true);
 	else log.cmd({ cmd: "eval", msg: `Output: ${output ? `"${output}"` : "No output"}` }, { guild, channel, user });
