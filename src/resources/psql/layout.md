@@ -14,6 +14,7 @@ Schemas
 **config**
 ```
 guild_id -> Columns
+├── id               (bigint)
 ├── member_log        (bigint)
 ├── log               (bigint)
 ├── mute              (bigint)
@@ -55,10 +56,6 @@ guild_id -> Columns
 **restrictions**
 ```
 guild_id -> Columns
-├── id       (bigint)  user id
-├── mute     (integer) 0/1
-├── bot      (integer)
-├── emoji    (integer)
-├── embed    (integer)
-└── reaction (integer)
+├── id        (bigint)  user id
+└── restricts (integer) bitfield
 ```

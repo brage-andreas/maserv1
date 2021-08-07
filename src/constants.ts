@@ -114,34 +114,24 @@ export const CONFIG_OPTION_CHOICES: ApplicationCommandOptionChoice[] = [
 ];
 
 export const CONFIG_OPTION_INFO: { [index: string]: { type: string; reg: RegExp } } = {
-	member_log_channel: { type: "CHANNEL", reg: CHANNEL_REGEX },
 	reaction_restrict: { type: "ROLE", reg: ROLE_REGEX },
-	log_channel: { type: "CHANNEL", reg: CHANNEL_REGEX },
 	embed_restrict: { type: "ROLE", reg: ROLE_REGEX },
 	emoji_restrict: { type: "ROLE", reg: ROLE_REGEX },
 	bot_restrict: { type: "ROLE", reg: ROLE_REGEX },
-	mute_role: { type: "ROLE", reg: ROLE_REGEX }
+	member_log: { type: "CHANNEL", reg: CHANNEL_REGEX },
+	mute_role: { type: "ROLE", reg: ROLE_REGEX },
+	log: { type: "CHANNEL", reg: CHANNEL_REGEX }
 };
 
-export const CONFIG_METHOD_CHOICES: ApplicationCommandOptionChoice[] = [
-	{
-		name: "set",
-		value: "set"
-	},
-	{
-		name: "view",
-		value: "view"
-	},
-	{
-		name: "remove",
-		value: "remove"
-	}
-];
+export const CONFIG_METHOD_CHOICES: ApplicationCommandOptionChoice[] = [];
 
 export type RESTRICTIONS_STR = "embed" | "emoji" | "reaction" | "bot";
-export const RESTRICTIONS: { [index: string]: number } = {
-	bot: 1 << 0,
+export const RESTRICTIONS_BIT: { [index: string]: number } = {
+	mute: 1 << 0,
 	embed: 1 << 1,
 	emoji: 1 << 2,
-	reaction: 1 << 3
+	reaction: 1 << 3,
+	bot: 1 << 4
 };
+
+export const RESTRICTIONS = Object.keys(RESTRICTIONS_BIT);

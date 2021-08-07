@@ -1,11 +1,11 @@
-import { MessageEmbed, Role } from "discord.js";
+import { ApplicationCommandData, MessageEmbed, Role } from "discord.js";
 import ms from "ms";
 
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { confirm, getDefaultChannel, hasPerms, log } from "../../resources/automaton.js";
 import { viewValue } from "../../resources/psql/schemas/config.js";
 
-export const data = {
+export const data: ApplicationCommandData = {
 	name: "mute",
 	description: "Mutes a member",
 	options: [

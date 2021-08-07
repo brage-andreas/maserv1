@@ -1,6 +1,6 @@
 import { ApplicationCommandData, GuildChannel, MessageEmbed, Role, TextChannel, ThreadChannel } from "discord.js";
 
-import { CHANNEL_REGEX, CONFIG_METHOD_CHOICES, CONFIG_OPTION_CHOICES, ID_REGEX, ROLE_REGEX } from "../../constants.js";
+import { CHANNEL_REGEX, CONFIG_OPTION_CHOICES, CONFIG_OPTION_INFO, ID_REGEX, ROLE_REGEX } from "../../constants.js";
 import { removeValue, setValue, viewConfig, viewValue } from "../../resources/psql/schemas/config.js";
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { log } from "../../resources/automaton.js";
@@ -13,7 +13,20 @@ export const data: ApplicationCommandData = {
 			name: "method",
 			type: "STRING",
 			description: "What method to use",
-			choices: CONFIG_METHOD_CHOICES,
+			choices: [
+				{
+					name: "set",
+					value: "set"
+				},
+				{
+					name: "view",
+					value: "view"
+				},
+				{
+					name: "remove",
+					value: "remove"
+				}
+			],
 			required: true
 		},
 		{
@@ -35,23 +48,21 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	const getValue = async (raw: string | null) => {
 		if (!raw) return null;
-
-		const roBase = guild.roles.cache;
-		const chBase = guild.channels.cache;
-
-		let role: Role | null = null;
-		let channel: GuildChannel | ThreadChannel | null = null;
-
-		if (ROLE_REGEX.test(raw) || ID_REGEX.test(raw)) role = roBase.get(raw.replace(/\D/g, "")) ?? null;
-		if (CHANNEL_REGEX.test(raw) || ID_REGEX.test(raw)) channel = chBase.get(raw.replace(/\D/g, "")) ?? null;
-
 		const fn = (that: Role | GuildChannel | ThreadChannel) => that.name.toLowerCase() === raw.toLowerCase();
-		if (!role) role = guild.roles.cache.find(fn) ?? null;
-		if (!channel) channel = guild.channels.cache.find(fn) ?? null;
 
-		channel = channel?.type === "GUILD_TEXT" ? (channel as TextChannel) : null;
+		const { type, reg } = CONFIG_OPTION_INFO[raw];
 
-		return role ?? channel ?? null;
+		if (type === "ROLE") {
+			if (reg.test(raw) || !ID_REGEX.test(raw)) return guild.roles.cache.get(raw.replace(/\D/g, "")) ?? null;
+			else return guild.roles.cache.find(fn) ?? null;
+		}
+
+		if (type === "CHANNEL") {
+			if (reg.test(raw) || !ID_REGEX.test(raw)) return guild.channels.cache.get(raw.replace(/\D/g, "")) ?? null;
+			else return guild.channels.cache.find(fn) ?? null;
+		}
+
+		return null;
 	};
 
 	const method = interaction.options.getString("method", true);

@@ -1,33 +1,26 @@
-import { get, existsRow, existsTable } from "../util.js";
+import { get } from "../util.js";
 
 const createNickRow = async (guildID: string, userID: string) => {
-	try {
-		await get(`
-            INSERT INTO nicks."${guildID}" (id)
-            VALUES ('${userID}');
-        `);
-	} catch (err) {
-		return err;
-	}
+	await get(`
+        INSERT INTO nicks."${guildID}" (id)
+        VALUES ('${userID}')
+        ON CONFLICT (id) DO NOTHING;
+    `);
 };
 
 const createNickTable = async (guildID: string) => {
-	try {
-		await get(`
-            CREATE TABLE nicks."${guildID}"
-                (
-                    id bigint PRIMARY KEY,
-                    nicks text[]
-                );
-        `);
-	} catch (err) {
-		return err;
-	}
+	await get(`
+        CREATE TABLE IF NOT EXISTS nicks."${guildID}"
+            (
+                id bigint PRIMARY KEY,
+                nicks text[]
+            );
+    `);
 };
 
 const check = async (guildID: string, userID: string) => {
-	if (!(await existsTable(guildID))) await createNickTable(guildID);
-	if (!(await existsRow(guildID, userID, "nicks"))) await createNickRow(guildID, userID);
+	await createNickTable(guildID);
+	await createNickRow(guildID, userID);
 };
 
 export const addNick = async (nick: string, userID: string, guildID: string) => {
