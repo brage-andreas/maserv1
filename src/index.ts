@@ -11,12 +11,12 @@ process.on("uncaughtException", (err) => {
 	console.error(`  There was an uncaught error:\n${errStr}`);
 });
 
-const daclient = new DaClient({
+const client = new DaClient({
 	intents: INTENTS_BITFIELD,
 	allowedMentions: { repliedUser: false }
 });
 
-await daclient.commands.init();
-await daclient.events.init();
+await client.commands.init();
+await client.events.init();
 
-void daclient.login(process.env.TOKEN);
+void client.login(process.env.TOKEN);
