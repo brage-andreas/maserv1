@@ -10,8 +10,8 @@ import {
 } from "discord.js";
 
 import { YELLOW, GREEN, RED, BLACK, WHITE, BLURPLE, INVIS, ORANGE } from "../constants.js";
-import { CommandManager } from "../util/commandManager.js";
-import { EventManager } from "../util/eventManager.js";
+import { CommandManager } from "../util/CommandManager.js";
+import { EventManager } from "../util/EventManager.js";
 
 class DaClient extends Client {
 	commands = new CommandManager();
