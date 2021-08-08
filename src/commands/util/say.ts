@@ -1,4 +1,4 @@
-import { hasPerms, log } from "../../resources/automaton.js";
+import { hasPerms, log } from "../../util/automaton.js";
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 
 export const data = {

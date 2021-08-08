@@ -1,5 +1,5 @@
 import { GuildMember, MessageEmbed } from "discord.js";
-import { getDefaultChannel, log, parseDate } from "../resources/automaton.js";
+import { getDefaultChannel, log, parseDate } from "../util/automaton.js";
 import { LEAVE_PHRASES } from "../constants.js";
 import { DaClient } from "../resources/definitions.js";
 

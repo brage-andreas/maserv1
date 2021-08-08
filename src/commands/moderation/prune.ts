@@ -1,7 +1,7 @@
 import { ApplicationCommandData, Collection, GuildChannel, Message, TextChannel } from "discord.js";
 
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
-import { confirm, hasPerms, log } from "../../resources/automaton.js";
+import { confirm, hasPerms, log } from "../../util/automaton.js";
 
 export const data: ApplicationCommandData = {
 	name: "prune",

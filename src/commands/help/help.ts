@@ -2,7 +2,7 @@ import { ApplicationCommandData, MessageEmbed } from "discord.js";
 
 import { CATEGORIES, CMD_TYPES } from "../../constants.js";
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
-import { log } from "../../resources/automaton.js";
+import { log } from "../../util/automaton.js";
 
 export const data: ApplicationCommandData = {
 	name: "help",
@@ -55,11 +55,9 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 			.setColor(`#${client.colours.yellow}`)
 			.setAuthor(member.displayName || user.tag, user.displayAvatarURL());
 
-		const allCategories = new Set(client.commands.map((cmd) => cmd.category).sort());
+		const allCategories = client.commands.categories;
 		allCategories.forEach((category: string) => {
-			const cmds = client.commands
-				.filter((cmd) => cmd.category === category)
-				.map((cmd) => `\`${cmd.data.name}\``);
+			const cmds = client.commands.withCategory(category);
 
 			allCmdsEmbed.addField(`${yellowArrow} ${CATEGORIES[category] || category}`, cmds.join(", "));
 		});

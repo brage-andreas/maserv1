@@ -1,7 +1,7 @@
 import { ApplicationCommandData, MessageEmbed, PresenceStatus } from "discord.js";
 
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
-import { log, parseDate } from "../../resources/automaton.js";
+import { log, parseDate } from "../../util/automaton.js";
 import { USER_STATUS } from "../../constants.js";
 import { getNick } from "../../resources/psql/schemas/nicks.js";
 

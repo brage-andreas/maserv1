@@ -3,7 +3,7 @@ import { ApplicationCommandData, GuildChannel, MessageEmbed, Role, TextChannel, 
 import { CHANNEL_REGEX, CONFIG_OPTION_CHOICES, CONFIG_OPTION_INFO, ID_REGEX, ROLE_REGEX } from "../../constants.js";
 import { removeValue, setValue, viewConfig, viewValue } from "../../resources/psql/schemas/config.js";
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
-import { log } from "../../resources/automaton.js";
+import { log } from "../../util/automaton.js";
 
 export const data: ApplicationCommandData = {
 	name: "config",

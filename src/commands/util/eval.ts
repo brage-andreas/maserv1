@@ -1,9 +1,10 @@
-import { ApplicationCommandData, Message, MessageAttachment, MessageEmbed, User } from "discord.js";
+import type { ApplicationCommandData, Message, User } from "discord.js";
+import Discord, { MessageAttachment, MessageEmbed } from "discord.js";
 import { performance } from "perf_hooks";
 import ms from "ms";
 
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
-import { log } from "../../resources/automaton.js";
+import { log } from "../../util/automaton.js";
 import { TOKEN_REGEX } from "../../constants.js";
 
 export const data: ApplicationCommandData = {
@@ -40,6 +41,7 @@ interface evalOutput {
 const wrap = (str: string) => `\`\`\`js\n${str}\n\`\`\``;
 
 export async function evalCmd(client: DaClient, opt: evalObj): Promise<evalOutput> {
+	const D = Discord;
 	const { code, user, that } = opt; // destructure "that" for use in eval command
 	const noReply = opt.noReply ?? false;
 
@@ -48,12 +50,12 @@ export async function evalCmd(client: DaClient, opt: evalObj): Promise<evalOutpu
 		const evaluatedRaw = await eval(`(async () => {\n${code}\n})()`);
 		const end = performance.now();
 
-		const evaluated = JSON.stringify(evaluatedRaw, null, 2);
+		const type = typeof evaluatedRaw;
+		const evaluated = type === "function" ? evaluatedRaw.toString() : JSON.stringify(evaluatedRaw, null, 2);
 
 		if (TOKEN_REGEX.test(evaluated)) return { error: "Command rejected" };
 
 		if (!noReply) {
-			const type = typeof evaluatedRaw;
 			const constructor = evaluatedRaw?.constructor.name ?? "Nullish";
 			const timeTaken = ms(Number((end - start).toFixed(3)), { long: true }).replace(".", ",");
 			let files: MessageAttachment[] | undefined = [];
@@ -112,7 +114,8 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 	const { error, embeds, output, files } = await evalCmd(client, { code, noReply, user, that });
 
 	if (embeds) interaction.editReply({ embeds, files });
-	else if (!noReply) interaction.editReply({ content: "Something went wrong" });
+	else if (!noReply && error) interaction.editReply({ content: error });
+	else if (!noReply) interaction.editReply({ content: "Something wen't wrong" });
 
 	if (error) log.cmd({ cmd: "eval", msg: `Error: "${error}"` }, { guild, channel, user }, true);
 	else log.cmd({ cmd: "eval", msg: `Output: ${output ? `"${output}"` : "No output"}` }, { guild, channel, user });

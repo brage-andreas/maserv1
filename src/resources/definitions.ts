@@ -1,4 +1,3 @@
-import { YELLOW, GREEN, RED, BLACK, WHITE, BLURPLE, INVIS, ORANGE } from "../constants.js";
 import {
 	ApplicationCommandData,
 	ApplicationCommandOptionData,
@@ -10,8 +9,13 @@ import {
 	TextChannel
 } from "discord.js";
 
+import { YELLOW, GREEN, RED, BLACK, WHITE, BLURPLE, INVIS, ORANGE } from "../constants.js";
+import { CommandManager } from "../util/commandManager.js";
+import { EventManager } from "../util/eventManager.js";
+
 class DaClient extends Client {
-	commands = new Collection<string, Command>();
+	commands = new CommandManager();
+	events = new EventManager(this);
 
 	colours = {
 		blurple: BLURPLE,

@@ -1,7 +1,7 @@
 import { ApplicationCommandData, GuildMember } from "discord.js";
 
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
-import { log } from "../../resources/automaton.js";
+import { log } from "../../util/automaton.js";
 import { RESTRICTIONS, RESTRICTIONS_STR } from "../../constants.js";
 import { Restriction } from "../../resources/psql/schemas/restrictions.js";
 

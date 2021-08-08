@@ -1,6 +1,6 @@
 import { ApplicationCommandData, CommandInteraction, GuildMember, TextChannel } from "discord.js";
 
-import { log } from "../../resources/automaton.js";
+import { log } from "../../util/automaton.js";
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 
 export const data: ApplicationCommandData = {

@@ -1,6 +1,6 @@
 import { ApplicationCommandData, MessageEmbed } from "discord.js";
 
-import { log, confirm, hasPerms, getDefaultChannel, permCheck } from "../../resources/automaton.js";
+import { log, confirm, hasPerms, getDefaultChannel, permCheck } from "../../util/automaton.js";
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 
 export const data: ApplicationCommandData = {

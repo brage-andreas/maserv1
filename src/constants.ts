@@ -1,3 +1,8 @@
+/*
+    INVITE URL
+    https://discord.com/oauth2/authorize?client_id=836883384399167498&scope=bot+applications.commands
+*/
+
 import { ApplicationCommandOptionChoice } from "discord.js";
 
 type StringObject = { [index: string]: string };

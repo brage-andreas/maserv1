@@ -3,7 +3,7 @@ import ms from "ms";
 
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { PLATFORMS } from "../../constants.js";
-import { log } from "../../resources/automaton.js";
+import { log } from "../../util/automaton.js";
 
 export const data: ApplicationCommandData = {
 	name: "bot",

@@ -9,7 +9,7 @@ import {
 } from "discord.js";
 
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
-import { log, parseDate } from "../../resources/automaton.js";
+import { log, parseDate } from "../../util/automaton.js";
 
 export const data: ApplicationCommandData = {
 	name: "server",

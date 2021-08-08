@@ -2,7 +2,7 @@ import { Message } from "discord.js";
 
 import { DaClient } from "../resources/definitions.js";
 import { CODEBLOCK_REGEX, TOKEN_REGEX } from "../constants.js";
-import { log } from "../resources/automaton.js";
+import { log } from "../util/automaton.js";
 import { evalCmd } from "../commands/util/eval.js";
 
 export async function run(client: DaClient, msg: Message) {
@@ -16,7 +16,7 @@ export async function run(client: DaClient, msg: Message) {
 	if (!guild) return;
 
 	if (content === "?build" && isBotOwner()) {
-		const data = client.commands.map((cmd) => cmd.data);
+		const data = client.commands.data;
 		guild.commands.set(data);
 		msg.delete();
 		return;
@@ -42,6 +42,7 @@ export async function run(client: DaClient, msg: Message) {
 		const { error, embeds, output, files } = await evalCmd(client, { code, user, that });
 
 		if (embeds) msg.reply({ embeds, files });
+		else if (error) msg.reply({ content: error });
 		else msg.reply({ content: "Something went wrong" });
 
 		if (error) log.cmd({ cmd: "eval", msg: `Error: "${error}"` }, { guild, channel, user }, true);

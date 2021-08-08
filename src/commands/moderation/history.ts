@@ -1,7 +1,7 @@
 import { ApplicationCommandData } from "discord.js";
 
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
-import { log } from "../../resources/automaton.js";
+import { log } from "../../util/automaton.js";
 
 export const data: ApplicationCommandData = {
 	name: "history",

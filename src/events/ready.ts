@@ -1,6 +1,6 @@
 import chalk from "chalk";
 
-import { time } from "../resources/automaton.js";
+import { time } from "../util/automaton.js";
 import { DaClient } from "../resources/definitions.js";
 import { FGREEN, FYELLOW } from "../constants.js";
 
