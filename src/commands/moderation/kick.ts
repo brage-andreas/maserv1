@@ -61,7 +61,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 		sendLog(interaction, kickEmbed, `Successfully kicked ${target.user.tag} (${target.id})`);
 
-		interaction.log(`Kicked ${target.user.tag} (${target.id})`);
+		interaction.util.log(`Kicked ${target.user.tag} (${target.id})`);
 	};
 
 	const sendError = () => {

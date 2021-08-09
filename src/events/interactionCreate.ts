@@ -10,7 +10,7 @@ export async function run(client: DaClient, intr: Interaction) {
 		}
 
 		const interaction = intr as CmdInteraction;
-		interaction.log = new CommandLogger(interaction).log;
+		interaction.util = new CommandLogger(interaction);
 
 		void client.commands.get(interaction.commandName)?.run(client, interaction);
 	}

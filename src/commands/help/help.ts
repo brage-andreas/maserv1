@@ -47,7 +47,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 		interaction.editReply({ embeds: [oneCmdEmbed] });
 
-		interaction.log(`Sent info about ${targetCmd}`);
+		interaction.util.log(`Sent info about ${targetCmd}`);
 	} else {
 		const allCmdsEmbed = new MessageEmbed()
 			.setTitle(`Commands`)
@@ -63,6 +63,6 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 		interaction.editReply({ embeds: [allCmdsEmbed] });
 
-		interaction.log("Sent all commands");
+		interaction.util.log("Sent all commands");
 	}
 }

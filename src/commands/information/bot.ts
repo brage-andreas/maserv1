@@ -34,5 +34,5 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	interaction.reply({ embeds: [infoEmbed] });
 
-	interaction.log();
+	interaction.util.log();
 }

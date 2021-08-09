@@ -78,7 +78,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 		});
 		if (logChannel) logChannel.send({ embeds: [banEmbed] });
 
-		interaction.log(`Banned ${target.tag} (${target.id})`);
+		interaction.util.log(`Banned ${target.tag} (${target.id})`);
 	};
 
 	const sendError = () => {

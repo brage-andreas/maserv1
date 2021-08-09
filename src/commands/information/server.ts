@@ -58,5 +58,5 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	interaction.editReply({ embeds: [infoEmbed] });
 
-	interaction.log(`Used on guild ${guild.name} (${guild.id})`);
+	interaction.util.log(`Used on guild ${guild.name} (${guild.id})`);
 }

@@ -7,5 +7,5 @@ export async function run(client: DaClient, command: ApplicationCommand) {
 	if (!guild) return;
 
 	const msg = `New command "${name}" with description: "${description}"`;
-	client.log(guild, "applicationCommandCreate", msg);
+	client.util.log(guild, "applicationCommandCreate", msg);
 }

@@ -119,5 +119,5 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	const errMsg = `Error: ${error}`;
 	const outputMsg = `Output: ${output ?? "No output"}`;
-	interaction.log(error ? errMsg : outputMsg, true);
+	interaction.util.log(error ? errMsg : outputMsg, error ? true : false);
 }

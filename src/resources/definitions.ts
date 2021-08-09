@@ -17,7 +17,7 @@ import EventManager from "../util/EventManager.js";
 export class DaClient extends Client {
 	commands = new CommandManager();
 	events = new EventManager(this);
-	lgr = new EventLogger();
+	util = new EventLogger();
 
 	colours = {
 		blurple: BLURPLE,
@@ -70,5 +70,5 @@ export interface CmdInteraction extends CommandInteraction {
 	member: GuildMember;
 	channel: TextChannel;
 	guild: Guild;
-	log: CommandLogger["log"];
+	util: CommandLogger;
 }

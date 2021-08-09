@@ -23,5 +23,5 @@ export const data: ApplicationCommandData = {
 export async function run(client: DaClient, interaction: CmdInteraction) {
 	const option = interaction.options.getString("option", true);
 
-	interaction.log();
+	interaction.util.log();
 }

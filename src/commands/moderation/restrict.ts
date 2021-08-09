@@ -74,5 +74,5 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 	}
 
 	const msg = `${flag} ${remove ? "removed from" : "added to"} ${memUser.tag} (${memUser.id})`;
-	interaction.log(msg);
+	interaction.util.log(msg);
 }

@@ -116,7 +116,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 						target.roles.set([...roleIdsSet]);
 					}, duration);
 
-					interaction.log(`Muted ${target.user.tag} (${targetId}) for ${durationStr}`);
+					interaction.util.log(`Muted ${target.user.tag} (${targetId}) for ${durationStr}`);
 				});
 		})
 		.catch(() => null);

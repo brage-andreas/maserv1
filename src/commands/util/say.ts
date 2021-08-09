@@ -26,5 +26,5 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	await interaction.reply(perms ? mentionOpt : opt);
 
-	interaction.log(`Said: "${input}"`);
+	interaction.util.log(`Said: "${input}"`);
 }

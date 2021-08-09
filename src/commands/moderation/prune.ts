@@ -70,7 +70,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 				channel.bulkDelete(msgsToDelete, true).then((messages: Collection<string, Message>) => {
 					interaction.editReply({ content: "Done!", components: [] });
 
-					interaction.log(`Deleted ${messages.size} messages`);
+					interaction.util.log(`Deleted ${messages.size} messages`);
 				});
 			})
 			.catch(() => null);

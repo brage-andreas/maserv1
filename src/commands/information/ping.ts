@@ -35,5 +35,5 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 		interaction.editReply(`Ping: ${emoji} ${ping} ms`);
 	}
 
-	interaction.log();
+	interaction.util.log();
 }

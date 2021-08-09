@@ -156,5 +156,5 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 	}
 
 	const msgNullStr = `${option ? ` on option ${option}` : ""}${value ? ` with value "${value}"` : ""}`;
-	interaction.log(`Method ${method}${msgNullStr}`);
+	interaction.util.log(`Method ${method}${msgNullStr}`);
 }

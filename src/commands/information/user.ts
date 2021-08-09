@@ -68,5 +68,5 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	interaction.editReply({ embeds: [infoEmbed] });
 
-	interaction.log(`Used on ${user.tag} (${user.id})`);
+	interaction.util.log(`Used on ${user.tag} (${user.id})`);
 }

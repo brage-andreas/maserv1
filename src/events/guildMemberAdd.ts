@@ -8,7 +8,7 @@ export async function run(client: DaClient, member: GuildMember) {
 	const me = guild.me;
 
 	const logMsg = `${user.tag} (${user.id}) joined ${guild.name}`;
-	client.log(guild, "guildMemberAdd", logMsg);
+	client.util.log(guild, "guildMemberAdd", logMsg);
 
 	if (!me) return;
 

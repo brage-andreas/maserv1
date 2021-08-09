@@ -8,7 +8,8 @@ process.stdout.write("\x1Bc\n"); // clears terminal, console.clear() doesn't ful
 
 process.on("uncaughtException", (err) => {
 	const errStr = err.toString().replace(/[\r\n]/g, "\n  ");
-	console.error(`  There was an uncaught error:\n${errStr}`);
+	const errStack = err.stack?.replace(/[\r\n]/g, "\n  ");
+	console.error(`  There was an uncaught error:\n  ${errStack ?? errStr}`);
 });
 
 const client = new DaClient({

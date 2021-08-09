@@ -33,5 +33,5 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 	client.emit(event, member);
 	interaction.reply({ content: "Done", ephemeral: true });
 
-	interaction.log(`Emitted ${event}`);
+	interaction.util.log(`Emitted ${event}`);
 }

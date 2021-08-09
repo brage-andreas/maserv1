@@ -24,12 +24,11 @@ let cache: LoggerCache = {
 };
 
 class Logger {
-	// public to use in child classes
-	public _channel: sn;
-	public _guildId: sn;
-	public _userId: sn;
-	public _guild: sn;
-	public _user: sn;
+	protected _channel: sn;
+	protected _guildId: sn;
+	protected _userId: sn;
+	protected _guild: sn;
+	protected _user: sn;
 
 	constructor() {
 		this._channel = null;
@@ -39,7 +38,7 @@ class Logger {
 		this._user = null;
 	}
 
-	public parse(string: string) {
+	protected parse(string: string) {
 		return string.replace(/[\r\n]/g, "\n  ");
 	}
 
@@ -68,7 +67,7 @@ class Logger {
 		return true;
 	}
 
-	public _update(newCache: LoggerCache) {
+	protected _update(newCache: LoggerCache) {
 		cache = newCache;
 	}
 
@@ -91,7 +90,7 @@ class Logger {
 }
 
 export class CommandLogger extends Logger {
-	private name: string;
+	private _name: string;
 
 	constructor(interaction: CmdInteraction) {
 		super();
@@ -102,14 +101,14 @@ export class CommandLogger extends Logger {
 		this._guild = interaction.guild.name;
 		this._user = interaction.user.tag;
 
-		this.name = interaction.commandName.toUpperCase();
+		this._name = interaction.commandName.toUpperCase();
 	}
 
 	public log(message?: string, err = false) {
 		this.trace();
 
 		const time = chalk`  {grey ${getTime()}}`;
-		const cmd = chalk` {${err ? FRED : FGREEN} ${this.name}}`;
+		const cmd = chalk` {${err ? FRED : FGREEN} ${this._name}}`;
 		const msg = message ? chalk` {grey >} ${this.parse(message)}` : null;
 
 		process.stdout.write(time);

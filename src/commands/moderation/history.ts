@@ -19,5 +19,5 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	const targetId = (interaction.options.get("member")?.value as string | undefined) ?? user.id;
 
-	interaction.log();
+	interaction.util.log();
 }
