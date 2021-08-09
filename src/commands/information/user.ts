@@ -1,7 +1,8 @@
-import { ApplicationCommandData, MessageEmbed, PresenceStatus } from "discord.js";
+import type { ApplicationCommandData } from "discord.js";
+import { MessageEmbed } from "discord.js";
 
-import { CmdInteraction, DaClient } from "../../resources/definitions.js";
-import { log, parseDate } from "../../util/automaton.js";
+import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import { parseDate } from "../../util/automaton.js";
 import { USER_STATUS } from "../../constants.js";
 import { getNick } from "../../resources/psql/schemas/nicks.js";
 
@@ -18,7 +19,7 @@ export const data: ApplicationCommandData = {
 };
 
 export async function run(client: DaClient, interaction: CmdInteraction) {
-	const { guild, channel } = interaction;
+	const { guild } = interaction;
 	const [online, idle, dnd, offline] = client.mojis("online", "idle", "dnd", "offline");
 	const emojis: { [index: string]: string | undefined } = { online, idle, dnd, offline };
 
@@ -67,5 +68,5 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	interaction.editReply({ embeds: [infoEmbed] });
 
-	log.cmd({ cmd: "userinfo", msg: `Used on ${user.tag} (${user.id})` }, { channel, guild, user: interaction.user });
+	interaction.log(`Used on ${user.tag} (${user.id})`);
 }

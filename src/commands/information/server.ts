@@ -1,15 +1,8 @@
-import {
-	ApplicationCommandData,
-	Collection,
-	GuildChannel,
-	MessageEmbed,
-	TextChannel,
-	ThreadChannel,
-	VoiceChannel
-} from "discord.js";
+import type { ApplicationCommandData, GuildChannel, TextChannel, ThreadChannel, VoiceChannel } from "discord.js";
+import { Collection, MessageEmbed } from "discord.js";
 
-import { CmdInteraction, DaClient } from "../../resources/definitions.js";
-import { log, parseDate } from "../../util/automaton.js";
+import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import { parseDate } from "../../util/automaton.js";
 
 export const data: ApplicationCommandData = {
 	name: "server",
@@ -17,7 +10,7 @@ export const data: ApplicationCommandData = {
 };
 
 export async function run(client: DaClient, interaction: CmdInteraction) {
-	const { guild, user, channel } = interaction;
+	const { guild } = interaction;
 
 	await interaction.deferReply();
 
@@ -65,5 +58,5 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	interaction.editReply({ embeds: [infoEmbed] });
 
-	log.cmd({ cmd: "serverinfo", msg: `Used on guild ${guild.name} (${guild.id})` }, { channel, guild, user });
+	interaction.log(`Used on guild ${guild.name} (${guild.id})`);
 }

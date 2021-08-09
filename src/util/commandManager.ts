@@ -3,7 +3,7 @@ import { Collection } from "discord.js";
 import type { Command } from "../resources/definitions";
 import { getCommandFiles } from "./getJSFiles.js";
 
-export class CommandManager {
+export default class CommandManager {
 	private _commands: Collection<string, Command>;
 
 	constructor() {

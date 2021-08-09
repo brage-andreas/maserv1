@@ -1,7 +1,6 @@
 import { ApplicationCommandData, Message } from "discord.js";
 
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
-import { log } from "../../util/automaton.js";
 
 export const data: ApplicationCommandData = {
 	name: "ping",
@@ -16,7 +15,6 @@ export const data: ApplicationCommandData = {
 };
 
 export async function run(client: DaClient, interaction: CmdInteraction) {
-	const { channel, guild, user } = interaction;
 	interaction.reply("...");
 
 	const reply = (await interaction.fetchReply()) as Message;
@@ -37,5 +35,5 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 		interaction.editReply(`Ping: ${emoji} ${ping} ms`);
 	}
 
-	log.cmd({ cmd: "ping" }, { channel: channel, guild, user });
+	interaction.log();
 }

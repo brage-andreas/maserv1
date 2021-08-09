@@ -1,7 +1,8 @@
-import { ApplicationCommandData, MessageEmbed } from "discord.js";
+import type { ApplicationCommandData } from "discord.js";
+import { MessageEmbed } from "discord.js";
 
-import { log, confirm, hasPerms, getDefaultChannel, permCheck } from "../../util/automaton.js";
-import { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import { confirm, getDefaultChannel, permCheck } from "../../util/automaton.js";
 
 export const data: ApplicationCommandData = {
 	name: "ban",
@@ -32,7 +33,7 @@ export const data: ApplicationCommandData = {
 };
 
 export async function run(client: DaClient, interaction: CmdInteraction) {
-	const { user, guild, member, channel } = interaction;
+	const { user, guild, member } = interaction;
 	const err = client.moji.get("err");
 
 	if (!guild.me) return interaction.reply({ content: "Something went wrong", ephemeral: true });
@@ -77,7 +78,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 		});
 		if (logChannel) logChannel.send({ embeds: [banEmbed] });
 
-		log.cmd({ cmd: "ban", msg: `Banned ${target.tag} (${target.id})` }, { guild, channel, user });
+		interaction.log(`Banned ${target.tag} (${target.id})`);
 	};
 
 	const sendError = () => {

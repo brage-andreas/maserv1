@@ -1,7 +1,6 @@
-import { ApplicationCommandData } from "discord.js";
+import type { ApplicationCommandData } from "discord.js";
 
-import { CmdInteraction, DaClient } from "../../resources/definitions.js";
-import { log } from "../../util/automaton.js";
+import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
 
 export const data: ApplicationCommandData = {
 	name: "history",
@@ -16,9 +15,9 @@ export const data: ApplicationCommandData = {
 };
 
 export async function run(client: DaClient, interaction: CmdInteraction) {
-	const { user, guild, channel } = interaction;
+	const { user } = interaction;
 
 	const targetId = (interaction.options.get("member")?.value as string | undefined) ?? user.id;
 
-	log.cmd({ cmd: "history", msg: `Showed history of X (${targetId})` }, { guild, channel, user });
+	interaction.log();
 }

@@ -2,7 +2,6 @@ import { Message } from "discord.js";
 
 import { DaClient } from "../resources/definitions.js";
 import { CODEBLOCK_REGEX, TOKEN_REGEX } from "../constants.js";
-import { log } from "../util/automaton.js";
 import { evalCmd } from "../commands/util/eval.js";
 
 export async function run(client: DaClient, msg: Message) {
@@ -39,13 +38,10 @@ export async function run(client: DaClient, msg: Message) {
 
 		const code = getCode(content);
 
-		const { error, embeds, output, files } = await evalCmd(client, { code, user, that });
+		const { error, embeds, files } = await evalCmd(client, { code, user, that });
 
 		if (embeds) msg.reply({ embeds, files });
 		else if (error) msg.reply({ content: error });
 		else msg.reply({ content: "Something went wrong" });
-
-		if (error) log.cmd({ cmd: "eval", msg: `Error: "${error}"` }, { guild, channel, user }, true);
-		else log.cmd({ cmd: "eval", msg: `Output: ${output ? output : "No output"}` }, { guild, channel, user });
 	}
 }

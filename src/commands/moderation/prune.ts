@@ -1,7 +1,8 @@
-import { ApplicationCommandData, Collection, GuildChannel, Message, TextChannel } from "discord.js";
+import type { ApplicationCommandData, GuildChannel, Message, TextChannel } from "discord.js";
+import { Collection } from "discord.js";
 
-import { CmdInteraction, DaClient } from "../../resources/definitions.js";
-import { confirm, hasPerms, log } from "../../util/automaton.js";
+import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import { confirm, hasPerms } from "../../util/automaton.js";
 
 export const data: ApplicationCommandData = {
 	name: "prune",
@@ -26,7 +27,7 @@ export const data: ApplicationCommandData = {
 };
 
 export async function run(client: DaClient, interaction: CmdInteraction) {
-	const { user, member, guild } = interaction;
+	const { member, guild } = interaction;
 
 	// --- Perms
 	const err = client.moji.get("err");
@@ -68,10 +69,8 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 			.then(() => {
 				channel.bulkDelete(msgsToDelete, true).then((messages: Collection<string, Message>) => {
 					interaction.editReply({ content: "Done!", components: [] });
-					log.cmd(
-						{ cmd: "prune", msg: `Deleted ${messages.size} messages` },
-						{ channel: interaction.channel as TextChannel, user, guild }
-					);
+
+					interaction.log(`Deleted ${messages.size} messages`);
 				});
 			})
 			.catch(() => null);

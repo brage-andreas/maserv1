@@ -1,5 +1,5 @@
-import { hasPerms, log } from "../../util/automaton.js";
-import { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import { hasPerms } from "../../util/automaton.js";
 
 export const data = {
 	name: "say",
@@ -15,7 +15,7 @@ export const data = {
 };
 
 export async function run(client: DaClient, interaction: CmdInteraction) {
-	const { user, guild, channel, member } = interaction;
+	const { member } = interaction;
 
 	const input = interaction.options.getString("input", true);
 
@@ -26,5 +26,5 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	await interaction.reply(perms ? mentionOpt : opt);
 
-	log.cmd({ cmd: "say", msg: `Said: "${input}"` }, { guild, channel, user });
+	interaction.log(`Said: "${input}"`);
 }

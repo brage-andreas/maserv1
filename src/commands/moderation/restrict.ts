@@ -1,7 +1,6 @@
-import { ApplicationCommandData, GuildMember } from "discord.js";
+import type { ApplicationCommandData } from "discord.js";
 
-import { CmdInteraction, DaClient } from "../../resources/definitions.js";
-import { log } from "../../util/automaton.js";
+import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { RESTRICTIONS, RESTRICTIONS_STR } from "../../constants.js";
 import { Restriction } from "../../resources/psql/schemas/restrictions.js";
 
@@ -31,8 +30,8 @@ export const data: ApplicationCommandData = {
 };
 
 export async function run(client: DaClient, interaction: CmdInteraction) {
-	const { user, guild, channel } = interaction;
-
+	const { guild } = interaction;
+	// TODO: fix mute and create unrestrict
 	await interaction.deferReply({ ephemeral: true });
 
 	const flag = interaction.options["_subcommand"] as RESTRICTIONS_STR | null;
@@ -75,5 +74,5 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 	}
 
 	const msg = `${flag} ${remove ? "removed from" : "added to"} ${memUser.tag} (${memUser.id})`;
-	log.cmd({ cmd: "restrict", msg }, { guild, channel, user });
+	interaction.log(msg);
 }

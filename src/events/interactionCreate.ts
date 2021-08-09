@@ -1,12 +1,16 @@
 import { Interaction } from "discord.js";
-import { DaClient } from "../resources/definitions.js";
+import { CmdInteraction, DaClient } from "../resources/definitions.js";
+import { CommandLogger } from "../util/Logger.js";
 
-export async function run(client: DaClient, interaction: Interaction) {
-	if (interaction.isCommand()) {
-		if (!interaction.channel || interaction.channel.type !== "GUILD_TEXT") {
-			interaction.reply({ content: "Try this in a guild text channel!", ephemeral: true });
+export async function run(client: DaClient, intr: Interaction) {
+	if (intr.isCommand()) {
+		if (!intr.channel || intr.channel.type !== "GUILD_TEXT") {
+			intr.reply({ content: "Try this in a guild text channel!", ephemeral: true });
 			return;
 		}
+
+		const interaction = intr as CmdInteraction;
+		interaction.log = new CommandLogger(interaction).log;
 
 		void client.commands.get(interaction.commandName)?.run(client, interaction);
 	}

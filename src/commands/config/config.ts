@@ -1,9 +1,9 @@
-import { ApplicationCommandData, GuildChannel, MessageEmbed, Role, TextChannel, ThreadChannel } from "discord.js";
+import type { ThreadChannel, Role, GuildChannel, ApplicationCommandData } from "discord.js";
+import { MessageEmbed } from "discord.js";
 
-import { CHANNEL_REGEX, CONFIG_OPTION_CHOICES, CONFIG_OPTION_INFO, ID_REGEX, ROLE_REGEX } from "../../constants.js";
+import { CONFIG_OPTION_CHOICES, CONFIG_OPTION_INFO, ID_REGEX } from "../../constants.js";
 import { removeValue, setValue, viewConfig, viewValue } from "../../resources/psql/schemas/config.js";
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
-import { log } from "../../util/automaton.js";
 
 export const data: ApplicationCommandData = {
 	name: "config",
@@ -44,7 +44,7 @@ export const data: ApplicationCommandData = {
 };
 
 export async function run(client: DaClient, interaction: CmdInteraction) {
-	const { user, channel, guild } = interaction;
+	const { user, guild } = interaction;
 
 	const getValue = async (raw: string | null) => {
 		if (!raw) return null;
@@ -156,5 +156,5 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 	}
 
 	const msgNullStr = `${option ? ` on option ${option}` : ""}${value ? ` with value "${value}"` : ""}`;
-	log.cmd({ cmd: "config", msg: `Method ${method}${msgNullStr}` }, { guild, channel, user });
+	interaction.log(`Method ${method}${msgNullStr}`);
 }

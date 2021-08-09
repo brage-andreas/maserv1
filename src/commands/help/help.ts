@@ -2,7 +2,6 @@ import { ApplicationCommandData, MessageEmbed } from "discord.js";
 
 import { CATEGORIES, CMD_TYPES } from "../../constants.js";
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
-import { log } from "../../util/automaton.js";
 
 export const data: ApplicationCommandData = {
 	name: "help",
@@ -17,7 +16,7 @@ export const data: ApplicationCommandData = {
 };
 
 export async function run(client: DaClient, interaction: CmdInteraction) {
-	const { guild, user, channel, member } = interaction;
+	const { guild, user, member } = interaction;
 	const [greenArrow, yellowArrow] = client.mojis("doubletick_g", "doubletick_y");
 
 	await interaction.deferReply();
@@ -48,7 +47,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 		interaction.editReply({ embeds: [oneCmdEmbed] });
 
-		log.cmd({ cmd: "help", msg: `Sent info about ${targetCmd}` }, { channel: channel, guild, user });
+		interaction.log(`Sent info about ${targetCmd}`);
 	} else {
 		const allCmdsEmbed = new MessageEmbed()
 			.setTitle(`Commands`)
@@ -64,6 +63,6 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 		interaction.editReply({ embeds: [allCmdsEmbed] });
 
-		log.cmd({ cmd: "help", msg: "Sent all commands" }, { channel: channel, guild, user });
+		interaction.log("Sent all commands");
 	}
 }

@@ -1,7 +1,8 @@
-import { ApplicationCommandData, MessageEmbed } from "discord.js";
+import type { ApplicationCommandData } from "discord.js";
+import { MessageEmbed } from "discord.js";
 
-import { log, confirm, sendLog, permCheck } from "../../util/automaton.js";
-import { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import { confirm, sendLog, permCheck } from "../../util/automaton.js";
 
 export const data: ApplicationCommandData = {
 	name: "kick",
@@ -27,7 +28,7 @@ export const data: ApplicationCommandData = {
 };
 
 export async function run(client: DaClient, interaction: CmdInteraction) {
-	const { user, guild, member, channel } = interaction;
+	const { user, guild, member } = interaction;
 	const err = client.moji.get("err");
 
 	if (!guild.me) return interaction.reply({ content: "Something went wrong", ephemeral: true });
@@ -59,7 +60,8 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 		if (nsfw) kickEmbed.addField("Info", "NSFW avatar removed from embed");
 
 		sendLog(interaction, kickEmbed, `Successfully kicked ${target.user.tag} (${target.id})`);
-		log.cmd({ cmd: "kick", msg: `Kicked ${target.user.tag} (${target.id})` }, { guild, channel, user });
+
+		interaction.log(`Kicked ${target.user.tag} (${target.id})`);
 	};
 
 	const sendError = () => {

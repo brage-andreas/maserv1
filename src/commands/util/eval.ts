@@ -1,10 +1,10 @@
 import type { ApplicationCommandData, Message, User } from "discord.js";
 import Discord, { MessageAttachment, MessageEmbed } from "discord.js";
+
 import { performance } from "perf_hooks";
 import ms from "ms";
 
-import { CmdInteraction, DaClient } from "../../resources/definitions.js";
-import { log } from "../../util/automaton.js";
+import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { TOKEN_REGEX } from "../../constants.js";
 
 export const data: ApplicationCommandData = {
@@ -101,7 +101,7 @@ export async function evalCmd(client: DaClient, opt: evalObj): Promise<evalOutpu
 }
 
 export async function run(client: DaClient, interaction: CmdInteraction) {
-	const { user, guild, channel } = interaction;
+	const { user } = interaction;
 	const that = interaction;
 
 	await interaction.deferReply();
@@ -117,6 +117,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 	else if (!noReply && error) interaction.editReply({ content: error });
 	else if (!noReply) interaction.editReply({ content: "Something wen't wrong" });
 
-	if (error) log.cmd({ cmd: "eval", msg: `Error: "${error}"` }, { guild, channel, user }, true);
-	else log.cmd({ cmd: "eval", msg: `Output: ${output ? `"${output}"` : "No output"}` }, { guild, channel, user });
+	const errMsg = `Error: ${error}`;
+	const outputMsg = `Output: ${output ?? "No output"}`;
+	interaction.log(error ? errMsg : outputMsg, true);
 }

@@ -1,5 +1,5 @@
 import { GuildMember, MessageEmbed } from "discord.js";
-import { getDefaultChannel, log, parseDate } from "../util/automaton.js";
+import { getDefaultChannel, parseDate } from "../util/automaton.js";
 import { JOIN_PHRASES } from "../constants.js";
 import { DaClient } from "../resources/definitions.js";
 
@@ -7,7 +7,8 @@ export async function run(client: DaClient, member: GuildMember) {
 	const { guild, user } = member;
 	const me = guild.me;
 
-	log.event({ guild, msg: `${user.tag} (${user.id}) joined ${guild.name}` });
+	const logMsg = `${user.tag} (${user.id}) joined ${guild.name}`;
+	client.log(guild, "guildMemberAdd", logMsg);
 
 	if (!me) return;
 

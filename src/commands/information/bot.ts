@@ -3,7 +3,6 @@ import ms from "ms";
 
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { PLATFORMS } from "../../constants.js";
-import { log } from "../../util/automaton.js";
 
 export const data: ApplicationCommandData = {
 	name: "bot",
@@ -11,8 +10,6 @@ export const data: ApplicationCommandData = {
 };
 
 export async function run(client: DaClient, interaction: CmdInteraction) {
-	const { user, guild, channel } = interaction;
-
 	const formatBytes = (number: number) => number.toFixed(2).replace(".", ",");
 
 	const { heapUsed, heapTotal } = process.memoryUsage();
@@ -37,5 +34,5 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	interaction.reply({ embeds: [infoEmbed] });
 
-	log.cmd({ cmd: "bot" }, { channel, guild, user });
+	interaction.log();
 }

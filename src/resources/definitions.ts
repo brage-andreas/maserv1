@@ -1,21 +1,23 @@
-import {
+import type {
 	ApplicationCommandData,
 	ApplicationCommandOptionData,
-	Client,
-	Collection,
 	CommandInteraction,
 	Guild,
+	GuildEmoji,
 	GuildMember,
 	TextChannel
 } from "discord.js";
+import { Client, Collection } from "discord.js";
 
 import { YELLOW, GREEN, RED, BLACK, WHITE, BLURPLE, INVIS, ORANGE } from "../constants.js";
-import { CommandManager } from "../util/CommandManager.js";
-import { EventManager } from "../util/EventManager.js";
+import { CommandLogger, EventLogger } from "../util/Logger.js";
+import CommandManager from "../util/CommandManager.js";
+import EventManager from "../util/EventManager.js";
 
-class DaClient extends Client {
+export class DaClient extends Client {
 	commands = new CommandManager();
 	events = new EventManager(this);
+	lgr = new EventLogger();
 
 	colours = {
 		blurple: BLURPLE,
@@ -28,26 +30,34 @@ class DaClient extends Client {
 		red: RED
 	};
 
-	get moji(): Collection<string, string> {
+	get moji() {
 		const emojis = new Collection<string, string>();
 
 		this.emojis.cache.forEach((emoji) => {
-			if (!emoji.name) return;
-			emojis.set(emoji.name, emoji.toString());
+			const mention = emoji.toString();
+			const name = emoji.name;
+
+			if (!name || !mention) return;
+			emojis.set(name, mention);
 		});
 
 		return emojis;
 	}
 
-	mojis(...mojis: string[]): (string | undefined)[] {
-		return mojis.map((emoji) => {
-			const emojiStr = this.emojis.cache.find((em) => em.name === emoji)?.toString();
-			if (emojiStr) return emojiStr;
+	mojis(...mojis: string[]) {
+		const emojis: string[] = [];
+
+		mojis.forEach((emoji) => {
+			const fn = (em: GuildEmoji) => em.name?.toLowerCase() === emoji.toLowerCase();
+			const emojiStr = this.emojis.cache.find(fn)?.toString();
+			if (emojiStr) emojis.push(emojiStr);
 		});
+
+		return emojis;
 	}
 }
 
-interface Command {
+export interface Command {
 	name: string;
 	description: string;
 	options?: ApplicationCommandOptionData[];
@@ -56,10 +66,9 @@ interface Command {
 	run(client: DaClient, interaction: CommandInteraction): void;
 }
 
-interface CmdInteraction extends CommandInteraction {
+export interface CmdInteraction extends CommandInteraction {
 	member: GuildMember;
 	channel: TextChannel;
 	guild: Guild;
+	log: CommandLogger["log"];
 }
-
-export { DaClient, Command, CmdInteraction };

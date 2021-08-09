@@ -1,8 +1,9 @@
-import { ApplicationCommandData, MessageEmbed, Role } from "discord.js";
+import type { ApplicationCommandData, Role } from "discord.js";
+import { MessageEmbed } from "discord.js";
 import ms from "ms";
 
-import { CmdInteraction, DaClient } from "../../resources/definitions.js";
-import { confirm, getDefaultChannel, hasPerms, log } from "../../util/automaton.js";
+import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import { confirm, getDefaultChannel, hasPerms } from "../../util/automaton.js";
 import { viewValue } from "../../resources/psql/schemas/config.js";
 
 export const data: ApplicationCommandData = {
@@ -34,7 +35,7 @@ export const data: ApplicationCommandData = {
 };
 
 export async function run(client: DaClient, interaction: CmdInteraction) {
-	const { user, guild, channel } = interaction;
+	const { user, guild } = interaction;
 	const err = client.moji.get("err");
 	const MIN_TIME = 300000; // 5 min
 	const MAX_TIME = 604800000; // 1 week
@@ -115,10 +116,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 						target.roles.set([...roleIdsSet]);
 					}, duration);
 
-					log.cmd(
-						{ cmd: "mute", msg: `Muted ${target.user.tag} (${targetId}) for ${durationStr}` },
-						{ guild, channel, user }
-					);
+					interaction.log(`Muted ${target.user.tag} (${targetId}) for ${durationStr}`);
 				});
 		})
 		.catch(() => null);
