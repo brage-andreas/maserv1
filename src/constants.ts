@@ -130,7 +130,7 @@ export const CONFIG_OPTION_INFO: { [index: string]: { type: string; reg: RegExp 
 
 export const CONFIG_METHOD_CHOICES: ApplicationCommandOptionChoice[] = [];
 
-export type RESTRICTIONS_STR = "embed" | "emoji" | "reaction" | "bot";
+export type RESTRICTIONS_STR = "mute" | "embed" | "emoji" | "reaction" | "bot";
 export const RESTRICTIONS_BIT: { [index: string]: number } = {
 	mute: 1 << 0,
 	embed: 1 << 1,
