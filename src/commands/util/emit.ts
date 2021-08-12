@@ -26,7 +26,7 @@ export const data: ApplicationCommandData = {
 };
 
 export async function run(client: DaClient, interaction: CmdInteraction) {
-	const { user, guild, channel, member } = interaction;
+	const { member } = interaction;
 
 	const event = interaction.options.getString("event", true);
 

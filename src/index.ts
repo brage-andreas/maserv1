@@ -12,6 +12,8 @@ process.on("uncaughtException", (err) => {
 	console.error(`  There was an uncaught error:\n  ${errStack ?? errStr}`);
 });
 
+// <>
+
 const client = new DaClient({
 	intents: INTENTS_BITFIELD,
 	allowedMentions: { repliedUser: false }

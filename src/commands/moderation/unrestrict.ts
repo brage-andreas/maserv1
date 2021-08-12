@@ -5,7 +5,7 @@ import { RESTRICTIONS, RESTRICTIONS_STR } from "../../constants.js";
 import { Restriction } from "../../resources/psql/schemas/restrictions.js";
 
 export const data: ApplicationCommandData = {
-	name: "restrict",
+	name: "unrestrict",
 	description: "Restricts a member",
 	options: RESTRICTIONS.map((restriction) => {
 		return {
@@ -16,7 +16,7 @@ export const data: ApplicationCommandData = {
 				{
 					name: "member",
 					type: "USER",
-					description: "Member to restrict",
+					description: "Member to unrestrict",
 					required: true
 				}
 			]
@@ -27,7 +27,7 @@ export const data: ApplicationCommandData = {
 export async function run(client: DaClient, interaction: CmdInteraction) {
 	const { guild } = interaction;
 	// TODO: fix mute and create unrestrict
-	await interaction.deferReply({ ephemeral: true });
+	/*await interaction.deferReply({ ephemeral: true });
 
 	const flag = interaction.options["_subcommand"] as RESTRICTIONS_STR | null;
 	const memUser = interaction.options.getUser("member", true);
@@ -55,4 +55,5 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	const msg = `${flag} removed from ${memUser.tag} (${memUser.id})`;
 	interaction.util.log(msg);
+    */
 }

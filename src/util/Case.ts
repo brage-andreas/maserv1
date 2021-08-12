@@ -1,4 +1,5 @@
 import type { GuildMember, User } from "discord.js";
+import { get } from "../resources/psql/util";
 
 export class Case {
 	/*
@@ -17,10 +18,6 @@ export class Case {
 	private duration?: number;
 	private reason?: string;
 	private nsfw?: number;
-
-	constructor() {
-		//
-	}
 
 	public from(id: string) {
 		// get from db by id
@@ -46,5 +43,14 @@ export class Case {
 
 	public setNSFW(bool: boolean) {
 		this.nsfw = bool ? 1 : 0;
+	}
+
+	public async set() {
+		//
+		await get(`
+            INSERT INTO cases."table" (id)
+            VALUES ('123')
+            ON CONFLICT (id) DO NOTHING;
+        `);
 	}
 }
