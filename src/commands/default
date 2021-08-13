@@ -1,15 +1,14 @@
-import { ApplicationCommandData } from "discord.js";
+import { ApplicationCommandOptionType } from "discord-api-types";
 
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
-import { log } from "../../resources/automaton.js";
 
-export const data: ApplicationCommandData = {
+export const data = {
 	name: "",
 	description: "",
 	options: [
 		{
 			name: "",
-			type: "",
+			type: ApplicationCommandOptionType,
 			description: "",
 			required: true
 		}
@@ -21,5 +20,5 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	const option = interaction.options.getString("option", true);
 
-	log.cmd({ cmd: "" }, { guild, channel, user });
+	interaction.util.log("");
 }

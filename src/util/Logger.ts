@@ -23,7 +23,7 @@ let cache: LoggerCache = {
 	user: null
 };
 
-class Logger {
+export class Logger {
 	protected _channel: sn;
 	protected _guildId: sn;
 	protected _userId: sn;
@@ -38,7 +38,7 @@ class Logger {
 		this._user = null;
 	}
 
-	protected parse(string: string) {
+	static parse(string: string) {
 		return string.replace(/[\r\n]/g, "\n  ");
 	}
 
@@ -109,7 +109,7 @@ export class CommandLogger extends Logger {
 
 		const time = chalk`  {grey ${getTime()}}`;
 		const cmd = chalk` {${err ? FRED : FGREEN} ${this._name}}`;
-		const msg = message ? chalk` {grey >} ${this.parse(message)}` : null;
+		const msg = message ? chalk` {grey >} ${Logger.parse(message)}` : null;
 
 		process.stdout.write(time);
 		process.stdout.write(cmd);
@@ -147,7 +147,7 @@ export class EventLogger extends Logger {
 
 		const time = chalk`  {grey ${getTime()}}`;
 		const evn = chalk` {${FYELLOW} ${event}}`;
-		const msg = message ? chalk` {grey >} ${this.parse(message)}` : null;
+		const msg = message ? chalk` {grey >} ${Logger.parse(message)}` : null;
 
 		process.stdout.write(time);
 		process.stdout.write(evn);
@@ -180,7 +180,7 @@ export class InfoLogger extends Logger {
 	public log(event: string, message?: string, parse = true) {
 		const time = chalk`  {grey ${getTime()}}`;
 		const evn = chalk` {${FRED} ${event}}`;
-		const msg = message ? chalk` {grey >} ${parse ? this.parse(message) : message}` : null;
+		const msg = message ? chalk` {grey >} ${parse ? Logger.parse(message) : message}` : null;
 
 		process.stdout.write(time);
 		process.stdout.write(evn);

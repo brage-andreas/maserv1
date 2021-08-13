@@ -1,26 +1,27 @@
-import type { ApplicationCommandData, GuildChannel, Message, TextChannel } from "discord.js";
+import type { GuildChannel, Message, TextChannel } from "discord.js";
+import { ApplicationCommandOptionType } from "discord-api-types";
 import { Collection } from "discord.js";
 
 import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { confirm, hasPerms } from "../../util/automaton.js";
 
-export const data: ApplicationCommandData = {
+export const data = {
 	name: "prune",
 	description: "Deletes up to 100 messages",
 	options: [
 		{
 			name: "amount",
-			type: "INTEGER",
+			type: ApplicationCommandOptionType.Integer,
 			description: "How many messages"
 		},
 		{
 			name: "user",
-			type: "USER",
+			type: ApplicationCommandOptionType.User,
 			description: "Who to limit deleting to"
 		},
 		{
 			name: "channel",
-			type: "CHANNEL",
+			type: ApplicationCommandOptionType.Channel,
 			description: "Where to delete messages. Channel must be in the same guild"
 		}
 	]

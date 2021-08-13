@@ -15,10 +15,8 @@ export async function run(client: DaClient, msg: Message) {
 	if (!guild) return;
 
 	if (content === "?build" && isBotOwner()) {
-		const data = client.commands.data;
-		guild.commands.set(data);
-		msg.delete();
-		return;
+		if (!client.user || !guild) return msg.reply("Something went wrong!");
+		await client.commands.post(client.user.id, guild.id);
 	}
 
 	if (content === "?clear" && isBotOwner()) {

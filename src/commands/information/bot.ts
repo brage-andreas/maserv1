@@ -1,10 +1,10 @@
-import { ApplicationCommandData, MessageEmbed } from "discord.js";
+import { MessageEmbed } from "discord.js";
 import ms from "ms";
 
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { PLATFORMS } from "../../constants.js";
 
-export const data: ApplicationCommandData = {
+export const data = {
 	name: "bot",
 	description: "Sends information about me"
 };

@@ -1,14 +1,14 @@
-import type { ApplicationCommandData } from "discord.js";
+import { ApplicationCommandOptionType } from "discord-api-types";
 
 import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
 
-export const data: ApplicationCommandData = {
+export const data = {
 	name: "history",
 	description: "Shows a member's history",
 	options: [
 		{
 			name: "member",
-			type: "USER",
+			type: ApplicationCommandOptionType.User,
 			description: "Who to show history of"
 		}
 	]

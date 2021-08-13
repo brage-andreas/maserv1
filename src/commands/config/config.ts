@@ -1,17 +1,18 @@
-import type { ThreadChannel, Role, GuildChannel, ApplicationCommandData } from "discord.js";
+import type { ThreadChannel, Role, GuildChannel } from "discord.js";
 import { MessageEmbed } from "discord.js";
 
 import { CONFIG_OPTION_CHOICES, CONFIG_OPTION_INFO, ID_REGEX } from "../../constants.js";
 import { removeValue, setValue, viewConfig, viewValue } from "../../resources/psql/schemas/config.js";
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import { ApplicationCommandOptionType } from "discord-api-types";
 
-export const data: ApplicationCommandData = {
+export const data = {
 	name: "config",
 	description: "Changes the various options for this server",
 	options: [
 		{
 			name: "method",
-			type: "STRING",
+			type: ApplicationCommandOptionType.String,
 			description: "What method to use",
 			choices: [
 				{
@@ -31,13 +32,13 @@ export const data: ApplicationCommandData = {
 		},
 		{
 			name: "option",
-			type: "STRING",
+			type: ApplicationCommandOptionType.String,
 			description: "What option to administer",
 			choices: CONFIG_OPTION_CHOICES
 		},
 		{
 			name: "value",
-			type: "STRING",
+			type: ApplicationCommandOptionType.String,
 			description: "What to update the setting to. Takes IDs, mentions, and names."
 		}
 	]

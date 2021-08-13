@@ -1,32 +1,32 @@
-import type { ApplicationCommandData } from "discord.js";
+import { ApplicationCommandOptionType } from "discord-api-types";
 import { MessageEmbed } from "discord.js";
 
 import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { confirm, getDefaultChannel, permCheck } from "../../util/automaton.js";
 
-export const data: ApplicationCommandData = {
+export const data = {
 	name: "ban",
 	description: "Bans a member",
 	options: [
 		{
 			name: "member",
-			type: "USER",
+			type: ApplicationCommandOptionType.User,
 			description: "Who to ban. Takes ID and mention",
 			required: true
 		},
 		{
 			name: "reason",
-			type: "STRING",
+			type: ApplicationCommandOptionType.String,
 			description: "Reason for ban"
 		},
 		{
 			name: "days",
-			type: "INTEGER",
+			type: ApplicationCommandOptionType.Integer,
 			description: "How many days to prune messages"
 		},
 		{
 			name: "nsfw",
-			type: "BOOLEAN",
+			type: ApplicationCommandOptionType.Boolean,
 			description: "Removes the member's avatar in logs if true"
 		}
 	]

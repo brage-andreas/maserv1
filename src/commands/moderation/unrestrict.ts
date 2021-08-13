@@ -1,21 +1,21 @@
-import type { ApplicationCommandData } from "discord.js";
+import { ApplicationCommandOptionType } from "discord-api-types";
 
 import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { RESTRICTIONS, RESTRICTIONS_STR } from "../../constants.js";
 import { Restriction } from "../../resources/psql/schemas/restrictions.js";
 
-export const data: ApplicationCommandData = {
+export const data = {
 	name: "unrestrict",
 	description: "Restricts a member",
 	options: RESTRICTIONS.map((restriction) => {
 		return {
 			name: restriction,
-			type: "SUB_COMMAND",
+			type: ApplicationCommandOptionType.SubCommand,
 			description: "Type of restriction",
 			options: [
 				{
 					name: "member",
-					type: "USER",
+					type: ApplicationCommandOptionType.User,
 					description: "Member to unrestrict",
 					required: true
 				}

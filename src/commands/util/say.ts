@@ -1,3 +1,5 @@
+import { ApplicationCommandOptionType } from "discord-api-types";
+
 import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { hasPerms } from "../../util/automaton.js";
 
@@ -7,7 +9,7 @@ export const data = {
 	options: [
 		{
 			name: "input",
-			type: "STRING",
+			type: ApplicationCommandOptionType.String,
 			description: "Content to send",
 			required: true
 		}

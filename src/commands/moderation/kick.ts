@@ -1,27 +1,27 @@
-import type { ApplicationCommandData } from "discord.js";
+import { ApplicationCommandOptionType } from "discord-api-types";
 import { MessageEmbed } from "discord.js";
 
 import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { confirm, sendLog, permCheck } from "../../util/automaton.js";
 
-export const data: ApplicationCommandData = {
+export const data = {
 	name: "kick",
 	description: "Kicks a member",
 	options: [
 		{
 			name: "member",
-			type: "USER",
+			type: ApplicationCommandOptionType.User,
 			description: "Who to kick. Takes ID and mention",
 			required: true
 		},
 		{
 			name: "reason",
-			type: "STRING",
+			type: ApplicationCommandOptionType.String,
 			description: "Reason for kick"
 		},
 		{
 			name: "nsfw",
-			type: "BOOLEAN",
+			type: ApplicationCommandOptionType.Boolean,
 			description: "Removes the member's avatar in logs if true"
 		}
 	]

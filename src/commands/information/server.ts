@@ -1,10 +1,10 @@
-import type { ApplicationCommandData, GuildChannel, TextChannel, ThreadChannel, VoiceChannel } from "discord.js";
+import type { GuildChannel, TextChannel, ThreadChannel, VoiceChannel } from "discord.js";
 import { Collection, MessageEmbed } from "discord.js";
 
 import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { parseDate } from "../../util/automaton.js";
 
-export const data: ApplicationCommandData = {
+export const data = {
 	name: "server",
 	description: "Sends information about this server"
 };

@@ -1,4 +1,4 @@
-import type { ApplicationCommandData } from "discord.js";
+import { ApplicationCommandOptionType } from "discord-api-types";
 import { MessageEmbed } from "discord.js";
 
 import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
@@ -6,13 +6,13 @@ import { parseDate } from "../../util/automaton.js";
 import { USER_STATUS } from "../../constants.js";
 import { getNick } from "../../resources/psql/schemas/nicks.js";
 
-export const data: ApplicationCommandData = {
+export const data = {
 	name: "user",
 	description: "Sends information about a user",
 	options: [
 		{
 			name: "user",
-			type: "USER",
+			type: ApplicationCommandOptionType.User,
 			description: "What user to send information about"
 		}
 	]

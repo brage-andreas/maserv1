@@ -1,14 +1,15 @@
-import { ApplicationCommandData, Message } from "discord.js";
+import { ApplicationCommandOptionType } from "discord-api-types";
+import { Message } from "discord.js";
 
 import { CmdInteraction, DaClient } from "../../resources/definitions.js";
 
-export const data: ApplicationCommandData = {
+export const data = {
 	name: "ping",
 	description: "Sends ping",
 	options: [
 		{
 			name: "extended",
-			type: "BOOLEAN",
+			type: ApplicationCommandOptionType.Boolean,
 			description: "Sends more information"
 		}
 	]

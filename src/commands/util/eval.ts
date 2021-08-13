@@ -1,4 +1,4 @@
-import type { ApplicationCommandData, Message, User } from "discord.js";
+import type { Message, User } from "discord.js";
 import Discord, { MessageAttachment, MessageEmbed } from "discord.js";
 
 import { performance } from "perf_hooks";
@@ -6,20 +6,21 @@ import ms from "ms";
 
 import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { TOKEN_REGEX } from "../../constants.js";
+import { ApplicationCommandOptionType } from "discord-api-types";
 
-export const data: ApplicationCommandData = {
+export const data = {
 	name: "eval",
 	description: "Runs code",
 	options: [
 		{
 			name: "code",
-			type: "STRING",
+			type: ApplicationCommandOptionType.String,
 			description: "Code to run",
 			required: true
 		},
 		{
 			name: "reply",
-			type: "BOOLEAN",
+			type: ApplicationCommandOptionType.Boolean,
 			description: "Check true if you have custom replies"
 		}
 	]

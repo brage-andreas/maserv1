@@ -1,14 +1,15 @@
+import { ApplicationCommandOptionType } from "discord-api-types";
 import type { ApplicationCommandData } from "discord.js";
 
 import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
 
-export const data: ApplicationCommandData = {
+export const data = {
 	name: "emit",
 	description: "Emits an event",
 	options: [
 		{
 			name: "event",
-			type: "STRING",
+			type: ApplicationCommandOptionType.String,
 			description: "What event to emit",
 			choices: [
 				{

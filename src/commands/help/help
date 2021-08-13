@@ -24,7 +24,7 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 	const targetCmd = interaction.options.getString("command");
 
 	if (targetCmd) {
-		const cmd = client.commands.get(targetCmd as string);
+		const cmd = client.commands.get(targetCmd);
 		if (!cmd)
 			return interaction.editReply({
 				content: `I cannot find said command ${guild ? `in ${guild.name}` : ""}`

@@ -1,34 +1,35 @@
-import type { ApplicationCommandData, Role } from "discord.js";
+import type { Role } from "discord.js";
 import { MessageEmbed } from "discord.js";
 import ms from "ms";
 
 import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
 import { confirm, getDefaultChannel, hasPerms } from "../../util/automaton.js";
 import { viewValue } from "../../resources/psql/schemas/config.js";
+import { ApplicationCommandOptionType } from "discord-api-types";
 
-export const data: ApplicationCommandData = {
+export const data = {
 	name: "mute",
 	description: "Mutes a member",
 	options: [
 		{
 			name: "member",
-			type: "USER",
+			type: ApplicationCommandOptionType.User,
 			description: "Member to mute",
 			required: true
 		},
 		{
 			name: "duration",
-			type: "STRING",
+			type: ApplicationCommandOptionType.String,
 			description: "Member to mute"
 		},
 		{
 			name: "reason",
-			type: "STRING",
+			type: ApplicationCommandOptionType.String,
 			description: "Reason for mute"
 		},
 		{
 			name: "nsfw",
-			type: "BOOLEAN",
+			type: ApplicationCommandOptionType.Boolean,
 			description: "Removes the member's avatar in logs if true"
 		}
 	]
