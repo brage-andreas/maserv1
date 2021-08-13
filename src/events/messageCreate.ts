@@ -15,13 +15,17 @@ export async function run(client: DaClient, msg: Message) {
 	if (!guild) return;
 
 	if (content === "?build" && isBotOwner()) {
-		if (!client.user || !guild) return msg.reply("Something went wrong!");
+		if (!client.user || !guild) return msg.reply("Something went wrong");
+
+		msg.delete();
 		await client.commands.post(client.user.id, guild.id);
 	}
 
 	if (content === "?clear" && isBotOwner()) {
-		guild.commands.set([]);
+		if (!client.user || !guild) return msg.reply("Something went wrong");
+
 		msg.delete();
+		await client.commands.clear(client.user.id, guild.id);
 	}
 
 	if (content.toLowerCase().startsWith("?eval") && isBotOwner()) {

@@ -4,7 +4,9 @@ import { Routes } from "discord-api-types/v9";
 
 import type { Command } from "../resources/definitions";
 import { getCommandFiles } from "./getJSFiles.js";
-import { Logger } from "./Logger.js";
+import { InfoLogger, Logger } from "./Logger.js";
+
+const logger = new InfoLogger();
 
 export default class CommandManager {
 	private _commands: Collection<string, Command>;
@@ -34,17 +36,29 @@ export default class CommandManager {
 	}
 
 	public async post(clientId: string, guildId: string) {
+		const data = this.data();
+		await this._set(clientId, guildId, data);
+	}
+
+	public async clear(clientId: string, guildId: string) {
+		const data: any = [];
+		await this._set(clientId, guildId, data);
+	}
+
+	private async _set(clientId: string, guildId: string, data: any) {
 		if (!process.env.TOKEN) {
 			return console.error(Logger.parse("Token not defined in .env file"));
 		}
-
-		const data = this.data();
 		const rest = new REST({ version: "9" }).setToken(process.env.TOKEN);
-
 		try {
-			await rest.put(Routes.applicationGuildCommands(clientId as `${bigint}`, guildId as `${bigint}`), {
-				body: data
-			});
+			const res = await rest
+				.put(Routes.applicationGuildCommands(clientId as `${bigint}`, guildId as `${bigint}`), {
+					body: data
+				})
+				.then(() => `Set commands in guild: ${guildId}`)
+				.catch((err) => err.stack ?? err.toString());
+
+			logger.log("CommandManager", res);
 		} catch (e) {
 			console.error(Logger.parse(e.stack ?? e.toString()));
 		}
