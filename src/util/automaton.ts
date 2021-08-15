@@ -123,11 +123,13 @@ export const hasPerms = (permissions: Perm, member: GuildMember | null, channel?
 	return perms.has(toCheck);
 };
 
-export const permCheck = (perm: Perm, me: GuildMember, member: GuildMember, target: GuildMember) => {
+export const permCheck = (perm: Perm, me: GuildMember, member: GuildMember, target: GuildMember | null) => {
 	if (!hasPerms(perm, me)) return "I don't have sufficient permissions";
 	if (!hasPerms(perm, member)) return "You don't have sufficient permissions";
 
-	if (target.id === member.user.id) return "You can't do this action on yourself";
+	if (target && target.id === member.user.id) return "You can't do this action on yourself";
+
+	return null;
 };
 
 export const sendLog = async (interaction: CmdInteraction, embed: MessageEmbed, reply: string) => {

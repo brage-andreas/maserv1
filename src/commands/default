@@ -1,6 +1,6 @@
 import { ApplicationCommandOptionType } from "discord-api-types";
 
-import { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import { CmdInteraction } from "../../resources/definitions.js";
 
 export const data = {
 	name: "",
@@ -15,7 +15,7 @@ export const data = {
 	]
 };
 
-export async function run(client: DaClient, interaction: CmdInteraction) {
+export async function run(interaction: CmdInteraction) {
 	const { user, guild, channel } = interaction;
 
 	const option = interaction.options.getString("option", true);

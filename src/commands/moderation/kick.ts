@@ -1,7 +1,7 @@
 import { ApplicationCommandOptionType } from "discord-api-types";
 import { MessageEmbed } from "discord.js";
 
-import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import type { CmdInteraction } from "../../resources/definitions.js";
 import { confirm, sendLog, permCheck } from "../../util/automaton.js";
 
 export const data = {
@@ -27,8 +27,8 @@ export const data = {
 	]
 };
 
-export async function run(client: DaClient, interaction: CmdInteraction) {
-	const { user, guild, member } = interaction;
+export async function run(interaction: CmdInteraction) {
+	const { client, user, guild, member } = interaction;
 	const err = client.moji.get("err");
 
 	if (!guild.me) return interaction.reply({ content: "Something went wrong", ephemeral: true });

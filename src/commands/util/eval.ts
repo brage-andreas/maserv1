@@ -101,8 +101,8 @@ export async function evalCmd(client: DaClient, opt: evalObj): Promise<evalOutpu
 	}
 }
 
-export async function run(client: DaClient, interaction: CmdInteraction) {
-	const { user } = interaction;
+export async function run(interaction: CmdInteraction) {
+	const { user, client } = interaction;
 	const that = interaction;
 
 	await interaction.deferReply();

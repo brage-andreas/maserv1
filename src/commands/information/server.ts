@@ -1,7 +1,7 @@
 import type { GuildChannel, TextChannel, ThreadChannel, VoiceChannel } from "discord.js";
 import { Collection, MessageEmbed } from "discord.js";
 
-import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import type { CmdInteraction } from "../../resources/definitions.js";
 import { parseDate } from "../../util/automaton.js";
 
 export const data = {
@@ -9,8 +9,8 @@ export const data = {
 	description: "Sends information about this server"
 };
 
-export async function run(client: DaClient, interaction: CmdInteraction) {
-	const { guild } = interaction;
+export async function run(interaction: CmdInteraction) {
+	const { guild, client } = interaction;
 
 	await interaction.deferReply();
 

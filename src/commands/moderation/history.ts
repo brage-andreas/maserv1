@@ -1,6 +1,6 @@
 import { ApplicationCommandOptionType } from "discord-api-types";
 
-import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import type { CmdInteraction } from "../../resources/definitions.js";
 
 export const data = {
 	name: "history",
@@ -14,7 +14,7 @@ export const data = {
 	]
 };
 
-export async function run(client: DaClient, interaction: CmdInteraction) {
+export async function run(interaction: CmdInteraction) {
 	const { user } = interaction;
 
 	const targetId = (interaction.options.get("member")?.value as string | undefined) ?? user.id;

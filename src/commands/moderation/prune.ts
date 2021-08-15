@@ -2,7 +2,7 @@ import type { GuildChannel, Message, TextChannel } from "discord.js";
 import { ApplicationCommandOptionType } from "discord-api-types";
 import { Collection } from "discord.js";
 
-import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import type { CmdInteraction } from "../../resources/definitions.js";
 import { confirm, hasPerms } from "../../util/automaton.js";
 
 export const data = {
@@ -27,8 +27,8 @@ export const data = {
 	]
 };
 
-export async function run(client: DaClient, interaction: CmdInteraction) {
-	const { member, guild } = interaction;
+export async function run(interaction: CmdInteraction) {
+	const { client, member, guild } = interaction;
 
 	await interaction.reply({ content: "Working...", ephemeral: true });
 

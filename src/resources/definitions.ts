@@ -63,7 +63,7 @@ export interface Command {
 	options?: ApplicationCommandOptionData[];
 	data: ApplicationCommandData;
 	category: string;
-	run(client: DaClient, interaction: CommandInteraction): void;
+	run(interaction: CommandInteraction): void;
 }
 
 export interface Event {
@@ -71,8 +71,9 @@ export interface Event {
 }
 
 export interface CmdInteraction extends CommandInteraction {
-	member: GuildMember;
 	channel: TextChannel;
-	guild: Guild;
+	member: GuildMember;
 	util: CommandLogger;
+	client: DaClient;
+	guild: Guild;
 }

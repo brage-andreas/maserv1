@@ -1,7 +1,7 @@
 import { ApplicationCommandOptionType } from "discord-api-types";
 import { Message } from "discord.js";
 
-import { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import { CmdInteraction } from "../../resources/definitions.js";
 
 export const data = {
 	name: "ping",
@@ -15,7 +15,9 @@ export const data = {
 	]
 };
 
-export async function run(client: DaClient, interaction: CmdInteraction) {
+export async function run(interaction: CmdInteraction) {
+	const { client } = interaction;
+
 	interaction.reply("...");
 
 	const reply = (await interaction.fetchReply()) as Message;

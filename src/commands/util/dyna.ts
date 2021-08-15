@@ -1,4 +1,4 @@
-import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import type { CmdInteraction } from "../../resources/definitions.js";
 import { Logger } from "../../util/Logger.js";
 
 export const data = {
@@ -6,6 +6,6 @@ export const data = {
 	description: "This interaction will fail"
 };
 
-export async function run(client: DaClient, interaction: CmdInteraction) {
+export async function run(interaction: CmdInteraction) {
 	// Logger.parse()
 }

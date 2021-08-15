@@ -1,6 +1,6 @@
 import { ApplicationCommandOptionType } from "discord-api-types";
 
-import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import type { CmdInteraction } from "../../resources/definitions.js";
 
 export const data = {
 	name: "softban",
@@ -20,7 +20,7 @@ export const data = {
 	]
 };
 
-export async function run(client: DaClient, interaction: CmdInteraction) {
+export async function run(interaction: CmdInteraction) {
 	const option = interaction.options.getString("option", true);
 
 	interaction.util.log();

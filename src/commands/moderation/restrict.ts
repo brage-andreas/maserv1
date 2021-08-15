@@ -1,6 +1,6 @@
 import { ApplicationCommandOptionType } from "discord-api-types";
 
-import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import type { CmdInteraction } from "../../resources/definitions.js";
 import { RESTRICTIONS, RESTRICTIONS_STR } from "../../constants.js";
 import { Restriction } from "../../resources/psql/schemas/restrictions.js";
 import ms from "ms";
@@ -47,7 +47,7 @@ export const data = {
 	})
 };
 
-export async function run(client: DaClient, interaction: CmdInteraction) {
+export async function run(interaction: CmdInteraction) {
 	const { guild } = interaction;
 	await interaction.deferReply({ ephemeral: true });
 

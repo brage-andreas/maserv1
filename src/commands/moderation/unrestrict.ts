@@ -1,6 +1,6 @@
 import { ApplicationCommandOptionType } from "discord-api-types";
 
-import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import type { CmdInteraction } from "../../resources/definitions.js";
 import { RESTRICTIONS, RESTRICTIONS_STR } from "../../constants.js";
 import { Restriction } from "../../resources/psql/schemas/restrictions.js";
 
@@ -24,10 +24,10 @@ export const data = {
 	})
 };
 
-export async function run(client: DaClient, interaction: CmdInteraction) {
-	const { guild } = interaction;
+export async function run(interaction: CmdInteraction) {
+	const { client, guild } = interaction;
 	// TODO: fix mute and create unrestrict
-	/*await interaction.deferReply({ ephemeral: true });
+	await interaction.deferReply({ ephemeral: true });
 
 	const flag = interaction.options["_subcommand"] as RESTRICTIONS_STR | null;
 	const memUser = interaction.options.getUser("member", true);
@@ -55,5 +55,4 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	const msg = `${flag} removed from ${memUser.tag} (${memUser.id})`;
 	interaction.util.log(msg);
-    */
 }

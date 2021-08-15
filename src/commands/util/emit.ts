@@ -1,7 +1,6 @@
 import { ApplicationCommandOptionType } from "discord-api-types";
-import type { ApplicationCommandData } from "discord.js";
 
-import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import type { CmdInteraction } from "../../resources/definitions.js";
 
 export const data = {
 	name: "emit",
@@ -26,8 +25,8 @@ export const data = {
 	]
 };
 
-export async function run(client: DaClient, interaction: CmdInteraction) {
-	const { member } = interaction;
+export async function run(interaction: CmdInteraction) {
+	const { client, member } = interaction;
 
 	const event = interaction.options.getString("event", true);
 

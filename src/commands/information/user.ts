@@ -1,7 +1,7 @@
 import { ApplicationCommandOptionType } from "discord-api-types";
 import { MessageEmbed } from "discord.js";
 
-import type { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import type { CmdInteraction } from "../../resources/definitions.js";
 import { parseDate } from "../../util/automaton.js";
 import { USER_STATUS } from "../../constants.js";
 import { getNick } from "../../resources/psql/schemas/nicks.js";
@@ -18,8 +18,8 @@ export const data = {
 	]
 };
 
-export async function run(client: DaClient, interaction: CmdInteraction) {
-	const { guild } = interaction;
+export async function run(interaction: CmdInteraction) {
+	const { client, guild } = interaction;
 	const [online, idle, dnd, offline] = client.mojis("online", "idle", "dnd", "offline");
 	const emojis: { [index: string]: string | undefined } = { online, idle, dnd, offline };
 

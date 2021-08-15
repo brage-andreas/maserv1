@@ -1,7 +1,7 @@
 import { MessageEmbed } from "discord.js";
 import ms from "ms";
 
-import { CmdInteraction, DaClient } from "../../resources/definitions.js";
+import { CmdInteraction } from "../../resources/definitions.js";
 import { PLATFORMS } from "../../constants.js";
 
 export const data = {
@@ -9,7 +9,9 @@ export const data = {
 	description: "Sends information about me"
 };
 
-export async function run(client: DaClient, interaction: CmdInteraction) {
+export async function run(interaction: CmdInteraction) {
+	const { client } = interaction;
+
 	const formatBytes = (number: number) => number.toFixed(2).replace(".", ",");
 
 	const { heapUsed, heapTotal } = process.memoryUsage();
