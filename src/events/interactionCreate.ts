@@ -9,6 +9,7 @@ export async function run(client: DaClient, intr: Interaction) {
 			return;
 		}
 
+		if (intr.user.id !== "196333104183508992") return intr.reply({ content: "rip", ephemeral: true });
 		const interaction = intr as CmdInteraction;
 		interaction.util = new CommandLogger(interaction);
 

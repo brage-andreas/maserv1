@@ -12,7 +12,7 @@ export default class EventManager {
 	}
 
 	public async init() {
-		const events = await getEventFiles("./events/");
+		const events = await getEventFiles();
 
 		events.forEach((event, name) => {
 			this._client.on(name, (...args: unknown[]) => event.run(this._client, ...args));

@@ -1,3 +1,4 @@
+/*
 import type { ThreadChannel, Role, GuildChannel } from "discord.js";
 import { MessageEmbed } from "discord.js";
 
@@ -51,7 +52,9 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 		if (!raw) return null;
 		const fn = (that: Role | GuildChannel | ThreadChannel) => that.name.toLowerCase() === raw.toLowerCase();
 
-		const { type, reg } = CONFIG_OPTION_INFO[raw];
+		console.log(CONFIG_OPTION_INFO);
+		console.log(raw);
+		const { type, reg } = CONFIG_OPTION_INFO?.[raw];
 
 		if (type === "ROLE") {
 			if (reg.test(raw) || !ID_REGEX.test(raw)) return guild.roles.cache.get(raw.replace(/\D/g, "")) ?? null;
@@ -159,3 +162,4 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 	const msgNullStr = `${option ? ` on option ${option}` : ""}${value ? ` with value "${value}"` : ""}`;
 	interaction.util.log(`Method ${method}${msgNullStr}`);
 }
+*/

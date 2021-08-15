@@ -5,6 +5,7 @@ import { Routes } from "discord-api-types/v9";
 import type { Command } from "../resources/definitions";
 import { getCommandFiles } from "./getJSFiles.js";
 import { InfoLogger, Logger } from "./Logger.js";
+import { ID_REGEX } from "../constants.js";
 
 const logger = new InfoLogger();
 
@@ -16,7 +17,7 @@ export default class CommandManager {
 	}
 
 	public async init() {
-		this._commands = await getCommandFiles("./commands/");
+		this._commands = await getCommandFiles();
 	}
 
 	public get(command: string) {
@@ -49,6 +50,15 @@ export default class CommandManager {
 		if (!process.env.TOKEN) {
 			return console.error(Logger.parse("Token not defined in .env file"));
 		}
+
+		if (!ID_REGEX.test(clientId)) {
+			return console.error(Logger.parse(`Client id is faulty: ${clientId}`));
+		}
+
+		if (!ID_REGEX.test(guildId)) {
+			return console.error(Logger.parse(`Guild id is faulty: ${clientId}`));
+		}
+
 		const rest = new REST({ version: "9" }).setToken(process.env.TOKEN);
 		try {
 			const res = await rest

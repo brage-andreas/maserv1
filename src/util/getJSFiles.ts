@@ -2,8 +2,8 @@ import { Collection } from "discord.js";
 import { readdirSync } from "fs";
 import { Command, DaClient } from "../resources/definitions";
 
-const getFolders = (files: string[]) => files.filter((f) => !f.includes("."));
-const getFiles = (files: string[]) => files.filter((f) => f.includes("."));
+const getFolders = (files: string[]) => files.filter((f) => !f.endsWith(".js"));
+const getFiles = (files: string[]) => files.filter((f) => f.endsWith(".js"));
 
 export const getCommandFiles = async (dir = "commands"): Promise<Collection<string, Command>> => {
 	const allItemsInDir = readdirSync(new URL(`../${dir}`, import.meta.url));

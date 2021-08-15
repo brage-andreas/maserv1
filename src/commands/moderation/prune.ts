@@ -30,25 +30,21 @@ export const data = {
 export async function run(client: DaClient, interaction: CmdInteraction) {
 	const { member, guild } = interaction;
 
-	// --- Perms
+	await interaction.reply({ content: "Working...", ephemeral: true });
+
 	const err = client.moji.get("err");
-	if (!hasPerms(["BAN_MEMBERS"], guild.me))
+	if (!hasPerms(["MANAGE_MESSAGES", "READ_MESSAGE_HISTORY"], guild.me))
 		return interaction.editReply(`${err || ""} I don't have sufficient permissions`);
 
-	if (!hasPerms(["BAN_MEMBERS"], member))
+	if (!hasPerms(["MANAGE_MESSAGES", "READ_MESSAGE_HISTORY"], member))
 		return interaction.editReply(`${err || ""} You don't have sufficient permissions`);
 
-	// --- Functions
 	const allowedAmount = (n: number) => (Math.ceil(n) > 100 ? 100 : Math.ceil(n) < 0 ? 0 : Math.ceil(n));
 	const getChannel = (ch: GuildChannel | null): TextChannel | null => {
 		if (ch?.type !== "GUILD_TEXT") return null;
 		return ch as TextChannel;
 	};
 
-	// --- Deferring
-	await interaction.reply({ content: "Working...", ephemeral: true });
-
-	// --- Args
 	const rawChannel = (interaction.options.getChannel("channel") as GuildChannel | null) ?? interaction.channel;
 	const rawAmount = interaction.options.getInteger("amount") ?? 50;
 	const target = interaction.options.getUser("user");
@@ -58,22 +54,24 @@ export async function run(client: DaClient, interaction: CmdInteraction) {
 
 	if (!channel) return interaction.editReply({ content: "Something went wrong with the channel" });
 
-	// --- Prune
-	channel.messages.fetch({ limit: amount }).then(async (messages: Collection<string, Message>) => {
-		const msgsToDelete = target ? messages.filter((msg) => msg.author.id === target.id) : messages;
+	channel.messages
+		.fetch({ limit: amount })
+		.then(async (messages: Collection<string, Message>) => {
+			const msgsToDelete = target ? messages.filter((msg) => msg.author.id === target.id) : messages;
 
-		const targetStr = target ? ` from ${target}` : "";
-		const channelStr = channel ? ` in ${channel}` : "";
+			const targetStr = target ? ` from ${target}` : "";
+			const channelStr = channel ? ` in ${channel}` : "";
 
-		const query = `Are you sure you want to delete ${msgsToDelete.size} messages${targetStr}${channelStr}?`;
-		await confirm(interaction, query)
-			.then(() => {
-				channel.bulkDelete(msgsToDelete, true).then((messages: Collection<string, Message>) => {
-					interaction.editReply({ content: "Done!", components: [] });
+			const query = `Are you sure you want to delete ${msgsToDelete.size} messages${targetStr}${channelStr}?`;
+			await confirm(interaction, query)
+				.then(() => {
+					channel.bulkDelete(msgsToDelete, true).then((messages: Collection<string, Message>) => {
+						interaction.editReply({ content: "Done!", components: [] });
 
-					interaction.util.log(`Deleted ${messages.size} messages`);
-				});
-			})
-			.catch(() => null);
-	});
+						interaction.util.log(`Deleted ${messages.size} messages`);
+					});
+				})
+				.catch(() => null);
+		})
+		.catch(() => interaction.editReply({ content: "Something went wrong with fetching the messages" }));
 }

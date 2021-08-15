@@ -40,7 +40,7 @@ export class DaClient extends Client {
 			if (!name || !mention) return;
 			emojis.set(name, mention);
 		});
-
+		//test
 		return emojis;
 	}
 
@@ -64,6 +64,10 @@ export interface Command {
 	data: ApplicationCommandData;
 	category: string;
 	run(client: DaClient, interaction: CommandInteraction): void;
+}
+
+export interface Event {
+	run(client: DaClient, ...args: unknown[]): Promise<void>;
 }
 
 export interface CmdInteraction extends CommandInteraction {
