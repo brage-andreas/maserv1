@@ -12,7 +12,8 @@ export const data = {
 		{
 			name: "amount",
 			type: ApplicationCommandOptionType.Integer,
-			description: "How many messages"
+			description: "How many messages",
+			required: true
 		},
 		{
 			name: "user",
@@ -40,14 +41,14 @@ export async function run(interaction: CmdInteraction) {
 		return interaction.editReply(`${err || ""} You don't have sufficient permissions`);
 
 	const allowedAmount = (n: number) => (Math.ceil(n) > 100 ? 100 : Math.ceil(n) < 0 ? 0 : Math.ceil(n));
-	const getChannel = (ch: GuildChannel | null): TextChannel | null => {
-		if (ch?.type !== "GUILD_TEXT") return null;
-		return ch as TextChannel;
+	const getChannel = (ch: GuildChannel | null) => {
+		if (!ch?.isText()) return null;
+		return ch;
 	};
 
-	const rawChannel = (interaction.options.getChannel("channel") as GuildChannel | null) ?? interaction.channel;
-	const rawAmount = interaction.options.getInteger("amount") ?? 50;
+	const rawAmount = interaction.options.getInteger("amount", true);
 	const target = interaction.options.getUser("user");
+	const rawChannel = (interaction.options.getChannel("channel") as GuildChannel | null) ?? interaction.channel;
 
 	const channel = getChannel(rawChannel);
 	const amount = allowedAmount(rawAmount);

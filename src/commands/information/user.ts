@@ -38,16 +38,16 @@ export async function run(interaction: CmdInteraction) {
 	const member = await getMember(rawUser?.id);
 	const user = member.user;
 
-	if (!member.presence) return interaction.editReply({ content: "Hmm. Something went wrong" });
+	const rawStatus = member.presence ? member.presence.status : "offline";
 
 	const roles = member.roles.cache.filter((r) => r.name !== "@everyone").map((r) => r.toString());
 	const avatar = user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 });
-	const status = `${emojis[member.presence.status]} ${USER_STATUS[member.presence.status]}`;
+	const status = `${emojis[rawStatus]} ${USER_STATUS[rawStatus]}`;
 	const came = parseDate(member.joinedTimestamp);
 	const made = parseDate(user.createdTimestamp);
 	const colour = ["#000000", "#ffffff"].includes(member.displayHexColor) ? "RANDOM" : member.displayHexColor;
 
-	const nicks = await getNick(user.id, guild.id);
+	const nicks = await getNick(guild.id, user.id, member.displayName);
 
 	const infoEmbed = new MessageEmbed()
 		.setColor(colour)

@@ -51,7 +51,9 @@ export async function run(interaction: CmdInteraction) {
 	const { guild } = interaction;
 	await interaction.deferReply({ ephemeral: true });
 
-	const flag = interaction.options["_subcommand"] as RESTRICTIONS_STR | null;
+	// TODO create log
+
+	const flag = interaction.options.getSubcommand() as RESTRICTIONS_STR | null;
 
 	const memUser = interaction.options.getUser("member", true);
 	const duration = ms(interaction.options.getString("duration", true));
